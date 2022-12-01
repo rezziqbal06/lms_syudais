@@ -34,7 +34,7 @@ class A_Pengguna_Model extends \Sene_Model
 			->where_as("username", $this->db->esc($username), "OR", "=", 0, 1);
 		return $this->db->get_first('object', 0); //
 	}
-	public function checkToken($kind = "api_web", $token)
+	public function checkToken( $token, $kind = "api_web")
 	{
 		$dt = $this->db->where($kind . '_token', $token)->get();
 		if (count($dt) > 1) {
@@ -74,7 +74,7 @@ class A_Pengguna_Model extends \Sene_Model
 		}
 		return 0;
 	}
-	public function setToken($kind = "api_web", $token, $id)
+	public function setToken($token, $id, $kind = "api_web")
 	{
 		$du = array($kind . '_token' => $token);
 		return $this->db->where("id", $id)->update($this->tbl, $du);

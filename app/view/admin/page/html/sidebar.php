@@ -80,7 +80,7 @@ $admin_foto = $this->cdn_url($admin_foto);
 				</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link " href="<?= base_url_admin() ?>kelas">
+				<a class="nav-link " href="<?= base_url_admin() ?>pengaturan/ruangan">
 					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 						<i class="ni ni-app text-info text-sm opacity-10"></i>
 					</div>
