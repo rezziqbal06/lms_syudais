@@ -24,6 +24,7 @@ class A_Ruangan_Concern extends \JI_Model
     const COLUMNS = [
         'a_rs_id',
         'nama',
+        'kd_ruangan',
         'deskripsi',
         'gambar',
         'is_active',
@@ -31,6 +32,7 @@ class A_Ruangan_Concern extends \JI_Model
     ];
     const DEFAULTS = [
         null,
+        '',
         '',
         '',
         '',
@@ -69,6 +71,7 @@ class A_Ruangan_Concern extends \JI_Model
         $this->datatables['admin'] = new \Seme_Datatable([
             ["$this->tbl_as.id", 'id', 'ID'],
             ["$this->tbl_as.nama", 'nama', 'Nama Ruangan'],
+            ["$this->tbl_as.kd_ruangan", 'kd_ruangan', 'Kode Ruangan'],
             ["$this->tbl_as.deskripsi", 'deskripsi', 'Deskripsi'],
             ["$this->tbl_as.is_active", 'is_active', 'Status']
         ]);

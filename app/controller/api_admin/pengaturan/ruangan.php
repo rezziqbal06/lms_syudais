@@ -93,12 +93,15 @@ class Ruangan extends JI_Controller
 			$this->__json_out($data);
 			die();
 		}
+		
 
 		$res = $this->arm->save();
 		if ($res) {
+			$this->status = 200;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			$this->lib("conumtext");
 			$token = $this->conumtext->genRand($type = "str", 9, 9);
-			$update_apikey = $this->arm->update($res, ['apikey' => $token]);
+			// $update_apikey = $this->arm->update($res, ['apikey' => $token]);
 		} else {
 			$this->status = 110;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -149,10 +152,17 @@ class Ruangan extends JI_Controller
 	 *
 	 * @return void
 	 */
-	public function edit($id)
+	public function edit($id = "")
 	{
 		$d = $this->__init();
 		$data = array();
+
+		$du = $_POST;
+		
+
+		$id = (int)$id;
+		$id = isset($du['id']) ? $du['id'] : 0;
+
 
 		if (!$this->admin_login) {
 			$this->status = 400;
@@ -188,26 +198,23 @@ class Ruangan extends JI_Controller
 			$this->__json_out($data);
 			die();
 		}
-		$this->arm->columns['cdate']->value = $this->__($arm, 'cdate', 'NOW()');
-		$this->arm->columns['kelamin']->value = $this->__($arm, 'kelamin', '1');
-		$this->arm->columns['bdate']->value = $this->__($arm, 'bdate', 'NOW()');
-		$this->arm->columns['umur']->value = $this->__($arm, 'umur', '30');
-		$this->arm->columns['adate']->value = $this->__($arm, 'adate', 'NOW()');
-		$this->arm->columns['edate']->value = $this->__($arm, 'edate', 'NOW()');
-		$this->arm->columns['api_reg_date']->value = $this->__($arm, 'api_reg_date', 'NOW()');
-		$this->arm->columns['api_web_date']->value = $this->__($arm, 'api_web_date', 'NOW()');
-		$this->arm->columns['api_mobile_date']->value = $this->__($arm, 'api_mobile_date', 'NOW()');
-		$this->arm->columns['is_deleted']->value = $this->__($arm, 'is_deleted', '0');
-		$this->arm->columns['b_user_id']->value = $this->__($arm, 'b_user_id', 'NULL');
-
-		$res = $this->arm->save($id);
-		if ($res) {
-			$this->status = 200;
+		if ($id > 0) {
+			unset($du['id']);
+			$res = $this->arm->update($id,$du);
+			if ($res) {
+				$this->status = 200;
+				$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			} else {
+				$this->status = 901;
+				$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			}
+		}else{
+			$this->status = 444;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
-		} else {
-			$this->status = 901;
-			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+			die();
 		}
+		
 		$this->__json_out($data);
 	}
 

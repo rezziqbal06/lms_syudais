@@ -33,17 +33,20 @@ if(jQuery('#drTable').length>0){
 						ieid = id;
 						$.get('<?=base_url("api_admin/pengaturan/ruangan/detail/")?>'+ieid).done(function(dt){
 							if(dt.data){
-								if(dt.data.utype){
-									if(dt.data.utype == 'agen'){
-										$("#areseller").hide();
+								$.each(dt.data, function(k,v){
+									$("#ie"+k).val(v);
+									if(k == "nama"){
+										console.log(k);
+										$("#tvruangan").html(v);
 									}
-								}
+								})
 							}
 						})
 						$("#adetail").attr("href","<?=base_url_admin("pengaturan/ruangan/detail/")?>"+ieid);
-						$("#aedit").attr("href","<?=base_url_admin("pengaturan/ruangan/edit/")?>"+ieid);
+						//$("#aedit").attr("href","<?=base_url_admin("pengaturan/ruangan/edit/")?>"+ieid);
 						$("#areseller").attr("href","<?=base_url_admin("partner/reseller/baru/")?>"+ieid);
 						$("#modal_option").modal("show");
+						
 					});
 
 					$().btnSubmit('finished');
@@ -62,6 +65,91 @@ if(jQuery('#drTable').length>0){
 	});
 }
 
+//submit form
+$("#ftambah").on("submit",function(e){
+	e.preventDefault();
+	NProgress.start();
+	$('.btn-submit').prop('disabled',true);
+	$('.icon-submit').addClass('fa-circle-o-notch fa-spin');
+
+	var fd = new FormData($(this)[0]);
+	var url = '<?= base_url("api_admin/pengaturan/ruangan/baru/")?>';
+
+	$.ajax({
+		type: $(this).attr('method'),
+		url: url,
+		data: fd,
+		processData: false,
+		contentType: false,
+		success: function(respon){
+			if(respon.status==200){
+				gritter('<h4>Sukses</h4><p>Data berhasil ditambahkan</p>','success');
+				setTimeout(function(){
+					window.location = '<?=base_url_admin('pengaturan/ruangan/')?>';
+				},3000);
+			}else{
+				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
+				$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
+				$('.btn-submit').prop('disabled',false);
+				NProgress.done();
+			}
+		},
+		error:function(){
+			setTimeout(function(){
+				gritter('<h4>Error</h4><p>Tidak dapat menambah data, silahkan coba beberapa saat lagi</p>','warning');
+			}, 666);
+
+			$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
+			$('.btn-submit').prop('disabled',false);
+			NProgress.done();
+			return false;
+		}
+	});
+});
+
+// edit form 
+$("#fedit").on("submit",function(e){
+	e.preventDefault();
+	NProgress.start();
+	$('.btn-submit').prop('disabled',true);
+	$('.icon-submit').addClass('fa-circle-o-notch fa-spin');
+
+	var fd = new FormData($(this)[0]);
+	var url = '<?=base_url("api_admin/pengaturan/ruangan/edit/")?>';
+
+	$.ajax({
+		type: $(this).attr('method'),
+		url: url,
+		data: fd,
+		processData: false,
+		contentType: false,
+		success: function(respon){
+			if(respon.status==200){
+				gritter('<h4>Sukses</h4><p>Data berhasil diubah</p>','success');
+				setTimeout(function(){
+					window.location = '<?=base_url_admin('pengaturan/ruangan/')?>';
+				},3000);
+			}else{
+				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
+
+				$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
+				$('.btn-submit').prop('disabled',false);
+				NProgress.done();
+			}
+		},
+		error:function(){
+			setTimeout(function(){
+				gritter('<h4>Error</h4><p>Tidak dapat mengubah data sekarang, silahkan coba lagi nanti</p>','warning');
+			}, 666);
+
+			$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
+			$('.btn-submit').prop('disabled',false);
+			NProgress.done();
+			return false;
+		}
+	});
+
+});
 
 //hapus
 $("#bhapus").on("click",function(e){
@@ -128,6 +216,11 @@ $("#fl_a_company_id_parent").select2({
 	}
 });
 
+$("#btn_close_modal").on("click",function(e){
+	e.preventDefault();
+	$("#modal_option").modal("hide");
+});
+
 $("#fl_do").on("click",function(e){
 		e.preventDefault();
 		drTable.ajax.reload();
@@ -136,6 +229,12 @@ $("#fl_do").on("click",function(e){
 	
 $("#atambah").on("click",function(e){
 		e.preventDefault();
-		window.location = '<?=base_url_admin("pengaturan/ruangan/baru/")?>'
+		$("#modal_tambah").modal("show");
 	});
-	
+
+// edit modal
+$("#aedit").on("click",function(e){
+	e.preventDefault();
+	$("#modal_option").modal("hide");
+	$("#modal_edit").modal("show");
+});

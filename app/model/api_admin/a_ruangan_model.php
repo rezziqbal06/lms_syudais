@@ -34,10 +34,9 @@ class A_Ruangan_Model extends \Model\A_Ruangan_Concern
     //   $this->db->where_as("$this->tbl_as.a_unit_id", $this->db->esc($a_unit_id));
     // }
     if (strlen($keyword) > 0) {
-      $this->db->where_as("$this->tbl_as.fnama", $keyword, "OR", "%like%", 1, 0);
-      $this->db->where_as("$this->tbl_as.telp", $keyword, "AND", "%like%", 0, 0);
-      $this->db->where_as("$this->tbl_as.email", $keyword, "AND", "%like%", 0, 0);
-      $this->db->where_as("$this->tbl_as.alamat", $keyword, "AND", "%like%", 0, 1);
+      $this->db->where_as("$this->tbl_as.nama", $keyword, "OR", "%like%", 1, 0);
+      $this->db->where_as("$this->tbl_as.deskripsi", $keyword, "AND", "%like%", 0, 0);
+      $this->db->where_as("$this->tbl_as.kd_ruangan", $keyword, "AND", "%like%", 0, 0);
     }
     return $this;
   }
