@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2022 at 06:35 AM
--- Server version: 10.4.25-MariaDB
--- PHP Version: 8.1.10
+-- Generation Time: Dec 06, 2022 at 06:59 AM
+-- Server version: 10.4.13-MariaDB
+-- PHP Version: 7.4.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,10 +24,42 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `a_indikator`
+--
+
+CREATE TABLE `a_indikator` (
+  `id` int(5) NOT NULL,
+  `a_jpenilaian_id` int(5) NOT NULL,
+  `nama` varchar(255) NOT NULL,
+  `kategori` varchar(255) NOT NULL,
+  `type` varchar(128) NOT NULL,
+  `cdate` datetime NOT NULL,
+  `is_active` int(1) NOT NULL,
+  `is_deleted` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `a_jabatan`
 --
 
 CREATE TABLE `a_jabatan` (
+  `id` int(5) NOT NULL,
+  `nama` varchar(255) NOT NULL,
+  `deskripsi` text NOT NULL,
+  `cdate` datetime NOT NULL,
+  `is_active` int(1) NOT NULL,
+  `is_deleted` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `a_jpenilaian`
+--
+
+CREATE TABLE `a_jpenilaian` (
   `id` int(5) NOT NULL,
   `nama` varchar(255) NOT NULL,
   `deskripsi` text NOT NULL,
@@ -223,6 +255,21 @@ INSERT INTO `a_ruangan` (`id`, `a_rs_id`, `nama`, `kd_ruangan`, `deskripsi`, `ga
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `a_unit`
+--
+
+CREATE TABLE `a_unit` (
+  `id` int(5) NOT NULL,
+  `nama` varchar(255) NOT NULL,
+  `deskripsi` text NOT NULL,
+  `cdate` datetime NOT NULL,
+  `is_active` int(1) NOT NULL,
+  `is_deleted` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `b_user`
 --
 
@@ -299,14 +346,43 @@ INSERT INTO `b_user` (`id`, `b_user_id`, `a_unit_id`, `a_jabatan_id`, `google_id
 (69, 0, 0, 0, '', '', '', 'rezziqbal@gmail.com', '', '', '', '', 'Rizki', '', 'Jl. kutawaringin', '', 'PALASARI', 'CIBIRU', 'BANDUNG', 'JAWA BARAT', 'INDONESIA', '40615', 0, '', '0000-00-00', '0000-00-00 00:00:00', '0000-00-00', '0000-00-00', '085789701750', '', 0, '', 0, 0, 0, '', 'online', NULL, 0, '', '0000-00-00', '', '0000-00-00', '', '0000-00-00', '', '', '', '2X4332XC22', 0, 0, 0, 1, 1, 1, 0),
 (70, NULL, NULL, NULL, '', NULL, NULL, '', '', '', '', NULL, 'MS CHANDRA', ' ', '', NULL, '', '', '', '', 'Indonesia', '', 1, '-', '1970-01-01', '0000-00-00 00:00:00', NULL, NULL, '085721xxxx', '', NULL, '', NULL, 0, 0, ' ', 'online', NULL, 20, '', NULL, NULL, NULL, NULL, NULL, NULL, ' ', 'web', '', 0, 0, 0, 1, 1, 1, 0);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `c_asesmen`
+--
+
+CREATE TABLE `c_asesmen` (
+  `id` int(5) NOT NULL,
+  `a_jpenilaian_id` int(5) NOT NULL,
+  `b_user_id` int(5) NOT NULL,
+  `value` text NOT NULL,
+  `nilai` text NOT NULL,
+  `cdate` datetime NOT NULL,
+  `is_active` int(1) NOT NULL,
+  `is_deleted` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Indexes for dumped tables
 --
 
 --
+-- Indexes for table `a_indikator`
+--
+ALTER TABLE `a_indikator`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `a_jabatan`
 --
 ALTER TABLE `a_jabatan`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `a_jpenilaian`
+--
+ALTER TABLE `a_jpenilaian`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -347,6 +423,12 @@ ALTER TABLE `a_ruangan`
   ADD KEY `id` (`id`,`a_rs_id`) USING BTREE;
 
 --
+-- Indexes for table `a_unit`
+--
+ALTER TABLE `a_unit`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `b_user`
 --
 ALTER TABLE `b_user`
@@ -360,13 +442,31 @@ ALTER TABLE `b_user`
   ADD KEY `idx_is_confirmed` (`kode_lama`);
 
 --
+-- Indexes for table `c_asesmen`
+--
+ALTER TABLE `c_asesmen`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `a_indikator`
+--
+ALTER TABLE `a_indikator`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `a_jabatan`
 --
 ALTER TABLE `a_jabatan`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `a_jpenilaian`
+--
+ALTER TABLE `a_jpenilaian`
   MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
 
 --
@@ -394,10 +494,22 @@ ALTER TABLE `a_ruangan`
   MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
+-- AUTO_INCREMENT for table `a_unit`
+--
+ALTER TABLE `a_unit`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `b_user`
 --
 ALTER TABLE `b_user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+
+--
+-- AUTO_INCREMENT for table `c_asesmen`
+--
+ALTER TABLE `c_asesmen`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
