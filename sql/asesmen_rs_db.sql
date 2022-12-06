@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 01, 2022 at 07:29 AM
+-- Generation Time: Dec 06, 2022 at 06:35 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -20,6 +20,21 @@ SET time_zone = "+00:00";
 --
 -- Database: `asesmen_rs_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `a_jabatan`
+--
+
+CREATE TABLE `a_jabatan` (
+  `id` int(5) NOT NULL,
+  `nama` varchar(255) NOT NULL,
+  `deskripsi` text NOT NULL,
+  `cdate` datetime NOT NULL,
+  `is_active` int(1) NOT NULL,
+  `is_deleted` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -186,12 +201,24 @@ CREATE TABLE `a_ruangan` (
   `id` int(5) NOT NULL,
   `a_rs_id` int(5) DEFAULT NULL,
   `nama` varchar(255) NOT NULL,
+  `kd_ruangan` varchar(20) NOT NULL,
   `deskripsi` text NOT NULL,
   `gambar` varchar(255) NOT NULL,
   `cdate` datetime NOT NULL,
   `is_active` int(1) NOT NULL DEFAULT 1,
   `is_deleted` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `a_ruangan`
+--
+
+INSERT INTO `a_ruangan` (`id`, `a_rs_id`, `nama`, `kd_ruangan`, `deskripsi`, `gambar`, `cdate`, `is_active`, `is_deleted`) VALUES
+(6, 0, 'sakinah mawaddah warahmah', 'SK-0123', 'ruangan ini', '', '0000-00-00 00:00:00', 1, 0),
+(7, 0, 'Pasien - 03', 'RP-03123', 'ruang pasien ini', '', '0000-00-00 00:00:00', 1, 0),
+(10, 0, 'Bedah - 01', 'RB-0133', 'ruang bedah ini', '', '0000-00-00 00:00:00', 1, 0),
+(11, 0, 'Bedah - 02', 'RB-02', 'ruang\r\n', '', '0000-00-00 00:00:00', 1, 0),
+(12, 0, 'Rontgen', 'RR-IPO234', 'ruang x-ray', '', '0000-00-00 00:00:00', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -277,6 +304,12 @@ INSERT INTO `b_user` (`id`, `b_user_id`, `a_unit_id`, `a_jabatan_id`, `google_id
 --
 
 --
+-- Indexes for table `a_jabatan`
+--
+ALTER TABLE `a_jabatan`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `a_modules`
 --
 ALTER TABLE `a_modules`
@@ -331,6 +364,12 @@ ALTER TABLE `b_user`
 --
 
 --
+-- AUTO_INCREMENT for table `a_jabatan`
+--
+ALTER TABLE `a_jabatan`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `a_pengguna`
 --
 ALTER TABLE `a_pengguna`
@@ -352,7 +391,7 @@ ALTER TABLE `a_rs`
 -- AUTO_INCREMENT for table `a_ruangan`
 --
 ALTER TABLE `a_ruangan`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `b_user`
