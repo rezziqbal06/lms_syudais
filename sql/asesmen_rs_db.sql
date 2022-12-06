@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 30, 2022 at 03:26 PM
--- Server version: 10.4.13-MariaDB
--- PHP Version: 7.4.7
+-- Generation Time: Dec 01, 2022 at 07:29 AM
+-- Server version: 10.4.25-MariaDB
+-- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -164,6 +164,38 @@ INSERT INTO `a_pengguna_module` (`id`, `a_pengguna_id`, `a_modules_identifier`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `a_rs`
+--
+
+CREATE TABLE `a_rs` (
+  `id` int(5) NOT NULL,
+  `nama` varchar(255) NOT NULL,
+  `alamat` text NOT NULL,
+  `gambar` varchar(255) NOT NULL,
+  `is_active` int(1) NOT NULL DEFAULT 0,
+  `is_deleted` int(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `a_ruangan`
+--
+
+CREATE TABLE `a_ruangan` (
+  `id` int(5) NOT NULL,
+  `a_rs_id` int(5) DEFAULT NULL,
+  `nama` varchar(255) NOT NULL,
+  `deskripsi` text NOT NULL,
+  `gambar` varchar(255) NOT NULL,
+  `cdate` datetime NOT NULL,
+  `is_active` int(1) NOT NULL DEFAULT 1,
+  `is_deleted` int(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `b_user`
 --
 
@@ -269,6 +301,19 @@ ALTER TABLE `a_pengguna_module`
   ADD KEY `fka_modules_identifier` (`a_modules_identifier`);
 
 --
+-- Indexes for table `a_rs`
+--
+ALTER TABLE `a_rs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `a_ruangan`
+--
+ALTER TABLE `a_ruangan`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id` (`id`,`a_rs_id`) USING BTREE;
+
+--
 -- Indexes for table `b_user`
 --
 ALTER TABLE `b_user`
@@ -296,6 +341,18 @@ ALTER TABLE `a_pengguna`
 --
 ALTER TABLE `a_pengguna_module`
   MODIFY `id` int(8) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3195;
+
+--
+-- AUTO_INCREMENT for table `a_rs`
+--
+ALTER TABLE `a_rs`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `a_ruangan`
+--
+ALTER TABLE `a_ruangan`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `b_user`
