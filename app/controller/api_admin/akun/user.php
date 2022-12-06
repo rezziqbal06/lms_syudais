@@ -61,9 +61,6 @@ class User extends JI_Controller
 			if (isset($gd->fnama)) {
 				$gd->fnama = htmlentities(rtrim($gd->fnama, ' - '));
 			}
-			if (isset($gd->utype)) {
-				$gd->utype = ($gd->utype == 'agen' || $gd->utype == 'reseller') ? '<span class="label label-warning">Reseller</span>' : '<span class="label label-primary">Member</span>';
-			}
 			if (isset($gd->is_active)) {
 				$gd->is_active = $this->bum->label('is_active', $gd->is_active);
 			}
