@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 	<?php $this->getThemeElement("page/html/head",$__forward); ?>
-	<body>
+	<body style="overflow-x: hidden;">
 		<!-- Page Wrapper -->
 		<div id="page-wrapper" class="page-loading">
 			<!-- Preloader -->
-			<div class="preloader themed-background">
+			<!-- <div class="preloader themed-background">
 				<h1 class="push-top-bottom text-light text-center" >
-                    <strong><?=$this->current_reseller->nama?></strong>
+                    <strong>rezza</strong>
                     <br><small>Loading...</small>
                 </h1>
 				<div class="inner">
 					<h3 class="text-light visible-lt-ie10"><strong>Loading..</strong></h3>
 					<div class="preloader-spinner hidden-lt-ie10"></div>
 				</div>
-			</div>
+			</div> -->
 			<!-- END Preloader -->
 
 			<div id="page-container" class="header-fixed-top footer-fixed">
 				<!-- Main Container -->
 				<div id="main-container">
 					<!-- Header -->
-					<?php $this->getThemeElement("page/html/topbar/header",$__forward); ?>
+					<?php // $this->getThemeElement("page/html/topbar/header",$__forward); ?>
 					<!-- END Header -->
 
 					<!-- Main Container -->
@@ -34,7 +34,7 @@
 					<!-- Main Container End -->
 
 					<!-- Footer -->
-					<?php $this->getThemeElement("page/html/footer",$__forward); ?>
+					<?php // $this->getThemeElement("page/html/footer",$__forward); ?>
 					<!-- End Footer -->
 				</div>
 				<!-- End Main Container -->
@@ -46,7 +46,7 @@
 		<!-- End Page Wrapper -->
 
 		<!-- Foot -->
-		<?php $this->getThemeElement("page/html/foot",$__forward); ?>
+		<?php // $this->getThemeElement("page/html/foot",$__forward); ?>
 		<!-- End Foot -->
 
 		<div id="modal-preloader" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
