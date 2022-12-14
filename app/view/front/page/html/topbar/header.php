@@ -8,7 +8,7 @@
 
     <!-- Navbar Header -->
     <div class="navbar-header">
-        <a class="navbar-brand-logo" href="<?= $this->current_base_url() ?>" title="<?= $this->current_reseller->nama ?>">
+        <a class="navbar-brand-logo" href="#" title="rezza iqbal">
             <img alt="<?= $this->current_reseller->nama ?>" src="<?= $this->cdn_url($this->current_reseller->logo_kotak) ?>" alt="Logo <?= $this->current_reseller->nama ?>" onerror="this.null;this.src='<?= $this->cdn_url('media/default-logo.png') ?>';" />
         </a>
         <!-- Horizontal Menu Toggle + Alternative Sidebar Toggle Button, Visible only in small screens (< 768px) -->

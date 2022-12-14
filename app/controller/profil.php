@@ -9,11 +9,11 @@ class Profil extends JI_Controller
 		$this->setTheme('front');
 		$this->current_parent = 'dashboard';
 		$this->current_page = 'dashboard';
-		$this->load('a_company_concern');
+		// $this->load('a_company_concern');
 		$this->load('b_user_alamat_concern');
 
-		$this->load('front/a_pengguna_model', 'apm');
-		$this->load('front/a_company_model', 'acm');
+		// $this->load('front/a_pengguna_model', 'apm');
+		// $this->load('front/a_company_model', 'acm');
 		$this->load('front/b_user_alamat_model', 'buam');
 	}
 
@@ -96,18 +96,18 @@ class Profil extends JI_Controller
 	{
 		$data = $this->__init();
 
-		if (!$this->user_login) {
-			redir(base_url('login'));
-			die();
-		}
+		// if (!$this->user_login) {
+		// 	redir(base_url('login'));
+		// 	die();
+		// }
 
-		$acm = $this->acm->getByUserId($data['sess']->user->id);
-		if (isset($acm->id)) $data['acm'] = $acm;
-		unset($acm);
+		// $acm = $this->acm->getByUserId($data['sess']->user->id);
+		// if (isset($acm->id)) $data['acm'] = $acm;
+		// unset($acm);
 
-		$buam = $this->buam->getByUserId($data['sess']->user->id);
-		if (isset($buam->id)) $data['buam'] = $buam;
-		unset($buam);
+		// $buam = $this->buam->getByUserId($data['sess']->user->id);
+		// if (isset($buam->id)) $data['buam'] = $buam;
+		// unset($buam);
 
 		$this->setTitle('Profil Saya ' . $this->config->semevar->site_suffix);
 		$this->putThemeContent("profil/home_modal", $data);

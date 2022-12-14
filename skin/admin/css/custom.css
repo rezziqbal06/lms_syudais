@@ -8,3 +8,34 @@
 .btn-group-vertical a{
     margin:0;
 }
+.bg-primary{
+    background-color: var(--primary) !important;
+}
+
+.bg-accent{
+    background-color: var(--accent) !important; 
+}
+
+.bg-secondary{
+    background-color: var(--secondary) !important;
+}
+
+.bg-background{
+    background-color: var(--background) !important;
+}
+
+.text-primary{
+    color: var(--primary) !important;
+}
+
+.text-accent{
+    color: var(--accent) !important; 
+}
+
+.text-secondary{
+    color: var(--secondary) !important;
+}
+
+.text-background{
+    color: var(--background) !important;
+}

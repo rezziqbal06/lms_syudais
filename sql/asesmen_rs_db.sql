@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2022 at 06:59 AM
--- Server version: 10.4.13-MariaDB
--- PHP Version: 7.4.7
+-- Generation Time: Dec 13, 2022 at 03:12 AM
+-- Server version: 10.4.25-MariaDB
+-- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -52,6 +52,13 @@ CREATE TABLE `a_jabatan` (
   `is_active` int(1) NOT NULL,
   `is_deleted` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `a_jabatan`
+--
+
+INSERT INTO `a_jabatan` (`id`, `nama`, `deskripsi`, `cdate`, `is_active`, `is_deleted`) VALUES
+(1, 'Account Officer edit', 'ao', '0000-00-00 00:00:00', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -267,6 +274,13 @@ CREATE TABLE `a_unit` (
   `is_deleted` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `a_unit`
+--
+
+INSERT INTO `a_unit` (`id`, `nama`, `deskripsi`, `cdate`, `is_active`, `is_deleted`) VALUES
+(1, 'Kursi Roda edit', 'kursi roda', '0000-00-00 00:00:00', 1, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -461,7 +475,7 @@ ALTER TABLE `a_indikator`
 -- AUTO_INCREMENT for table `a_jabatan`
 --
 ALTER TABLE `a_jabatan`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `a_jpenilaian`
@@ -497,7 +511,7 @@ ALTER TABLE `a_ruangan`
 -- AUTO_INCREMENT for table `a_unit`
 --
 ALTER TABLE `a_unit`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `b_user`
