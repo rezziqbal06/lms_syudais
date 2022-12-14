@@ -22,6 +22,7 @@ class B_User_Concern extends \JI_Model
     // public $tbl3_as = 'ac';
 
     const COLUMNS = [
+        'a_jabatan_id',
         'a_unit_id',
         'google_id',
         'kode',
@@ -83,6 +84,7 @@ class B_User_Concern extends \JI_Model
         '',
         '',
         '',
+        '',
         null,
         null,
         null,
@@ -104,6 +106,7 @@ class B_User_Concern extends \JI_Model
         null
     ];
     const REQUIREDS = [
+        'a_jabatan_id',
         'email',
         'fnama',
         'alamat',

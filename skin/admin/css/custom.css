@@ -4,3 +4,7 @@
     --secondary:#086867;
     --background:#d7d0b3;
 }
+
+.btn-group-vertical a{
+    margin:0;
+}

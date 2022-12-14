@@ -74,7 +74,7 @@ $("#ienegara").on("change",function(e){
 $("#ieprovinsi").select2({
 	ajax: {
 		method: 'post',
-		url: '<?=base_url("api_admin/alamat/provinsi/get/")?>',
+		url: '<?=$this->config->semevar->api_address."provinsi/get/"?>',
 		dataType: 'json',
     delay: 250,
 		data: function (params) {
@@ -86,7 +86,7 @@ $("#ieprovinsi").select2({
     },
     processResults: function (dt) {
       return {
-        results:  $.map(dt, function (itm) {
+        results:  $.map(dt.result, function (itm) {
           return {
             text: itm.text,
             id: itm.text
@@ -101,7 +101,7 @@ $("#ieprovinsi").select2({
 $("#iekabkota").select2({
 	ajax: {
 		method: 'post',
-		url: '<?=base_url("api_admin/alamat/kabkota/get/")?>',
+		url: '<?=$this->config->semevar->api_address."kabkota/get/"?>',
 		dataType: 'json',
     delay: 250,
 		data: function (params) {
@@ -113,7 +113,7 @@ $("#iekabkota").select2({
     },
     processResults: function (dt) {
       return {
-        results:  $.map(dt, function (itm) {
+        results:  $.map(dt.result, function (itm) {
           return {
             text: itm.text,
             id: itm.text
@@ -128,7 +128,7 @@ $("#iekabkota").select2({
 $("#iekecamatan").select2({
 	ajax: {
 		method: 'post',
-		url: '<?=base_url("api_admin/alamat/kecamatan/get/")?>',
+		url: '<?=$this->config->semevar->api_address."kecamatan/get/"?>',
 		dataType: 'json',
     delay: 250,
 		data: function (params) {
@@ -140,7 +140,7 @@ $("#iekecamatan").select2({
     },
     processResults: function (dt) {
       return {
-        results:  $.map(dt, function (itm) {
+        results:  $.map(dt.result, function (itm) {
           return {
             text: itm.text,
             id: itm.text
@@ -156,7 +156,7 @@ $("#iekecamatan").select2({
 $("#iekelurahan").select2({
 	ajax: {
 		method: 'post',
-		url: '<?=base_url("api_admin/alamat/kelurahan/get/")?>',
+		url: '<?=$this->config->semevar->api_address."kelurahan/get/"?>',
 		dataType: 'json',
     delay: 250,
 		data: function (params) {
@@ -168,7 +168,7 @@ $("#iekelurahan").select2({
     },
     processResults: function (dt) {
       return {
-        results:  $.map(dt, function (itm) {
+        results:  $.map(dt.result, function (itm) {
           return {
             text: itm.text,
             id: itm.text
@@ -180,83 +180,6 @@ $("#iekelurahan").select2({
 	}
 });
 
-$("#ieutype").on("change",function(e){
-	e.preventDefault();
-	$("#iea_company_id").val("NULL").trigger('change');
-})
-$("#iea_company_idx").select2({
-	ajax: {
-		method: 'post',
-		url: '<?=base_url("api_admin/akun/user/get/")?>',
-		dataType: 'json',
-    delay: 250,
-		data: function (params) {
-      var query = {
-        keyword: params.term,
-      }
-      return query;
-    },
-    processResults: function (dt) {
-      return {
-        results:  $.map(dt, function (itm) {
-          return {
-            text: itm.text,
-            id: itm.id
-          }
-        })
-      };
-    },
-    cache: true
-	}
-});
-
-
-$("#ialamat_select").select2({
-	ajax: {
-		method: 'post',
-		url: '<?=base_url("api_admin/pengaturan/destination/cari")?>',
-		dataType: 'json',
-	delay: 250,
-		data: function (params) {
-	var query = {
-		keyword: params.term,
-	}
-	return query;
-	},
-	processResults: function (dt) {
-	return {
-		results:  $.map(dt, function (itm) {
-		return {
-			text: itm.text,
-			id: itm.id
-		}
-		})
-	};
-	},
-	cache: true
-	}
-});
-
-
-$("#ialamat_select").on('change', function(e){
-	var value = $(this).find('option:selected').val();
-	var text = $(this).find('option:selected').text();
-	var alamat = text.split(' - ');
-	$("[name='kode_destination']").val(value);
-	$("[name='provinsi']").val(alamat[0]);
-	$("[name='kabkota']").val(alamat[1]);
-	$("[name='kecamatan']").val(alamat[2]);
-	$("[name='kelurahan']").val(alamat[3]);
-	$("[name='kodepos']").val(alamat[4]);
-  var kabkota = alamat[1];
-  $.get('<?=base_url("api_admin/pengaturan/origin/get_by_kota/")?>'+kabkota).done(function(dt){
-    if(dt.status == 200){
-      if(dt.data){
-        $("[name='kode_origin']").val(dt.data.code);
-      }
-    }
-  })
-})
 
 
 <?php if(isset($bum->id)){
@@ -266,15 +189,3 @@ $("#ialamat_select").on('change', function(e){
     <?php } ?>
   <?php }
 } ?>
-
-<?php if(isset($buam->id)){
-  foreach($buam as $k => $v){ ?>
-    <?php if(isset($v) && strlen($v) && $k != 'nama'){?>
-     $("[name='<?=$k?>']").val('<?=$v?>');
-    <?php } ?>
-  <?php }
-} ?>
-
-var s = '<option value="<?=$bum->id?>"><?=$bum->fnama." - ".$bum->email?></option>';
-
-if(s) $("#ib_user_id_owner").html(s);
