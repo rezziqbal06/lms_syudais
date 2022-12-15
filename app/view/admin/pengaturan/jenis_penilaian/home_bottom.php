@@ -1,5 +1,14 @@
 var drTable = {};
 var ieid = '';
+var nIndikator;
+
+function addIndikator(type='tambah'){
+	nIndikator = $("#panel_indikator_"+type).children().length;
+	var row = $("#row_indikator_"+type+"_0").get(0).outerHTML;
+	row = row.replaceAll('0', `${nIndikator}`);
+	row = row.replaceAll('none', '');
+	$("#panel_indikator_"+type).append(row);
+}
 
 App.datatables();
 
@@ -35,10 +44,25 @@ if(jQuery('#drTable').length>0){
 							if(dt.data){
 								$.each(dt.data, function(k,v){
 									$("#ie"+k).val(v);
-									if(k == "nama"){
-										console.log(k);
-										$("#tvruangan").html(v);
-									}
+								})
+							}
+							if(dt.data.indikator){
+								$(".row-indikator-edit[data-id!='0']").remove();
+								$.each(dt.data.indikator, function(k,v){
+									$.each(v, function(kitem, vitem){
+										if(kitem == "id"){
+											addIndikator('edit')
+										}
+										if(kitem == 'nama') kitem = kitem + '_indikator';
+										$("#ie"+kitem+'_'+(nIndikator-1)).val(vitem);
+										if(kitem == 'a_ruangan_ids'){
+											var ids = JSON.parse(vitem);
+											$.each(ids, function(kid, vid){
+												$("#ie"+kitem+'_'+(nIndikator-1)+" option[value='"+vid+"']").prop('selected', true)
+											})
+										}
+									})
+									
 								})
 							}
 						})
@@ -238,3 +262,15 @@ $("#aedit").on("click",function(e){
 	$("#modal_option").modal("hide");
 	$("#modal_edit").modal("show");
 });
+
+$(document).off('click', '.btn-tambah-indikator')
+$(document).on('click', '.btn-tambah-indikator', function(e){
+	e.preventDefault();
+	var type = $(this).attr('data-type');
+	addIndikator(type)
+})
+$(document).off('click', '.btn-remove-row')
+$(document).on('click', '.btn-remove-row', function(e){
+	e.preventDefault();
+	$(this).closest('tr').remove();
+})

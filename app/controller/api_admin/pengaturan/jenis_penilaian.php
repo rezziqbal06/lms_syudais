@@ -29,7 +29,7 @@ class Jenis_Penilaian extends JI_Controller
 		$this->message = API_ADMIN_ERROR_CODES[$this->status];
 
 
-		$is_active = $this->input->request('is_active', '');
+		$is_active = $this->input->request('is_active', 1);
 		if (strlen($is_active)) {
 			$is_active = intval($is_active);
 		}
@@ -86,6 +86,7 @@ class Jenis_Penilaian extends JI_Controller
 			$this->__json_out($data);
 			die();
 		}
+		$this->ajm->columns['cdate']->value = 'NOW()';
 
 
 		$res = $this->ajm->save();
@@ -94,14 +95,17 @@ class Jenis_Penilaian extends JI_Controller
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			$nama_indikator = $this->input->request('nama_indikator') ?? null;
 			if (isset($nama_indikator) && is_array($nama_indikator) && count($nama_indikator)) {
-				$data = [];
+				$dai = [];
 				foreach ($nama_indikator as $k => $v) {
-					$data[$k]['nama'] = $v;
-					$data[$k]['kategori'] = $_POST['kategori'][$k] ?? '';
-					$data[$k]['type'] = $_POST['type'][$k] ?? '';
-					$data[$k]['a_jpenilaian_id'] = $res;
+					$dai[$k]['nama'] = $v;
+					$dai[$k]['a_ruangan_ids'] = json_encode($_POST['a_ruangan_ids_' . $k]) ?? '';
+					$dai[$k]['kategori'] = $_POST['kategori'][$k] ?? '';
+					$dai[$k]['subkategori'] = $_POST['subkategori'][$k] ?? '';
+					$dai[$k]['type'] = $_POST['type'][$k] ?? '';
+					$dai[$k]['a_jpenilaian_id'] = $res;
+					$dai[$k]['cdate'] = 'NOW()';
 				}
-				$res = $this->aim->setMass($data);
+				$res = $this->aim->setMass($dai);
 				if ($res) {
 					$this->status = 200;
 					$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -148,6 +152,8 @@ class Jenis_Penilaian extends JI_Controller
 			$this->__json_out($data);
 			die();
 		}
+
+		$data->indikator = $this->aim->getByPenilaianId($id);
 		$this->__json_out($data);
 	}
 
@@ -170,7 +176,9 @@ class Jenis_Penilaian extends JI_Controller
 
 		$id = (int)$id;
 		$id = isset($du['id']) ? $du['id'] : 0;
-
+		$du = [];
+		$du['nama'] = $_POST['nama'];
+		$du['deskripsi'] = $_POST['deskripsi'];
 
 		if (!$this->admin_login) {
 			$this->status = 400;
@@ -210,6 +218,35 @@ class Jenis_Penilaian extends JI_Controller
 			unset($du['id']);
 			$res = $this->ajm->update($id, $du);
 			if ($res) {
+				$nama_indikator = $this->input->request('nama_indikator') ?? null;
+				if (isset($nama_indikator) && is_array($nama_indikator) && count($nama_indikator)) {
+					$resDelete = $this->aim->deleteByPenilaianId($id);
+					if (!$resDelete) {
+						$this->status = 200;
+						$this->message = API_ADMIN_ERROR_CODES[$this->status];
+						$this->__json_out($data);
+						die();
+					}
+
+					$dai = [];
+					foreach ($nama_indikator as $k => $v) {
+						$dai[$k]['nama'] = $v;
+						$dai[$k]['a_ruangan_ids'] = json_encode($_POST['a_ruangan_ids_' . $k]) ?? '';
+						$dai[$k]['kategori'] = $_POST['kategori'][$k] ?? '';
+						$dai[$k]['subkategori'] = $_POST['subkategori'][$k] ?? '';
+						$dai[$k]['type'] = $_POST['type'][$k] ?? '';
+						$dai[$k]['a_jpenilaian_id'] = $id;
+						$dai[$k]['cdate'] = 'NOW()';
+					}
+					$res = $this->aim->setMass($dai);
+					if ($res) {
+						$this->status = 200;
+						$this->message = API_ADMIN_ERROR_CODES[$this->status];
+					} else {
+						$this->status = 110;
+						$this->message = API_ADMIN_ERROR_CODES[$this->status];
+					}
+				}
 				$this->status = 200;
 				$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			} else {

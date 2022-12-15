@@ -23,13 +23,19 @@ class A_Indikator_Concern extends \JI_Model
 
     const COLUMNS = [
         'a_jpenilaian_id',
+        'a_ruangan_ids',
         'nama',
         'kategori',
+        'subkategori',
         'type',
+        'cdate',
         'is_active',
         'is_deleted'
     ];
     const DEFAULTS = [
+        null,
+        null,
+        null,
         null,
         null,
         '',

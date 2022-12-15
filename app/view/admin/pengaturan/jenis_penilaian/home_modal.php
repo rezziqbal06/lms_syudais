@@ -33,12 +33,13 @@
 
 <!-- modal tambah -->
 <div id="modal_tambah" class="modal fade " tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-fullscreen">
 		<div class="modal-content">
 
 			<!-- Modal Header -->
 			<div class="modal-header text-center">
 				<h2 class="modal-title">Tambah</h2>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<!-- END Modal Header -->
 
@@ -59,34 +60,67 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="row float-end">
-								<div class="col-md-2">
-									<button id="btn_tambah_indikator" class="btn btn-info"><i class="fa fa-plus"></i></button>
+							<div class="row mb-1">
+								<div class="col-10"></div>
+								<div class="col-2">
+									<button class="btn btn-info float-end btn-tambah-indikator" data-type="tambah"><i class="fa fa-plus"></i></button>
 								</div>
 							</div>
-							<div id="panel_indikator">
-								<div id="row_indikator_0" class="row">
-									<div class="col-md-4">
-										<label for="ikategori_0" class="control-label">Kategori</label>
-										<input id="ikategori_0" type="text" name="kategori[]" class="form-control">
-									</div>
-									<div class="col-md-8">
-										<label for="inama_indikator_0" class="control-label">Nama</label>
-										<input id="inama_indikator_0" type="text" name="nama_indikator[]" class="form-control">
-									</div>
-									<div class="col-md-9">
-										<label for="itype_0" class="control-label">Tipe</label>
-										<select id="itype_0" type="text" name="type[]" class="form-control">
-											<option value="indikator">indikator</option>
-											<option value="aksi">aksi</option>
-										</select>
-									</div>
-									<div class="col-md-3">
-										<label for="" class="control-label">Aksi</label>
-										<input type="button" class="btn btn-danger btn-remove-row" value="-" data-id="0">
-									</div>
-								</div>
+							<div class="row">
+								<table class="my_table mt-3">
+									<thead>
+										<tr>
+											<th rowspan="2">Aksi</th>
+											<th rowspan="2" class="">Kategori</th>
+											<th rowspan="2" class="">Sub Kategori</th>
+											<th rowspan="2" class="">Nama</th>
+											<th rowspan="2" class="">Tipe</th>
+											<th rowspan="2" class="">Ruangan</th>
+										</tr>
+									</thead>
+									<tbody id="panel_indikator_tambah">
+										<tr id="row_indikator_tambah_0" class="row-indikator-tambah" data-id="0">
+											<td>
+												<button style="display: none;" type="button" class="btn btn-xs btn-danger btn-remove-row"><i class="fa fa-close"></i></button>
+											</td>
+											<td>
+												<div class="form-group">
+													<input id="ikategori_0" type="text" name="kategori[]" class="form-control">
+												</div>
+											</td>
+											<td>
+												<div class="form-group">
+													<input id="isubkategori_0" type="text" name="subkategori[]" class="form-control">
+												</div>
+											</td>
+											<td>
+												<div class="form-group">
+													<input id="inama_indikator_0" type="text" name="nama_indikator[]" class="form-control">
+												</div>
+											</td>
+											<td>
+												<div class="form-group">
+													<select id="itype_0" type="text" name="type[]" class="form-control">
+														<option value="indikator">indikator</option>
+														<option value="aksi">aksi</option>
+													</select>
+												</div>
+											</td>
+											<td>
+												<div class="form-group">
+													<select id="ia_ruangan_ids_0" type="text" name="a_ruangan_ids_0[]" multiple class="form-select">
+														<option value="">-- Tidak ada --</option>
+														<?php foreach ($ruangans as $r) { ?>
+															<option value="<?= $r->id ?>"><?= $r->nama ?></option>
+														<?php } ?>
+													</select>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
+
 						</div>
 					</div>
 					<div class="row" style="margin-top: 1em; ">
@@ -104,12 +138,13 @@
 
 <!-- modal edit -->
 <div id="modal_edit" class="modal fade " tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-fullscreen">
 		<div class="modal-content">
 
 			<!-- Modal Header -->
 			<div class="modal-header text-center">
 				<h2 class="modal-title">Edit</h2>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<!-- END Modal Header -->
 
@@ -120,19 +155,74 @@
 						<div class="form-group">
 							<input type="hidden" name="id" id="ieid">
 							<div class="row">
-								<div class="col-md-6">
+								<div class="col-md-12">
 									<label for="ienama" class="control-label">Nama</label>
 									<input id="ienama" type="text" name="nama" class="form-control" required>
 								</div>
-								<div class="col-md-6">
-									<label for="ie_kd" class="control-label">Kode</label>
-									<input id="iekd" type="text" name="kd" class="form-control" required>
+								<div class="col-md-12">
+									<label for="iedeskripsi" class="control-label">Deskripsi</label>
+									<textarea name="deskripsi" id="iedeskripsi" class="form-control" cols="30" rows="10"></textarea>
 								</div>
-
 							</div>
-							<div class="col-md-12">
-								<label for="iedeskripsi" class="control-label">Deskripsi</label>
-								<textarea name="deskripsi" id="iedeskripsi" class="form-control" cols="30" rows="10"></textarea>
+							<div class="row mb-1 mt-1">
+								<div class="col-10"></div>
+								<div class="col-2">
+									<button class="btn btn-info float-end btn-tambah-indikator" data-type="edit"><i class="fa fa-plus"></i></button>
+								</div>
+							</div>
+							<div class="row">
+								<table class="my_table mt-3">
+									<thead>
+										<tr>
+											<th rowspan="2">Aksi</th>
+											<th rowspan="2" class="">Kategori</th>
+											<th rowspan="2" class="">Sub Kategori</th>
+											<th rowspan="2" class="">Nama</th>
+											<th rowspan="2" class="">Tipe</th>
+											<th rowspan="2" class="">Ruangan</th>
+										</tr>
+									</thead>
+									<tbody id="panel_indikator_edit">
+										<tr id="row_indikator_edit_0" class="row-indikator-edit" data-id="0">
+											<td>
+												<button style="display: none;" type="button" class="btn btn-xs btn-danger btn-remove-row"><i class="fa fa-close"></i></button>
+											</td>
+											<td>
+												<div class="form-group">
+													<input id="iekategori_0" type="text" name="kategori[]" class="form-control">
+												</div>
+											</td>
+											<td>
+												<div class="form-group">
+													<input id="iesubkategori_0" type="text" name="subkategori[]" class="form-control">
+												</div>
+											</td>
+											<td>
+												<div class="form-group">
+													<input id="ienama_indikator_0" type="text" name="nama_indikator[]" class="form-control">
+												</div>
+											</td>
+											<td>
+												<div class="form-group">
+													<select id="ietype_0" type="text" name="type[]" class="form-control">
+														<option value="indikator">indikator</option>
+														<option value="aksi">aksi</option>
+													</select>
+												</div>
+											</td>
+											<td>
+												<div class="form-group">
+													<select id="iea_ruangan_ids_0" type="text" name="a_ruangan_ids_0[]" multiple class="form-select">
+														<option value="">-- Tidak ada --</option>
+														<?php foreach ($ruangans as $r) { ?>
+															<option value="<?= $r->id ?>"><?= $r->nama ?></option>
+														<?php } ?>
+													</select>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>

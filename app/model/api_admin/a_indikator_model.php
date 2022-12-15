@@ -48,6 +48,18 @@ class A_Indikator_Model extends \Model\A_Indikator_Concern
     return $this;
   }
 
+  public function getByPenilaianId($id)
+  {
+    $this->db->where('a_jpenilaian_id', $id);
+    return $this->db->get('', 0);
+  }
+
+  public function deleteByPenilaianId($id)
+  {
+    $this->db->where("a_jpenilaian_id", $id);
+    return $this->db->delete($this->tbl);
+  }
+
   private function joins()
   {
     $this->db->from($this->tbl, $this->tbl_as);
@@ -75,5 +87,10 @@ class A_Indikator_Model extends \Model\A_Indikator_Concern
       return $d->jumlah;
     }
     return 0;
+  }
+
+  public function setMass($dis)
+  {
+    return $this->db->insert_multi($this->tbl, $dis);
   }
 }

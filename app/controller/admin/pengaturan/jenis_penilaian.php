@@ -22,7 +22,9 @@ class Jenis_Penilaian extends \JI_Controller
 		$this->setTheme('admin');
 		$this->lib("seme_purifier");
 		$this->load("a_jpenilaian_concern");
+		$this->load("a_ruangan_concern");
 		$this->load("admin/a_jpenilaian_model", "ajm");
+		$this->load("admin/a_ruangan_model", "arm");
 		$this->current_parent = 'pengaturan';
 		$this->current_page = 'jenis_penilaian';
 	}
@@ -35,6 +37,7 @@ class Jenis_Penilaian extends \JI_Controller
 		}
 
 
+		$data['ruangans'] = $this->arm->getAll();
 		$this->setTitle('Jenis Penilaian ' . $this->config_semevar('site_suffix_admin', ''));
 
 		$this->putThemeContent("pengaturan/jenis_penilaian/home_modal", $data);

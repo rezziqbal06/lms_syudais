@@ -39,3 +39,31 @@
 .text-background{
     color: var(--background) !important;
 }
+
+.my_table {
+    margin-bottom: 0.5rem;
+}
+
+.my_table td {
+    border: 1px solid #ced4da;
+    padding: 0.5rem;
+}
+
+.my_table th {
+    border: 1px solid #ced4da;
+    padding: 0.5rem;
+}
+
+.my_table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.my_table input {
+    border: none;
+    background: transparent;
+    outline: none;
+}
+
+.modal{
+    z-index:9999 !important;
+}

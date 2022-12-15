@@ -21,5 +21,10 @@ class A_Ruangan_Model extends \Model\A_Ruangan_Concern
 		$this->db->from($this->tbl, $this->tbl_as);
 		$this->point_of_view = 'admin';
 	}
-	
+
+	public function getAll()
+	{
+		$this->db->where('is_active', 1);
+		return $this->db->get('', 0);
+	}
 }

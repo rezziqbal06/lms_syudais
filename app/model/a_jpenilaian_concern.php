@@ -25,13 +25,15 @@ class A_JPenilaian_Concern extends \JI_Model
         'nama',
         'deskripsi',
         'is_active',
-        'is_deleted'
+        'is_deleted',
+        'cdate',
     ];
     const DEFAULTS = [
-        null,
+        '',
         '',
         1,
-        0
+        0,
+        'NOW()'
     ];
     const REQUIREDS = [
         'nama'
