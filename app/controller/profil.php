@@ -114,7 +114,7 @@ class Profil extends JI_Controller
 		$this->putThemeContent("profil/home", $data);
 
 		$this->putJsReady("profil/home_bottom", $data);
-		$this->loadLayout('col-1-top', $data);
+		$this->loadLayout('col-1', $data);
 		$this->render();
 	}
 	public function edit_foto()
@@ -161,8 +161,8 @@ class Profil extends JI_Controller
 		$this->putThemeContent("profil/home_modal", $data);
 		$this->putThemeContent("profil/home", $data);
 
-		$this->putJsReady("profil/home_bottom",$data);
-		$this->loadLayout('col-1-top',$data);
+		$this->putJsReady("profil/home_bottom", $data);
+		$this->loadLayout('col-1', $data);
 		$this->render();
 	}
 }
