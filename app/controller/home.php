@@ -13,10 +13,10 @@ class Home extends JI_Controller
 	public function index()
 	{
 		$data = $this->__init();
-		if (!$this->user_login) {
-			redir(base_url('login'), 0);
-			die();
-		}
+		// if (!$this->user_login) {
+		// 	redir(base_url('login'), 0);
+		// 	die();
+		// }
 		$this->setTitle('Dashboard ' . $this->config->semevar->site_suffix);
 
 		//$this->putJsFooter($this->cdn_url('skin/admin/').'js/helpers/gmaps.min',0);
