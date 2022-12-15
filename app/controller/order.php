@@ -41,7 +41,7 @@ class Order extends \JI_Controller
 		$this->putThemeContent("order/home", $data);
 		$this->putThemeContent("order/home_modal", $data);
 		$this->putJsContent("order/home_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 
@@ -66,7 +66,7 @@ class Order extends \JI_Controller
 		$this->putThemeContent("order/tambah", $data);
 		$this->putThemeContent("order/tambah_modal", $data);
 		$this->putJsContent("order/tambah_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 
@@ -91,7 +91,7 @@ class Order extends \JI_Controller
 		$this->putThemeContent("order/booking", $data);
 		$this->putThemeContent("order/booking_modal", $data);
 		$this->putJsContent("order/booking_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 
@@ -116,7 +116,7 @@ class Order extends \JI_Controller
 		$this->putThemeContent("order/edit_booking", $data);
 		$this->putThemeContent("order/edit_booking_modal", $data);
 		$this->putJsContent("order/edit_booking_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 

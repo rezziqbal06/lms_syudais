@@ -24,7 +24,7 @@ class Home extends JI_Controller
 
 		$this->putThemeContent("home/home", $data);
 		$this->putJsContent("home/home_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 }

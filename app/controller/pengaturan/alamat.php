@@ -23,7 +23,7 @@ class Alamat extends JI_Controller
 		$this->putThemeContent("pengaturan/alamat/home_modal", $data);
 		$this->putThemeContent("pengaturan/alamat/home", $data);
 		$this->putJsContent("pengaturan/alamat/home_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 	public function baru()
@@ -38,7 +38,7 @@ class Alamat extends JI_Controller
 		$this->putThemeContent("pengaturan/alamat/baru_modal", $data);
 		$this->putThemeContent("pengaturan/alamat/baru", $data);
 		$this->putJsContent("pengaturan/alamat/baru_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 	public function edit($id)
@@ -71,7 +71,7 @@ class Alamat extends JI_Controller
 		$this->putThemeContent("pengaturan/alamat/edit_modal", $data);
 		$this->putThemeContent("pengaturan/alamat/edit", $data);
 		$this->putJsContent("pengaturan/alamat/edit_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 
@@ -103,7 +103,7 @@ class Alamat extends JI_Controller
 		$this->putThemeContent("pengaturan/alamat/detail_modal", $data);
 		$this->putThemeContent("pengaturan/alamat/detail", $data);
 		$this->putJsContent("pengaturan/alamat/detail_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 }

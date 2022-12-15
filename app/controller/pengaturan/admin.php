@@ -61,7 +61,7 @@ class Admin extends JI_Controller
 		$this->putThemeContent("pengaturan/admin/home_modal", $data);
 		$this->putThemeContent("pengaturan/admin/home", $data);
 		$this->putJsContent("pengaturan/admin/home_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 
@@ -77,7 +77,7 @@ class Admin extends JI_Controller
 		$this->putThemeContent("pengaturan/admin/baru_modal", $data);
 		$this->putThemeContent("pengaturan/admin/baru", $data);
 		$this->putJsContent("pengaturan/admin/baru_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 	public function edit($id)
@@ -110,7 +110,7 @@ class Admin extends JI_Controller
 		$this->putThemeContent("pengaturan/admin/edit_modal", $data);
 		$this->putThemeContent("pengaturan/admin/edit", $data);
 		$this->putJsContent("pengaturan/admin/edit_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 
@@ -142,7 +142,7 @@ class Admin extends JI_Controller
 		$this->putThemeContent("pengaturan/admin/detail_modal", $data);
 		$this->putThemeContent("pengaturan/admin/detail", $data);
 		$this->putJsContent("pengaturan/admin/detail_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 }

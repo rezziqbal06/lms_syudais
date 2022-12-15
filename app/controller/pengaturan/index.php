@@ -41,7 +41,7 @@ class Pengaturan extends JI_Controller
 		$this->putThemeContent("pengaturan/user/home", $data);
 		$this->putThemeContent("pengaturan/user/home_modal", $data);
 		$this->putJsContent("pengaturan/user/home_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 
@@ -62,7 +62,7 @@ class Pengaturan extends JI_Controller
 
 		$this->putThemeContent("pengaturan/perusahaan/home", $data);
 		$this->putJsContent("pengaturan/perusahaan/home_bottom", $data);
-		$this->loadLayout('col-1', $data);
+		$this->loadLayout('col-1-bar', $data);
 		$this->render();
 	}
 }
