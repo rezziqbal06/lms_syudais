@@ -14,6 +14,18 @@ $("#editprofil").on("click",function(e){
 		$("#modal_edit_profil").modal("show");
 });
 
+if (window.matchMedia('(max-width:600px)').matches) {
+        $("#edit-button").removeClass("col-md-6");
+        $("#edit-button").addClass("col-md-12");
+        $("#edit-button").addClass("flex-fill");
+        $(".info-asesmen").addClass("m-2")
+      }else{
+        $("#edit-button").addClass("col-md-6");
+        $("#edit-button").removeClass("col-md-12");
+        $("#edit-button").removeClass("flex-fill");
+        $(".info-asesmen").removeClass("m-2")
+    }
+
 $("#changepass").on("click",function(e){
 		e.preventDefault();
 		$("#modal_option").modal("hide");

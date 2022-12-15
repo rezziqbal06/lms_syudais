@@ -39,7 +39,7 @@
 
 			<!-- Modal Header -->
 			<div class="modal-header text-center">
-				<h2 class="modal-title">Edit Ruangan</h2>
+				<h2 class="modal-title">Ubah Password</h2>
 			</div>
 			<!-- END Modal Header -->
 
@@ -49,20 +49,19 @@
 					<div class="row">
 						<div class="form-group">
 							<input type="hidden" name="id" id="ieid">
+							<div class="col-md-12">
+								<label for="old-pass">Password Lama</label>
+								<input type="password" name="old_pass" class="form-control" id="old-pass">
+							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<label for="ienama" class="control-label">Nama Ruangan</label>
-									<input id="ienama" type="text" name="nama" class="form-control" required>
+									<label for="ienama" class="control-label">Password Baru</label>
+									<input id="ienama" type="password" name="nama" class="form-control" required>
 								</div>
 								<div class="col-md-6">
-									<label for="ie_kd_ruangan" class="control-label">Kode Ruangan</label>
-									<input id="iekd_ruangan" type="text" name="kd_ruangan" class="form-control" required>
+									<label for="ie_kd_ruangan" class="control-label">Confirm Password Baru</label>
+									<input id="iekd_ruangan" type="password" name="kd_ruangan" class="form-control" required>
 								</div>
-								
-							</div>
-							<div class="col-md-12">
-								<label for="iedeskripsi" class="control-label">Deskripsi</label>
-								<textarea name="deskripsi" id="iedeskripsi" class="form-control" cols="30" rows="10"></textarea>
 							</div>
 						</div>
 					</div>
@@ -98,11 +97,11 @@
 							<input type="hidden" name="id" id="ieid">
 							<div class="row">
 								<div class="col-md-6">
-									<label for="ienama" class="control-label">Nama Ruangan</label>
+									<label for="ienama" class="control-label">Nama Depan</label>
 									<input id="ienama" type="text" name="nama" class="form-control" required>
 								</div>
 								<div class="col-md-6">
-									<label for="ie_kd_ruangan" class="control-label">Kode Ruangan</label>
+									<label for="ie_kd_ruangan" class="control-label">Nama Belakang</label>
 									<input id="iekd_ruangan" type="text" name="kd_ruangan" class="form-control" required>
 								</div>
 								
