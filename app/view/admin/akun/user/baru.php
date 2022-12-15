@@ -35,8 +35,28 @@
 
                 <div class="form-group row">
                     <div class="col-md-12">
-                        <label for="ifnama" class="control-label">Nama Lengkap Kustomer</label>
-                        <input type="text" name="fnama" id="ifnama" class="form-control" placeholder="Nama Kustomer">
+                        <label for="ifnama" class="control-label">Nama Lengkap*</label>
+                        <input type="text" name="fnama" id="ifnama" class="form-control" placeholder="Nama" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="ia_jabatan_id" class="control-label">Profesi</label>
+                        <select name="a_jabatan_id" id="ia_jabatan_id" class="form-control select2" required>
+                            <?php if (isset($jabatans) && count($jabatans)) { ?>
+                                <?php foreach ($jabatans as $jb) { ?>
+                                    <option value="<?= $jb->id ?>"><?= $jb->nama ?></option>
+                                <?php } ?>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="ia_unit_id" class="control-label">Unit</label>
+                        <select name="a_unit_id" id="ia_unit_id" class="form-control select2" required>
+                            <?php if (isset($units) && count($units)) { ?>
+                                <?php foreach ($units as $un) { ?>
+                                    <option value="<?= $un->id ?>"><?= $un->nama ?></option>
+                                <?php } ?>
+                            <?php } ?>
+                        </select>
                     </div>
                 </div>
 
@@ -48,51 +68,52 @@
                 </div> -->
                 <div class="form-group row">
                     <div class="col-md-4">
-                        <label for="inegara">Negara *</label>
-                        <input id="inegara" class="form-control" name="negara" value="INDONESIA" required>
+                        <label for="iprovinsi">Provinsi</label>
+                        <select id="iprovinsi" class="form-control" name="provinsi"></select>
                     </div>
                     <div class="col-md-4">
-                        <label for="iprovinsi">Provinsi *</label>
-                        <input id="iprovinsi" class="form-control" name="provinsi" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="ikabkota">Kabupaten / Kota *</label>
-                        <input id="ikabkota" class="form-control" name="kabkota" required>
+                        <label for="ikabkota">Kabupaten / Kota</label>
+                        <select id="ikabkota" class="form-control" name="kabkota"></select>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-md-4">
-                        <label for="ikecamatan">Kecamatan *</label>
-                        <input id="ikecamatan" class="form-control" name="kecamatan" required>
+                        <label for="ikecamatan">Kecamatan</label>
+                        <select id="ikecamatan" class="form-control" name="kecamatan"></select>
                     </div>
                     <div class="col-md-4">
-                        <label for="ikelurahan">Desa / Kelurahan *</label>
-                        <input id="ikelurahan" class="form-control" name="kelurahan" required>
+                        <label for="ikelurahan">Desa / Kelurahan</label>
+                        <select id="ikelurahan" class="form-control" name="kelurahan"></select>
                     </div>
                     <div class="col-md-4">
-                        <label for="ialamat">Alamat *</label>
-                        <textarea id="ialamat" class="form-control" name="alamat" maxlength="30" required></textarea>
+                        <label for="ikodepos" class="control-label">Kodepos</label>
+                        <input id="ikodepos" class="form-control " name="kodepos" placeholder="Kodepos">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
+                        <label for="ialamat">Alamat</label>
+                        <textarea id="ialamat" class="form-control" name="alamat" maxlength="30"></textarea>
+                    </div>
+                    <div class="col-md-6">
                         <label for="ialamat2">Alamat2</label>
                         <textarea id="ialamat2" class="form-control" name="alamat2" maxlength="30"></textarea>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-md-4">
-                        <label for="ikodepos" class="control-label">Kodepos *</label>
-                        <input id="ikodepos" class="form-control " name="kodepos" placeholder="Kodepos" required>
-                    </div>
+
                 </div>
                 <div class="form-group row">
                     <div class="col-md-4">
                         <label for="iitelp" class="control-label">Telepon</label>
-                        <input id="iitelp" type="number" class="form-control" name="telp" placeholder="Telepon Perusahaan" />
+                        <input id="iitelp" type="number" class="form-control" name="telp" placeholder="Telepon" />
                     </div>
                     <div class="col-md-4">
                         <label for="iemail" class="control-label">Email</label>
-                        <input id="iemail" type="email" class="form-control" name="email" placeholder="Email Perusahaan" />
+                        <input id="iemail" type="email" class="form-control" name="email" placeholder="Email" />
                     </div>
+                    <!-- <div class="col-md-4">
+                        <label for="ipassword" class="control-label">Password</label>
+                        <input id="ipassword" type="password" class="form-control" name="password" value="123456" placeholder="password" />
+                    </div> -->
                 </div>
                 <div class="form-group form-actions">
                     <div class="col-xs-12 text-right">

@@ -11,7 +11,7 @@ register_namespace(__NAMESPACE__);
  * @package Model\Front
  * @since 1.0.0
  */
-class A_Ruangan_Model extends \Model\A_Ruangan_Concern
+class A_JPenilaian_Model extends \Model\A_JPenilaian_Concern
 {
 
 
@@ -20,11 +20,5 @@ class A_Ruangan_Model extends \Model\A_Ruangan_Concern
 		parent::__construct();
 		$this->db->from($this->tbl, $this->tbl_as);
 		$this->point_of_view = 'admin';
-	}
-
-	public function getAll()
-	{
-		$this->db->where('is_active', 1);
-		return $this->db->get('', 0);
 	}
 }

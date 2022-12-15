@@ -56,28 +56,25 @@ $("#inegara").on("change",function(e){
 	$("#iprovinsi").trigger("change");
 });
 
-$("#iutype").on("change",function(e){
-	e.preventDefault();
-	$("#ia_company_id").val("NULL").trigger('change');
-})
-$("#ia_company_idx").select2({
+$("#iprovinsi").select2({
 	ajax: {
 		method: 'post',
-		url: '<?=base_url("api_admin/akun/user/get/")?>',
+		url: '<?=$this->config->semevar->api_address."/provinsi/get/"?>',
 		dataType: 'json',
     delay: 250,
 		data: function (params) {
       var query = {
         keyword: params.term,
+        negara: $("#inegara").val()
       }
       return query;
     },
     processResults: function (dt) {
       return {
-        results:  $.map(dt, function (itm) {
+        results:  $.map(dt.result, function (itm) {
           return {
             text: itm.text,
-            id: itm.id
+            id: itm.text
           }
         })
       };
@@ -86,113 +83,84 @@ $("#ia_company_idx").select2({
 	}
 });
 
-$("#ikode_origin_select").select2({
+$("#ikabkota").select2({
 	ajax: {
 		method: 'post',
-		url: '<?=base_url("api_admin/pengaturan/destination/cari/?type=kota")?>',
+		url: '<?=$this->config->semevar->api_address."/kabkota/get/"?>',
 		dataType: 'json',
-	delay: 250,
+    delay: 250,
 		data: function (params) {
-	var query = {
-		keyword: params.term,
-	}
-	return query;
-	},
-	processResults: function (dt) {
-	return {
-		results:  $.map(dt, function (itm) {
-		return {
-			text: itm.text,
-			id: itm.id
-		}
-		})
-	};
-	},
-	cache: true
-	}
-});
-
-$("#ikode_origin_select").on('change', function(e){
-	var value = $(this).find('option:selected').val();
-	$("[name='kode_origin']").val(value);
-})
-
-$("#ialamat_select").select2({
-	ajax: {
-		method: 'post',
-		url: '<?=base_url("api_admin/pengaturan/destination/cari")?>',
-		dataType: 'json',
-	delay: 250,
-		data: function (params) {
-	var query = {
-		keyword: params.term,
-	}
-	return query;
-	},
-	processResults: function (dt) {
-	return {
-		results:  $.map(dt, function (itm) {
-		return {
-			text: itm.text,
-			id: itm.id
-		}
-		})
-	};
-	},
-	cache: true
-	}
-});
-
-
-$("#ialamat_select").on('change', function(e){
-	var value = $(this).find('option:selected').val();
-	var text = $(this).find('option:selected').text();
-	var alamat = text.split(' - ');
-	$("[name='kode_destination']").val(value);
-	$("[name='provinsi']").val(alamat[0]);
-	$("[name='kabkota']").val(alamat[1]);
-	$("[name='kecamatan']").val(alamat[2]);
-	$("[name='kelurahan']").val(alamat[3]);
-	$("[name='kodepos']").val(alamat[4]);
-  var kabkota = alamat[1];
-  $.get('<?=base_url("api_admin/pengaturan/origin/get_by_kota/")?>'+kabkota).done(function(dt){
-    if(dt.status == 200){
-      if(dt.data){
-        $("[name='kode_origin']").val(dt.data.code);
+      var query = {
+        keyword: params.term,
+        provinsi: $("#iprovinsi").val()
       }
-    }
-  })
-})
+      return query;
+    },
+    processResults: function (dt) {
+      return {
+        results:  $.map(dt.result, function (itm) {
+          return {
+            text: itm.text,
+            id: itm.text
+          }
+        })
+      };
+    },
+    cache: true
+	}
+});
 
-$("#ib_user_id_owner").select2({
+$("#ikecamatan").select2({
 	ajax: {
 		method: 'post',
-		url: '<?=base_url("api_admin/akun/user/cari")?>',
+		url: '<?=$this->config->semevar->api_address."/kecamatan/get/"?>',
 		dataType: 'json',
-	delay: 250,
+    delay: 250,
 		data: function (params) {
-	var query = {
-		keyword: params.term,
-	}
-	return query;
-	},
-	processResults: function (dt) {
-	return {
-		results:  $.map(dt, function (itm) {
-		return {
-			text: itm.text,
-			id: itm.id
-		}
-		})
-	};
-	},
-	cache: true
+      var query = {
+        keyword: params.term,
+        kabkota: $("#ikabkota").val()
+      }
+      return query;
+    },
+    processResults: function (dt) {
+      return {
+        results:  $.map(dt.result, function (itm) {
+          return {
+            text: itm.text,
+            id: itm.text
+          }
+        })
+      };
+    },
+    cache: true
 	}
 });
 
 
-$("#ib_user_id_owner").on('change', function(e){
-	var value = $(this).find('option:selected').val();
-	$("[name='b_user_id']").val(value);
-})
-
+$("#ikelurahan").select2({
+	ajax: {
+		method: 'post',
+		url: '<?=$this->config->semevar->api_address."/kelurahan/get/"?>',
+		dataType: 'json',
+    delay: 250,
+		data: function (params) {
+      var query = {
+        keyword: params.term,
+        kecamatan: $("#ikecamatan").val()
+      }
+      return query;
+    },
+    processResults: function (dt) {
+      return {
+        results:  $.map(dt.result, function (itm) {
+          return {
+            text: itm.text,
+            id: itm.text
+          }
+        })
+      };
+    },
+    cache: true
+	}
+});
