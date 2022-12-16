@@ -10,14 +10,16 @@ class Profil extends JI_Controller
 		$this->current_parent = 'dashboard';
 		$this->current_page = 'dashboard';
 		$this->load('a_jabatan_concern');
-		$this->load('a_unit_concern');
+		$this->load('a_ruangan_concern');
 		$this->load('b_user_alamat_concern');
+		$this->load('b_user_concern');
 
 		// $this->load('front/a_pengguna_model', 'apm');
 		// $this->load('front/a_company_model', 'acm');
 		$this->load('front/a_jabatan_model', 'ajm');
-		$this->load('front/a_unit_model', 'aum');
+		$this->load('front/a_ruangan_model', 'arm');
 		$this->load('front/b_user_alamat_model', 'buam');
+		$this->load('front/b_user_model', 'bum');
 	}
 
 	public function index()
@@ -41,9 +43,13 @@ class Profil extends JI_Controller
 		if(isset($ajm)) $data['ajm'] = $ajm;
 		unset($ajm);
 
-		$aum = $this->aum->get();
-		if(isset($aum)) $data['aum'] = $aum;
-		unset($aum);
+		$arm = $this->arm->getAll();
+		if(isset($arm)) $data['arm'] = $arm;
+		unset($arm);
+
+		$user_exist = $this->bum->getUserById(32);
+		if(isset($user_exist)) $data['ue'] = $user_exist;
+		unset($user_exist);
 
 		
 

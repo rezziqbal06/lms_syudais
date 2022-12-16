@@ -16,7 +16,12 @@ use Model;
  */
 class B_User_Model extends \Model\B_User_Concern
 {
-
+	public $tbl = 'b_user';
+	public $tbl_as = 'bu';
+	public $tbl2 = 'a_ruangan';
+	public $tbl2_as = 'ar';
+	public $tbl3 = 'a_jabatan';
+	public $tbl3_as = 'aj';
 
 	public function __construct()
 	{
@@ -31,6 +36,18 @@ class B_User_Model extends \Model\B_User_Concern
 			->where_as("email", $this->db->esc($username), "OR")
 			->where_as("username", $this->db->esc($username), "OR");
 		return $this->db->get_first('object', 0); //
+	}
+
+	public function getUserById($id)
+	{
+		$this->db->select_as("$this->tbl_as.*, $this->tbl_as.id", 'id', 0);
+		$this->db->select_as("COALESCE($this->tbl2_as.nama, '')", 'ruangan', 0);
+		$this->db->select_as("COALESCE($this->tbl3_as.nama, '')", 'profesi', 0);
+		$this->db->join($this->tbl2,$this->tbl2_as,"id",$this->tbl_as,"a_unit_id","left");
+		$this->db->join($this->tbl3,$this->tbl3_as,"id",$this->tbl_as,"a_jabatan_id","left");
+		$this->db->from($this->tbl, $this->tbl_as);
+		$this->db->where("bu.id", $id);
+		return $this->db->get_first('object', 0);
 	}
 
 	public function getByCompanyId($company_id, $mindate, $maxdate)

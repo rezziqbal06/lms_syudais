@@ -3,6 +3,9 @@
 		width: 200px;
 		height: 200px;
 	}
+	.select2-container{
+		z-index:100000;
+	}
 	@media only screen and (max-width:600px) {
 		.size-profile{
 			width: 100px;
@@ -18,6 +21,7 @@
 		<img src="<?= base_url()."/media/background-profile.jpg" ?>" class="rounded img-fluid" width="100%" alt="...">
 		
 	</div>
+	<?php //dd($ue); ?>
 	<div class="d-flex flex-wrap justify-content-between align-items-end px-5">
 		<div class="col-md-6">
 			<div class="d-flex align-items-center" style="margin-top:1rem;">
@@ -31,9 +35,9 @@
 
 				</div>
 				<div style="margin-left: 1.5rem;">
-					<h2 class="text-secondary">Rezza Muhammad </h2>
-					<div class="text-primary">profesi</div>
-					<div class="text-primary">unit</div>
+					<h2 class="text-secondary"><?= $ue->fnama ?></h2>
+					<div class="text-primary"><?= $ue->profesi ?></div>
+					<div class="text-primary"><?= $ue->ruangan ?></div>
 				</div>	
 			</div>
 			

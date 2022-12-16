@@ -11,7 +11,7 @@
       "src": "{{cdn_url}}skin/front/js/moment-with-locales.min.js"
     },
     {
-      "src": "{{cdn_url}}skin/front/js/jquery-3.3.1.min.js"
+      "src": "{{cdn_url}}skin/admin/js/vendor/jquery.min.js"
     },
     {
       "src": "{{cdn_url}}skin/front/js/datatables.min.js"
@@ -33,6 +33,9 @@
     },
     {
       "src": "{{cdn_url}}skin/front/js/slick.min.js"
+    },
+    {
+      "src": "{{cdn_url}}skin/admin/js/plugins/perfect-scrollbar.min.js"
     },
     {
       "src": "{{cdn_url}}skin/admin/js/argon-dashboard.min.js"

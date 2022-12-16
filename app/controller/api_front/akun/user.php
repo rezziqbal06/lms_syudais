@@ -9,7 +9,6 @@ class User extends \JI_Controller
 		$this->load('b_user_concern');
 		$this->load('b_user_alamat_concern');
 		$this->load("api_front/b_user_model", 'bum');
-		$this->load("api_front/b_user_alamat_model", 'buam');
 	}
 
 	/**
@@ -464,4 +463,79 @@ class User extends \JI_Controller
 		array_unshift($data, $p);
 		$this->__json_select2($data);
 	}
+
+	public function editProfil($id = "")
+	{
+		$d = $this->__init();
+		$data = array();
+
+		$du = $_POST;
+		// dd($du);
+		// if (!$this->user_login) {
+		// 	$this->status = 400;
+		// 	$this->message = API_ADMIN_ERROR_CODES[$this->status];
+		// 	header("HTTP/1.0 400 Harus login");
+		// 	$this->__json_out($data);
+		// 	die();
+		// }
+
+		$id = (int) $id;	
+		$id = isset($du['id']) ? $du['id'] : 0;
+		if ($id <= 0) {
+			$this->status = 444;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+			die();
+		}else{
+			unset($du['id']);
+			$res = $this->bum->update($id, $du);
+			if ($res) {
+				$this->status = 200;
+				$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			} else {
+				$this->status = 901;
+				$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			}
+		}
+
+		$this->__json_out($data);
+	}
+	
+	public function changePass($id = "")
+	{
+		$d = $this->__init();
+		$data = array();
+
+		$du = $_POST;
+		// dd($du);
+		// if (!$this->user_login) {
+		// 	$this->status = 400;
+		// 	$this->message = API_ADMIN_ERROR_CODES[$this->status];
+		// 	header("HTTP/1.0 400 Harus login");
+		// 	$this->__json_out($data);
+		// 	die();
+		// }
+
+		$id = (int) $id;	
+		$id = isset($du['id']) ? $du['id'] : 0;
+		if ($id <= 0) {
+			$this->status = 444;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+			die();
+		}else{
+			unset($du['id']);
+			$res = $this->bum->update($id, $du);
+			if ($res) {
+				$this->status = 200;
+				$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			} else {
+				$this->status = 901;
+				$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			}
+		}
+
+		$this->__json_out($data);
+	}
+	
 }

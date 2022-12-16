@@ -45,7 +45,7 @@
 
 			<!-- Modal Body -->
 			<div class="modal-body">
-				<form action="" method="POST" id="fedit">
+				<form action="" method="POST" id="fchange-password">
 					<div class="row">
 						<div class="form-group">
 							<input type="hidden" name="id" id="ieid">
@@ -55,12 +55,12 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<label for="ienama" class="control-label">Password Baru</label>
-									<input id="ienama" type="password" name="nama" class="form-control" required>
+									<label for="new-pass" class="control-label">Password Baru</label>
+									<input id="new-pass" type="password" name="new_pass" class="form-control" required>
 								</div>
 								<div class="col-md-6">
-									<label for="ie_kd_ruangan" class="control-label">Confirm Password Baru</label>
-									<input id="iekd_ruangan" type="password" name="kd_ruangan" class="form-control" required>
+									<label for="confirm-new-pass" class="control-label">Confirm Password Baru</label>
+									<input id="confirm-new-pass" type="password" name="confirm_new_pass" class="form-control" required>
 								</div>
 							</div>
 						</div>
@@ -79,7 +79,7 @@
 </div>
 
 <!-- modal edit -->
-<div id="modal_edit_profil" class="modal fade "  role="dialog" aria-hidden="true">
+<div id="modal_edit_profil" class="modal fade "   role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 
@@ -91,34 +91,30 @@
 
 			<!-- Modal Body -->
 			<div class="modal-body">
-				<form action="" method="POST" id="fedit">
+				<form action="" method="POST" id="fedit-profil">
 					<div class="row">
 						<div class="form-group">
-							<input type="hidden" name="id" id="ieid">
+							<input type="hidden" name="id" id="ieid" value="<?= $ue->id ?>">
 							<div class="col-md-12">
-								<label for="ienama" class="control-label">Nama Depan</label>
-								<input id="ienama" type="text" name="nama" class="form-control" required>
+								<label for="iefnama" class="control-label">Nama Depan</label>
+								<input id="iefnama" type="text" name="fnama" value="<?= $ue->fnama ?>" class="form-control" required>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<label for="ienama" class="control-label">Unit</label>
-									<select name="unit" class="form-control select2" style="width: 100%;">
-										<?php 
-											foreach ($aum as $key ) :
-										?>
-											<option value=""><?= $key->nama ?></option>
-										<?php
-											endforeach;
-										?>
+									<label for="ieruangan" class="control-label">Ruangan</label>
+									<select id="ieruangan" name="a_unit_id" class="form-control select2" style="width: 100%;">
+										<?php foreach ($arm as $key ) : ?>
+											<option value="<?= $key->id ?>" <?= $key->id==$ue->a_unit_id ? "selected" : "" ?>><?= $key->nama ?></option>
+										<?php endforeach; ?>
 									</select>
 								</div>
 								<div class="col-md-6">
-									<label for="ienama" class="control-label">Profesi</label>
-									<select name="unit" class="form-control select2" style="width: 100%;">
+									<label for="ieprofesi" class="control-label">Profesi</label>
+									<select id="ieprofesi" name="a_jabatan_id" class="form-control select2" style="width: 100%;">
 										<?php 
 											foreach ($ajm as $key ) :
 										?>
-											<option value=""><?= $key->nama ?></option>
+											<option value="<?= $key->id ?>" <?= $key->id==$ue->a_jabatan_id ? "selected" : "" ?>><?= $key->nama ?></option>
 										<?php
 											endforeach;
 										?>
