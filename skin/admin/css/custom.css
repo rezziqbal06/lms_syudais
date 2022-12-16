@@ -2,7 +2,11 @@
     --primary:#6c9b87;
     --accent:#d7a510;
     --secondary:#086867;
-    --background:#d7d0b3;
+    --background:#f5f3e6;
+}
+
+.btn{
+    margin-bottom:0;
 }
 
 .btn-group-vertical a{

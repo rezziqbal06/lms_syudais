@@ -10,6 +10,12 @@ function addIndikator(type='tambah'){
 	$("#panel_indikator_"+type).append(row);
 }
 
+function convertToSlug(Text) {
+  	return Text.toLowerCase()
+             .replace(/ /g, '-')
+             .replace(/[^\w-]+/g, '');
+}
+
 App.datatables();
 
 if(jQuery('#drTable').length>0){
@@ -55,7 +61,7 @@ if(jQuery('#drTable').length>0){
 										}
 										if(kitem == 'nama') kitem = kitem + '_indikator';
 										$("#ie"+kitem+'_'+(nIndikator-1)).val(vitem);
-										if(kitem == 'a_ruangan_ids'){
+										if(kitem == 'a_ruangan_ids' && vitem){
 											var ids = JSON.parse(vitem);
 											$.each(ids, function(kid, vid){
 												$("#ie"+kitem+'_'+(nIndikator-1)+" option[value='"+vid+"']").prop('selected', true)
@@ -110,7 +116,7 @@ $("#ftambah").on("submit",function(e){
 				gritter('<h4>Sukses</h4><p>Data berhasil ditambahkan</p>','success');
 				setTimeout(function(){
 					window.location = '<?=base_url_admin('pengaturan/jenis_penilaian/')?>';
-				},3000);
+				},500);
 			}else{
 				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
 				$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
@@ -152,7 +158,7 @@ $("#fedit").on("submit",function(e){
 				gritter('<h4>Sukses</h4><p>Data berhasil diubah</p>','success');
 				setTimeout(function(){
 					window.location = '<?=base_url_admin('pengaturan/jenis_penilaian/')?>';
-				},3000);
+				},500);
 			}else{
 				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
 
@@ -273,4 +279,11 @@ $(document).off('click', '.btn-remove-row')
 $(document).on('click', '.btn-remove-row', function(e){
 	e.preventDefault();
 	$(this).closest('tr').remove();
+})
+$(document).off('change', '[name="nama"]')
+$(document).on('change', '[name="nama"]', function(e){
+	e.preventDefault();
+	var type = $(this).attr('id').replace('nama','');
+	var slug = convertToSlug($(this).val());
+	$("#"+type+"slug").val(slug);
 })

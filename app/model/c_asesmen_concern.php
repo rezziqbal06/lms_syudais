@@ -4,7 +4,7 @@ namespace Model;
 
 register_namespace(__NAMESPACE__);
 /**
- * Define all general method(s) and constant(s) for a_jpenilaian table,
+ * Define all general method(s) and constant(s) for c_asesmen table,
  *   can be inherited a Concern class also can be reffered as class constants
  *
  * @version 1.0.0
@@ -12,30 +12,40 @@ register_namespace(__NAMESPACE__);
  * @package Model\B_User
  * @since 1.0.0
  */
-class A_JPenilaian_Concern extends \JI_Model
+class C_Asesmen_Concern extends \JI_Model
 {
-    public $tbl = 'a_jpenilaian';
-    public $tbl_as = 'ajp';
+    public $tbl = 'c_asesmen';
+    public $tbl_as = 'ca';
     // public $tbl2 = 'b_user_alamat';
     // public $tbl2_as = 'bua';
     // public $tbl3 = 'a_company';
     // public $tbl3_as = 'ac';
 
     const COLUMNS = [
-        'nama',
-        'slug',
-        'deskripsi',
-        'is_active',
-        'is_deleted',
+        'a_jpenilaian_id',
+        'b_user_id',
+        'a_ruangan_id',
+        'value',
+        'nilai',
+        'ntype',
         'cdate',
+        'stime',
+        'etime',
+        'durasi',
+        'is_active'
     ];
     const DEFAULTS = [
-        '',
-        '',
-        '',
-        1,
         0,
-        'NOW()'
+        0,
+        0,
+        '',
+        '',
+        'angka',
+        'NOW()',
+        0,
+        0,
+        0,
+        1
     ];
     const REQUIREDS = [
         'nama',
@@ -69,8 +79,8 @@ class A_JPenilaian_Concern extends \JI_Model
 
         $this->datatables['admin'] = new \Seme_Datatable([
             ["$this->tbl_as.id", 'id', 'ID'],
-            ["$this->tbl_as.nama", 'nama', 'Jenis Penilaian'],
-            ["$this->tbl_as.slug", 'slug', 'Slug'],
+            ["$this->tbl_as.a_jpenilaian_id", 'a_jpenilaian_id', 'Jenis Penilaian'],
+            ["$this->tbl_as.durasi", 'durasi', 'durasi'],
             ["$this->tbl_as.is_active", 'is_active', 'Status']
         ]);
 

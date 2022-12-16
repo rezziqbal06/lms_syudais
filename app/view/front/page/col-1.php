@@ -22,7 +22,6 @@
 			<!-- Main Container -->
 			<div id="main-container">
 				<!-- Header -->
-				<?php $this->getThemeElement("page/html/nav_bottom", $__forward); ?>
 				<!-- END Header -->
 
 				<!-- Main Container -->

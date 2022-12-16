@@ -179,6 +179,7 @@ class Jenis_Penilaian extends JI_Controller
 		$du = [];
 		$du['nama'] = $_POST['nama'];
 		$du['deskripsi'] = $_POST['deskripsi'];
+		$du['slug'] = $_POST['slug'];
 
 		if (!$this->admin_login) {
 			$this->status = 400;

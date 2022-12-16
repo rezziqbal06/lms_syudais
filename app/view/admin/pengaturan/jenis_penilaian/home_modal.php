@@ -49,9 +49,13 @@
 					<div class="row">
 						<div class="form-group">
 							<div class="row">
-								<div class="col-md-12">
+								<div class="col-md-6">
 									<label for="inama" class="control-label">Nama</label>
 									<input id="inama" type="text" name="nama" class="form-control" required>
+								</div>
+								<div class="col-md-6">
+									<label for="islug" class="control-label">Slug</label>
+									<input id="islug" type="text" name="slug" class="form-control" required>
 								</div>
 								<div class="col-md-12">
 									<label for="ideskripsi" class="control-label">Deskripsi</label>
@@ -155,9 +159,13 @@
 						<div class="form-group">
 							<input type="hidden" name="id" id="ieid">
 							<div class="row">
-								<div class="col-md-12">
+								<div class="col-md-6">
 									<label for="ienama" class="control-label">Nama</label>
 									<input id="ienama" type="text" name="nama" class="form-control" required>
+								</div>
+								<div class="col-md-6">
+									<label for="ieslug" class="control-label">Slug</label>
+									<input id="ieslug" type="text" name="slug" class="form-control" required>
 								</div>
 								<div class="col-md-12">
 									<label for="iedeskripsi" class="control-label">Deskripsi</label>
