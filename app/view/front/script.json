@@ -53,6 +53,9 @@
       "src":"{{cdn_url}}skin/front/js/signature-pad.min.js"
     },
     {
+      "src":"{{cdn_url}}skin/admin/js/plugins.js"
+    },
+    {
       "src":"https://cdn.jsdelivr.net/npm/chart.js",
       "type": "module"
     }

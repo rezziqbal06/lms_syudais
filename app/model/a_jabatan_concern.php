@@ -71,6 +71,13 @@ class A_Jabatan_Concern extends \JI_Model
             ["$this->tbl_as.is_active", 'is_active', 'Status']
         ]);
 
+        $this->datatables['front'] = new \Seme_Datatable([
+            ["$this->tbl_as.id", 'id', 'ID'],
+            ["$this->tbl_as.nama", 'nama', 'Nama Jabatan'],
+            ["$this->tbl_as.deskripsi", 'deskripsi', 'Deskripsi'],
+            ["$this->tbl_as.is_active", 'is_active', 'Status']
+        ]);
+
         // $this->datatables['front'] = new \Seme_Datatable([
         //     ["$this->tbl_as.id", 'id', 'ID'],
         //     ["$this->tbl_as.fnama", 'fnama', 'Nama'],

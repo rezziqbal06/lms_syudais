@@ -1,10 +1,10 @@
 <?php
 
-namespace Model\Admin;
+namespace Model\Front;
 
 register_namespace(__NAMESPACE__);
 /**
- * Scoped `front` model for `b_user` table
+ * Scoped `api_front` model for `a_company` table
  *
  * @version 5.4.1
  *
@@ -26,5 +26,17 @@ class A_Jabatan_Model extends \Model\A_Jabatan_Concern
 	{
 		$this->db->where('is_active', $is_active);
 		return $this->db->get('', 0);
+	}
+
+	public function get()
+	{
+		$this->db->where('is_active', '1');
+		return $this->db->get();
+	}
+
+	public function getByUserId($id)
+	{
+		$this->db->where('b_user_id_owner', $id);
+		return $this->db->get_first('object', 0);
 	}
 }

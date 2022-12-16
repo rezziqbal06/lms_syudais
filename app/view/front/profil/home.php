@@ -59,7 +59,7 @@
 		<div class="row">
 			<div class="col-md-6 info-asesmen">
 				<div class="card p-5">
-					<h2 class="text-secondary">Informasi Asesmen</h2>
+					<h4 class="text-secondary">Informasi Asesmen</h4>
 					<div class="d-flex justify-content-around flex-wrap">
 						<div class="p-3" style="flex: 50%;">
 							<div class="card text-primary" >
@@ -121,7 +121,7 @@
 			</div>
 			<div class="col-md-6 info-asesmen">
 				<div class="card p-5">
-					<h2 class="text-secondary">Grafik Asesmen</h2>
+					<h4 class="text-secondary">Grafik Asesmen</h4>
 					<div>
 						<canvas id="asesmenChart"></canvas>
 					</div>
