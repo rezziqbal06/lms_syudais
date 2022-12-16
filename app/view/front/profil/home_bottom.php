@@ -26,6 +26,9 @@ if (window.matchMedia('(max-width:600px)').matches) {
         $(".info-asesmen").removeClass("m-2")
     }
 
+
+$(".select2").select2();
+
 $("#changepass").on("click",function(e){
 		e.preventDefault();
 		$("#modal_option").modal("hide");

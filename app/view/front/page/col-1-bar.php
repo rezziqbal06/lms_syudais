@@ -88,7 +88,6 @@
 			<?php $this->getJsReady(); ?>
 			<?php //$this->getThemeElement('page/html/script',$__forward); 
 			?>
-			feather.replace()
 		});
 		<?php $this->getJsContent(); ?>
 	</script>

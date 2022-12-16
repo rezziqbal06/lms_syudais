@@ -79,7 +79,7 @@
 </div>
 
 <!-- modal edit -->
-<div id="modal_edit_profil" class="modal fade " tabindex="-1" role="dialog" aria-hidden="true">
+<div id="modal_edit_profil" class="modal fade "  role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 
@@ -95,20 +95,36 @@
 					<div class="row">
 						<div class="form-group">
 							<input type="hidden" name="id" id="ieid">
+							<div class="col-md-12">
+								<label for="ienama" class="control-label">Nama Depan</label>
+								<input id="ienama" type="text" name="nama" class="form-control" required>
+							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<label for="ienama" class="control-label">Nama Depan</label>
-									<input id="ienama" type="text" name="nama" class="form-control" required>
+									<label for="ienama" class="control-label">Unit</label>
+									<select name="unit" class="form-control select2" style="width: 100%;">
+										<?php 
+											foreach ($aum as $key ) :
+										?>
+											<option value=""><?= $key->nama ?></option>
+										<?php
+											endforeach;
+										?>
+									</select>
 								</div>
 								<div class="col-md-6">
-									<label for="ie_kd_ruangan" class="control-label">Nama Belakang</label>
-									<input id="iekd_ruangan" type="text" name="kd_ruangan" class="form-control" required>
+									<label for="ienama" class="control-label">Profesi</label>
+									<select name="unit" class="form-control select2" style="width: 100%;">
+										<?php 
+											foreach ($ajm as $key ) :
+										?>
+											<option value=""><?= $key->nama ?></option>
+										<?php
+											endforeach;
+										?>
+									</select>
 								</div>
-								
-							</div>
-							<div class="col-md-12">
-								<label for="iedeskripsi" class="control-label">Deskripsi</label>
-								<textarea name="deskripsi" id="iedeskripsi" class="form-control" cols="30" rows="10"></textarea>
+
 							</div>
 						</div>
 					</div>
