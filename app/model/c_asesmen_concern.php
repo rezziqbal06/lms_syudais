@@ -23,6 +23,7 @@ class C_Asesmen_Concern extends \JI_Model
 
     const COLUMNS = [
         'a_jpenilaian_id',
+        'b_user_id_penilai',
         'b_user_id',
         'a_ruangan_id',
         'value',
@@ -38,6 +39,7 @@ class C_Asesmen_Concern extends \JI_Model
         0,
         0,
         0,
+        0,
         '',
         '',
         'angka',
@@ -48,8 +50,8 @@ class C_Asesmen_Concern extends \JI_Model
         1
     ];
     const REQUIREDS = [
-        'nama',
-        'slug'
+        'stime',
+        'a_jpenilaian_id'
     ];
     const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 

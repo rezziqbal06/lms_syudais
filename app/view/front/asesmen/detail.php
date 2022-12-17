@@ -3,13 +3,16 @@
 		background-color: var(--background);
 	}
 </style>
-<form action="ftambah">
+<form method="POST" id="ftambah">
 	<div class="panel-header p-3 shadow-sm">
 		<button id="btn_back" class="btn btn-outline-primary mb-3"><i class="fa fa-arrow-left"></i> Kembali</button>
 		<h6 class="text-primary">Asesmen</h6>
 		<h3 class="mt-n2"><?= $ajm->nama ?></h3>
 		<div class="form-group row">
-			<div class="col-md-6">
+			<input type="hidden" name="a_jpenilaian_id" id="ia_jpenilaian_id" value="<?= $ajm->id ?>">
+			<input type="hidden" name="stime" id="istime" value="<?= $stime ?? '' ?>">
+			<input type="hidden" name="etime" id="ietime">
+			<div class="col-md-4">
 				<label for="iuser">Nama</label>
 				<input type="hidden" name="b_user_id" id="ib_user_id">
 				<div class="input-group">
@@ -17,7 +20,7 @@
 					<button class="btn btn-secondary" type="button" id="btn_cari_user">Cari</button>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<label for="ijabatan">Profesi</label>
 				<div class="input-group">
 					<select type="text" class="form-control select2" placeholder="Nama" id="ia_jabatan_id" name="a_jabatan_id">
@@ -29,7 +32,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<label for="ia_ruangan_id">Ruangan/Unit</label>
 				<select type="text" class="form-control select2" placeholder="Nama" id="ia_ruangan_id" name="a_ruangan_id">
 					<?php if (isset($arm) && count($arm)) : ?>
@@ -75,7 +78,7 @@
 	</div>
 
 	<div class="fixed-bottom row">
-		<button type="submit" class="btn btn-success bg-accent float-end">Simpan</button>
+		<button type="submit" class="btn btn-success bg-accent float-end btn-submit"><i class="icon-submit"></i> Simpan</button>
 	</div>
 
 </form>
