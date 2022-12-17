@@ -86,7 +86,7 @@ $("#ftambah").on("submit",function(e){
 				gritter('<h4>Sukses</h4><p>Data berhasil ditambahkan</p>','success');
 				setTimeout(function(){
 					window.location = '<?=base_url_admin('pengaturan/jabatan/')?>';
-				},3000);
+				},500);
 			}else{
 				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
 				$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
@@ -128,7 +128,7 @@ $("#fedit").on("submit",function(e){
 				gritter('<h4>Sukses</h4><p>Data berhasil diubah</p>','success');
 				setTimeout(function(){
 					window.location = '<?=base_url_admin('pengaturan/jabatan/')?>';
-				},3000);
+				},500);
 			}else{
 				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
 

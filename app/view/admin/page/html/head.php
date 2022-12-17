@@ -11,6 +11,11 @@
 
 
 		<!-- Stylesheets -->
+		<style>
+			.btn {
+				margin-bottom: 1em !important;
+			}
+		</style>
 		<!-- END Stylesheets -->
 
 		<?php $this->getAdditionalBefore() ?>

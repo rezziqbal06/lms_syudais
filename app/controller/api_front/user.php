@@ -404,6 +404,21 @@ class User extends JI_Controller
   }
 
   /**
+   * Cari user
+   * @return [type] [description]
+   */
+  public function cari()
+  {
+    $keyword = $this->input->request("keyword");
+    if (empty($keyword)) {
+      $keyword = "";
+    }
+    $data = $this->bum->cari($keyword);
+
+    $this->__json_select2($data);
+  }
+
+  /**
    * Pilih user yang mempunyai alamat
    * @return [type] [description]
    */

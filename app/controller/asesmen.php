@@ -95,6 +95,9 @@ class Asesmen extends JI_Controller
 		unset($aim);
 		unset($aim);
 
+		date_default_timezone_set('Asia/Jakarta');
+		$data['stime'] = date('H:i:s');
+
 		$this->setTitle('Asesmen' . $this->config->semevar->site_suffix);
 		$this->putThemeContent("asesmen/detail_modal", $data);
 		$this->putThemeContent("asesmen/detail", $data);

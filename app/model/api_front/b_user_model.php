@@ -1,7 +1,5 @@
 <?php
 
-namespace Model\Admin;
-
 register_namespace(__NAMESPACE__);
 /**
  * Scoped `front` model for `b_user` table
@@ -221,8 +219,9 @@ class B_User_Model extends \Model\B_User_Concern
   public function cari($keyword = "")
   {
     $this->db->select_as("$this->tbl_as.id", "id", 0);
-    $this->db->select_as("CONCAT($this->tbl_as.fnama,' - ', $this->tbl_as.email)", "text", 0);
+    $this->db->select_as("CONCAT($this->tbl_as.fnama,' - ', COALESCE($this->tbl2_as.nama, ''))", "text", 0);
     $this->db->from($this->tbl, $this->tbl_as);
+    $this->db->join($this->tbl2, $this->tbl2_as, 'id', $this->tbl_as, 'a_jabatan_id', 'left');
     if (strlen($keyword) > 0) {
       $this->db->where_as("$this->tbl_as.fnama", ($keyword), "OR", "LIKE%%", 1, 0);
       $this->db->where_as("$this->tbl_as.username", ($keyword), "OR", "LIKE%%", 0, 0);
@@ -247,6 +246,23 @@ class B_User_Model extends \Model\B_User_Concern
     $this->db->from($this->tbl, $this->tbl_as);
     $this->db->where("telp", $telp, "OR", "%like%", 1, 0);
     $this->db->where("fnama", $name, "OR", "%like%", 0, 1);
+    return $this->db->get_first("", 0);
+  }
+
+  public function getByName($name = "")
+  {
+    $this->db->flushQuery();
+    $this->db->select('id')
+      ->select('fnama')
+      ->select('telp')
+      ->select('alamat')
+      ->select('provinsi')
+      ->select('kabkota')
+      ->select('kecamatan')
+      ->select('kodepos')
+      ->select('is_active');
+    $this->db->from($this->tbl, $this->tbl_as);
+    $this->db->where("fnama", $name);
     return $this->db->get_first("", 0);
   }
   public function cari_alamat($keyword = '')
