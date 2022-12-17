@@ -47,7 +47,7 @@ class Profil extends JI_Controller
 		if(isset($arm)) $data['arm'] = $arm;
 		unset($arm);
 
-		$user_exist = $this->bum->getUserById(32);
+		$user_exist = $this->bum->getUserById(71);
 		if(isset($user_exist)) $data['ue'] = $user_exist;
 		unset($user_exist);
 
