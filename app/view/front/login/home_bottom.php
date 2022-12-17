@@ -13,7 +13,7 @@ $("#form-login").on("submit",function(evt){
 	evt.preventDefault();
 	console.log('login')
 	login_try++;
-	var url = '<?=base_url_admin('login/auth'); ?>';
+	var url = '<?=base_url('login/auth'); ?>';
 	var fd = {};
 	fd.username = $("#iusername").val();
 	fd.password = $("#ipassword").val();
@@ -43,7 +43,7 @@ $("#form-login").on("submit",function(evt){
 			},2000);
 			setTimeout(function(){
 				NProgress.done();
-				window.location =  '<?=base_url_admin('')?>';
+				window.location =  '<?=base_url('')?>';
 			},3000);
 		}else{
 			$("#iusername").prop("disabled",false);
@@ -57,7 +57,7 @@ $("#form-login").on("submit",function(evt){
 			setTimeout(function(){
 				$("#bsubmit").removeClass("fa-spin");
 				if(login_try>2){
-					window.location = '<?=base_url_admin('login')?>';
+					window.location = '<?=base_url('login')?>';
 				}
 			},3000);
 		}

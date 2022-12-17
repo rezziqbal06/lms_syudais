@@ -11,7 +11,6 @@ class Login extends \JI_Controller
 		$this->setTheme('front');
 		$this->load("b_user_concern");
 		$this->load("front/b_user_model", "bum");
-		$this->load("front/a_modules_model", "amod");
 		$this->load("api_front/b_user_module_model", "bumod");
 	}
 
@@ -183,6 +182,7 @@ class Login extends \JI_Controller
 		$password = $this->input->post("password");
 		if (strlen($username) > 3 && strlen($password) > 3) {
 			$res = $this->bum->auth($username, $password);
+			
 			if (isset($res->id)) {
 				if (empty($res->is_active)) {
 					$this->status = 103;
@@ -225,28 +225,28 @@ class Login extends \JI_Controller
 				$sess->user->modules = array();
 
 				//get modules
-				$modules = $this->amod->getAllParent('front');
-				foreach ($modules as &$module) {
-					$childs = $this->amod->getChild($module->identifier, 'front');
-					$mos = array();
-					if (count($childs) > 0) {
-						$sess->user->modules[] = $module;
-						foreach ($sess->user->modules as $m) {
-							foreach ($childs as $cs) {
-								$sess->user->modules[] = $module;
-							}
-						}
-					}
-					$module->childs = $mos;
-				}
-				unset($module);
+				// $modules = $this->amod->getAllParent('front');
+				// foreach ($modules as &$module) {
+				// 	$childs = $this->amod->getChild($module->identifier, 'front');
+				// 	$mos = array();
+				// 	if (count($childs) > 0) {
+				// 		$sess->user->modules[] = $module;
+				// 		foreach ($sess->user->modules as $m) {
+				// 			foreach ($childs as $cs) {
+				// 				$sess->user->modules[] = $module;
+				// 			}
+				// 		}
+				// 	}
+				// 	$module->childs = $mos;
+				// }
+				// unset($module);
 
 				//set module to session
-				$allowed_all = 1;
-				foreach ($modules as $mo) {
-					$sess->user->menus->left[$mo->identifier] = $mo;
-				}
-				unset($mo);
+				// $allowed_all = 1;
+				// foreach ($modules as $mo) {
+				// 	$sess->user->menus->left[$mo->identifier] = $mo;
+				// }
+				// unset($mo);
 
 
 				$this->setKey($sess);

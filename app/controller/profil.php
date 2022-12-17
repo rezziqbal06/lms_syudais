@@ -26,10 +26,10 @@ class Profil extends JI_Controller
 	{
 		$data = $this->__init();
 
-		// if (!$this->user_login) {
-		// 	redir(base_url('login'));
-		// 	die();
-		// }
+		if (!$this->user_login) {
+			redir(base_url('login'));
+			die();
+		}
 
 		// $acm = $this->acm->getByUserId($data['sess']->user->id);
 		// if (isset($acm->id)) $data['acm'] = $acm;
@@ -47,7 +47,7 @@ class Profil extends JI_Controller
 		if(isset($arm)) $data['arm'] = $arm;
 		unset($arm);
 
-		$user_exist = $this->bum->getUserById(71);
+		$user_exist = $this->bum->getUserById($data['sess']->user->id);
 		if(isset($user_exist)) $data['ue'] = $user_exist;
 		unset($user_exist);
 
