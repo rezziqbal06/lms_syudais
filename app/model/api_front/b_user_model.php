@@ -20,6 +20,14 @@ class B_User_Model extends \Model\B_User_Concern
     $this->point_of_view = 'front';
   }
 
+  public function getUserById($id)
+	{
+		$this->db->select_as("$this->tbl_as.*, $this->tbl_as.id", 'id', 0);
+		$this->db->from($this->tbl, $this->tbl_as);
+		$this->db->where("bu.id", $id);
+		return $this->db->get_first('object', 0);
+	}
+
   private function _filter($b_user_id = '', $keyword = '', $is_active = '')
   {
     if (strlen($b_user_id)) {

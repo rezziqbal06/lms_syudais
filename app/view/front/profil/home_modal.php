@@ -48,7 +48,7 @@
 				<form action="" method="POST" id="fchange-password">
 					<div class="row">
 						<div class="form-group">
-							<input type="hidden" name="id" id="ieid">
+							<input type="hidden" name="id" id="ieid" value="<?= $ue->id ?>">
 							<div class="col-md-12">
 								<label for="old-pass">Password Lama</label>
 								<input type="password" name="old_pass" class="form-control" id="old-pass">
