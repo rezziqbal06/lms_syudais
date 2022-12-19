@@ -32,6 +32,43 @@
 	</div>
 </div>
 
+<!-- modal option -->
+<div id="modal_logout" class="modal fade " tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header text-center">
+				<h2 class="modal-title">Logout </h2>
+				<h5 id="tvjabatan"></h5>
+			</div>
+			<!-- END Modal Header -->
+
+			<!-- Modal Body -->
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-12 btn-group-vertical">
+						<!-- <a id="adetail" href="#" class="btn btn-info btn-left"><i class="fa fa-info-circle"></i> Detail</a> -->
+						<!-- <a id="editprofil" href="#" class="btn btn-info bg-secondary btn-left"><i class="fa fa-pencil"></i> Edit Profil</a> -->
+						<!-- <a id="areseller" href="#" class="btn btn-warning btn-left"><i class="fa fa-user"></i> Jadikan Reseller</a> -->
+						<!-- <a id="changepass" href="#" class="btn btn-danger bg-primary btn-left"><i class="fa fa-key"></i> Ubah Password</a> -->
+						<p>Apakah yakin anda ingin logout?</p>
+					</div>
+				</div>
+				<div class="row" style="margin-top: 1em; ">
+					<div class="col-md-12" style="border-top: 1px #afafaf dashed;">&nbsp;</div>
+					<div class="d-flex flex-wrap">
+						<a class="btn btn-danger" style="width:50%" href="<?= base_url('logout') ?>" id="btn_action_logout"><i class="fa fa-door-open"></i> Logout</a>
+						<button type="button" class="btn btn-default" style="width:50%" data-dismiss="modal" id="btn_close_modal_logout"><i class="fa fa-close"></i> Tutup</button>
+						
+					</div>
+				</div>
+				<!-- END Modal Body -->
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- modal edit -->
 <div id="modal_edit_password" class="modal fade " tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg">

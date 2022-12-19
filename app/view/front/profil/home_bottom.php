@@ -3,6 +3,16 @@ $("#btn-edit-profile").on("click",function(e){
 		$("#modal_option").modal("show");
 });
 
+$("#btn-logout").on("click",function(e){
+		e.preventDefault();
+    $("#modal_logout").modal("show");
+});
+
+$("#btn_close_modal_logout").on("click",function(e){
+		e.preventDefault();
+		$("#modal_logout").modal("hide");
+});
+
 $("#btn_close_modal").on("click",function(e){
 		e.preventDefault();
 		$("#modal_option").modal("hide");
@@ -16,14 +26,17 @@ $("#editprofil").on("click",function(e){
 
 if (window.matchMedia('(max-width:600px)').matches) {
         $("#edit-button").removeClass("col-md-6");
+        $("#edit-button").removeClass("text-end");
+        $("#edit-button").addClass("text-center");
+        $("#edit-button").addClass("mt-4");
         $("#edit-button").addClass("col-md-12");
         $("#edit-button").addClass("flex-fill");
-        $(".info-asesmen").addClass("m-2")
+        $(".info-asesmen").addClass("m-2");
       }else{
         $("#edit-button").addClass("col-md-6");
         $("#edit-button").removeClass("col-md-12");
         $("#edit-button").removeClass("flex-fill");
-        $(".info-asesmen").removeClass("m-2")
+        $(".info-asesmen").removeClass("m-2");
     }
 
 $(".select2").select2();

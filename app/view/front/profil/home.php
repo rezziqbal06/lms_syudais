@@ -50,6 +50,12 @@
 					<div style="margin-left: 1rem;">Edit Profile</div>
 				</div>
 			</button>
+			<button class="btn btn-danger " id="btn-logout">
+				<div class="d-inline-flex">
+					<div><span class="fa fa-door-open"></span></div>
+					<div style="margin-left: 1rem;">Logout</div>
+				</div>
+			</button>
 			<!-- <div class="row justify-content-end mt-2">
 				<div class="col-md-2">Social Media</div>
 				<div class="col-md-1"><img src="<?= base_url()."/media/instagramm.png" ?>" alt=""></div>
