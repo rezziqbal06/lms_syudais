@@ -13,7 +13,7 @@
 			<div class="modal-body">
 				<div class="row">
 					<div class="col-md-12">
-						<select name="" id="cari_user" class="form-control select2"></select>
+						<select name="" id="cari_user" class="form-control select2" style="width: 100%;"></select>
 
 					</div>
 				</div>

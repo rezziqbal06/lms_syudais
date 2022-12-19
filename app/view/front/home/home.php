@@ -1,19 +1,47 @@
-<div id="page-content">
-	<!-- Dashboard 2 Header -->
-	<div class="content-header content-header-media" style="display: none;">
-		<div class="header-section">
-
-		</div>
-		<!-- For best results use an image with a resolution of 2560x248 pixels (You can also use a blurred image with ratio 10:1 - eg: 1000x100 pixels - it will adjust and look great!) -->
-		<!--<img src="<?= base_url() ?>skin/admin/img/placeholders/headers/dashboard_header.png" alt="header image" class="animation-pulseSlow">-->
+<div class="container mb-5">
+	<div class="row gradient-primary p-5" style="border-bottom-left-radius: 16px;border-bottom-right-radius: 16px;">
+		<h6 class="text-white">Statistik</h6>
+		<h3 class="text-white">Asesmen RS Bina Sehat</h3>
 	</div>
-	<!-- END Dashboard 2 Header -->
-
-	<!-- Main Dashboard -->
 	<div class="row">
-
+		<div class="col-md-12"></div>
 	</div>
-	<!-- EndMain Dashboard -->
-
-
+	<div class="input-group p-3 mt-n5">
+		<select name="" id="jenis_penilaian" class="form-control">
+			<?php if (isset($ajm) && count($ajm)) : ?>
+				<?php foreach ($ajm as $k => $v) : ?>
+					<option value="<?= $v->id ?>"><?= $v->nama ?></option>
+				<?php endforeach ?>
+			<?php endif ?>
+		</select>
+		<button class="btn btn-secondary bg-accent"><i class="fa fa-search"></i></button>
+	</div>
+	<div class="panel-statistik"></div>
+	<div class="panel-filter row" style="display: none;">
+		<div class="col-md-1">
+			<i class="fa fa-sliders"></i>
+		</div>
+	</div>
+	<div class="panel-list p-2" style="display: none;">
+	</div>
+	<div class="panel-loading mt-3">
+		<p class="placeholder-glow">
+			<span class="placeholder col-12"></span>
+			<span class="placeholder col-6"></span>
+			<span class="placeholder col-4"></span>
+			<span class="placeholder col-2"></span>
+			<span class="placeholder col-12"></span>
+			<span class="placeholder col-4"></span>
+			<span class="placeholder col-7"></span>
+			<span class="placeholder col-12"></span>
+			<span class="placeholder col-12"></span>
+			<span class="placeholder col-12"></span>
+		</p>
+	</div>
+	<div class="panel-empty row" style="display: none;">
+		<div class="col-md-12 text-center">
+			<img src="<?= base_url('media/empty.png') ?>" class="img-fluid mb-n5" alt="">
+			<h5>Penilaian masih kosong</h5>
+		</div>
+	</div>
 </div>

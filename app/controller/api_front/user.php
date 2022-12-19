@@ -9,9 +9,11 @@ class User extends JI_Controller
     $this->lib("seme_email");
     //$this->lib("seme_log");
     $this->load("b_user_concern");
-    $this->load("b_user_alamat_concern");
+    $this->load("c_asesmen_concern");
+    $this->load("a_jpenilaian_concern");
+    $this->load("api_front/a_jpenilaian_model", 'ajm');
     $this->load("api_front/b_user_model", 'bum');
-    $this->load("api_front/b_user_alamat_model", 'buam');
+    $this->load("api_front/c_asesmen_model", 'cam');
   }
   private function __genRegKode($user_id, $api_reg_token)
   {
@@ -439,6 +441,7 @@ class User extends JI_Controller
    */
   public function detail($id)
   {
+    $d = $this->__init();
     $data = [];
     if (empty($id)) {
       $this->status = 444;
@@ -447,7 +450,19 @@ class User extends JI_Controller
       die();
     }
 
+    $slug = $this->input->request('jenis_penilaian') ?? null;
+    if (isset($slug)) {
+      $ajm = $this->ajm->getBySlug($slug);
+    }
+
     $data = $this->bum->id($id);
+
+    $user_id = $d['sess']->user->id ?? 0;
+    $asesmen = $this->cam->getByFilter($id, $user_id, $ajm->id ?? 0, date('Y-m-d'), date('Y-m-t'));
+    $jumlah_penilaian = count($asesmen);
+    $progress_penilaian = $jumlah_penilaian > 0 ? $jumlah_penilaian / 10 * 100 : 0;
+    $data->jumlah_penilaian = $jumlah_penilaian;
+    $data->progress_penilaian = $progress_penilaian;
 
     $this->status = 200;
     $this->message = 'Berhasil';

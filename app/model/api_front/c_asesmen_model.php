@@ -51,7 +51,7 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     return $this;
   }
 
-  public function data($b_user_id = "", $page = 0, $pagesize = 10, $sortCol = "id", $sortDir = "ASC", $keyword = '', $is_active = '')
+  public function data($page = 0, $pagesize = 10, $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $keyword = '', $is_active = '')
   {
     $this->datatables[$this->point_of_view]->selections($this->db);
     $this->db->from($this->tbl, $this->tbl_as);
@@ -60,7 +60,7 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     return $this->db->get("object", 0);
   }
 
-  public function count($b_user_id = '', $keyword = '', $is_active = '')
+  public function count($b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $keyword = '', $is_active = '')
   {
     $this->db->select_as("COUNT($this->tbl_as.id)", "jumlah", 0);
     $this->db->from($this->tbl, $this->tbl_as);
@@ -74,5 +74,13 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
   public function setMass($dis)
   {
     return $this->db->insert_multi($this->tbl, $dis);
+  }
+
+  public function getByFilter($user_id, $penilai_id, $ajm_id, $sdate, $edate)
+  {
+    $this->db->where('b_user_id', $user_id)->where('b_user_id_penilai', $penilai_id);
+    $this->db->where('a_jpenilaian_id', $ajm_id);
+    $this->db->between("DATE($this->tbl_as.cdate)", "DATE('$sdate')", "DATE('$edate')");
+    return $this->db->get('', 0);
   }
 }

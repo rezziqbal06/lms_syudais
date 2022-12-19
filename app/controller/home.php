@@ -8,6 +8,10 @@ class Home extends JI_Controller
 		$this->setTheme('front');
 		$this->current_parent = 'dashboard';
 		$this->current_page = 'dashboard';
+
+		$this->load('a_jpenilaian_concern');
+
+		$this->load('front/a_jpenilaian_model', 'ajm');
 	}
 
 	public function index()
@@ -19,8 +23,12 @@ class Home extends JI_Controller
 		// }
 		$this->setTitle('Dashboard ' . $this->config->semevar->site_suffix);
 
-		//$this->putJsFooter($this->cdn_url('skin/admin/').'js/helpers/gmaps.min',0);
-		$this->putJsFooter($this->cdn_url('skin/admin/') . 'js/pages/index');
+
+		$ajm = $this->ajm->getAll();
+		if (isset($ajm[0]->id)) $data['ajm'] = $ajm;
+
+		$data['ajm'] = $ajm;
+		unset($ajm);
 
 		$this->putThemeContent("home/home", $data);
 		$this->putJsContent("home/home_bottom", $data);

@@ -8,6 +8,9 @@
 		<button id="btn_back" class="btn btn-outline-primary mb-3"><i class="fa fa-arrow-left"></i> Kembali</button>
 		<h6 class="text-primary">Asesmen</h6>
 		<h3 class="mt-n2"><?= $ajm->nama ?></h3>
+		<div class="progress" style="display: none;">
+			<div class="progress-bar" role="progressbar" aria-label="Example with label" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+		</div>
 		<div class="form-group row">
 			<input type="hidden" name="a_jpenilaian_id" id="ia_jpenilaian_id" value="<?= $ajm->id ?>">
 			<input type="hidden" name="stime" id="istime" value="<?= $stime ?? '' ?>">

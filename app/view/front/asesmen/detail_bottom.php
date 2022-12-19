@@ -83,12 +83,21 @@ $("#cari_user").select2({
 $("#pilih_user").on('click', function(e){
     e.preventDefault();
     var id = $('#cari_user').find('option:selected').val();
-    $.get('<?=base_url('api_front/user/detail/')?>' + id).done(function(dt){
+    $.get('<?=base_url('api_front/user/detail/')?>' + id + '?jenis_penilaian=<?=$ajm->slug?>').done(function(dt){
         if(dt.data){
             $("#ib_user_id").val(id);
             $("#iuser").val(dt.data.fnama);
-            $("#ia_jabatan_id").val(dt.data.a_jabatan_id);
-            $("#ia_ruangan_id").val(dt.data.a_unit_id);
+            $("#ia_jabatan_id").val(dt.data.a_jabatan_id).select2();
+            $("#ia_ruangan_id").val(dt.data.a_unit_id).select2();
+            $("#modal_cari_user").modal('hide');
+            <?php if($ajm->slug == 'audit-hand-hygiene') : ?>
+                if(dt.data.jumlah_penilaian){
+                    $('.progress-bar').css('width', dt.data.progress_penilaian+'%').attr('aria-valuenow', dt.data.progress_penilaian).text(dt.data.jumlah_penilaian); 
+                    $('.progress').slideDown();
+                }
+            <?php else : ?>
+                $('.progress').slideUp();
+            <?php endif; ?>
         } 
     })
 })

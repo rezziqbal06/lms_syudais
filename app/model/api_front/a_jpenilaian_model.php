@@ -74,4 +74,10 @@ class A_JPenilaian_Model extends \Model\A_JPenilaian_Concern
   {
     return $this->db->insert_multi($this->tbl, $dis);
   }
+
+  public function getBySlug($slug)
+  {
+    $this->db->where('slug', $slug);
+    return $this->db->get_first('', 0);
+  }
 }

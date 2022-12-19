@@ -62,7 +62,7 @@ CREATE TABLE `a_jabatan` (
   `is_active` int(1) NOT NULL,
   `is_deleted` int(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +71,7 @@ CREATE TABLE `a_jabatan` (
 
 LOCK TABLES `a_jabatan` WRITE;
 /*!40000 ALTER TABLE `a_jabatan` DISABLE KEYS */;
-INSERT INTO `a_jabatan` VALUES (1,'IPCD','(Infection Prevention Control Docter)','0000-00-00 00:00:00',1,0),(2,'IPCN','(Infection Prevention Control Nurse)','0000-00-00 00:00:00',1,0),(3,'IPCLN','(Infection Prevention Control Link Nurse)','0000-00-00 00:00:00',1,0),(4,'Komite Mutu','Komite Mutu','0000-00-00 00:00:00',1,0);
+INSERT INTO `a_jabatan` VALUES (1,'IPCD','(Infection Prevention Control Docter)','0000-00-00 00:00:00',1,0),(2,'IPCN','(Infection Prevention Control Nurse)','0000-00-00 00:00:00',1,0),(3,'IPCLN','(Infection Prevention Control Link Nurse)','0000-00-00 00:00:00',1,0),(4,'Komite Mutu','Komite Mutu','0000-00-00 00:00:00',1,0),(5,'Nurse','Perawat','0000-00-00 00:00:00',1,0);
 /*!40000 ALTER TABLE `a_jabatan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -402,7 +402,7 @@ CREATE TABLE `b_user` (
   KEY `a_pengguna_id` (`b_user_id`),
   KEY `idx_is_active` (`google_id`),
   KEY `idx_is_confirmed` (`kode_lama`)
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=latin1 COMMENT='tabel pengguna, bisa member atau user vendor,';
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=latin1 COMMENT='tabel pengguna, bisa member atau user vendor,';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -411,7 +411,7 @@ CREATE TABLE `b_user` (
 
 LOCK TABLES `b_user` WRITE;
 /*!40000 ALTER TABLE `b_user` DISABLE KEYS */;
-INSERT INTO `b_user` VALUES (30,402,NULL,NULL,'',NULL,NULL,'','','','','e10adc3949ba59abbe56e057f20f883e','Rezza Muhammad Iqbal',' ','Jl. Kutawaringin No 9 RT 01 RW 07 Desa/Kec. Kutawaringin Kab. Bandung',NULL,'','','','','Indonesia','',1,'-','1970-01-01','0000-00-00 00:00:00',NULL,NULL,'085789701750','',NULL,'',NULL,0,0,' ','online',NULL,20,'',NULL,NULL,NULL,NULL,NULL,NULL,' ','web','',0,0,0,1,1,1,0),(32,31,NULL,NULL,'',NULL,NULL,'rezziqbal@gmail.com','rezziqbal','','','e10adc3949ba59abbe56e057f20f883e','Rezza Muhammad Iqbal',' ','Jl. Kutawaringin Desa KUtawaringin',NULL,'','Kutawaringin','Kabupaten Bandung','Jawa Barat','Indonesia','40911',1,'-','1970-01-01','0000-00-00 00:00:00',NULL,NULL,'08578970175','',NULL,'',NULL,0,0,' ','online',NULL,20,'',NULL,NULL,NULL,NULL,NULL,NULL,' ','web','',0,0,0,1,1,1,0),(37,NULL,NULL,NULL,'',NULL,NULL,'drosanda@outlook.co.id','drosanda','','','$2y$10$YxehvrbD0KguQs12jwFZ4e6CaKpEjlsmOloIISadcO9oeXGHoghDW','Daeng Rosanda',' ','','','','','','','Indonesia','',1,'-','1970-01-01','2021-06-16 16:52:42',NULL,NULL,'6341 5041','',NULL,'',NULL,0,0,' ','online',NULL,20,'',NULL,NULL,NULL,NULL,NULL,NULL,' ','web','4DDB33DCBC',0,0,0,1,1,1,0),(39,NULL,NULL,NULL,'',NULL,NULL,'daeng@cenah.co.id','daeng@cenah.co.id','','','e10adc3949ba59abbe56e057f20f883e','Daeng Rosanda',' ','','','','','','','Indonesia','',1,'-','1970-01-01','2021-06-16 17:51:05',NULL,NULL,'6341 5041','',NULL,'',NULL,0,0,' ','online',NULL,20,'',NULL,NULL,NULL,NULL,NULL,NULL,' ','web','',0,0,0,1,1,1,0),(43,NULL,NULL,NULL,'',NULL,NULL,'vanny@cenah.co.id','vanny@cenah.co.id','','','e10adc3949ba59abbe56e057f20f883e','Vanny Fandhiny',' ','','','','','','','Indonesia','',1,'-','1970-01-01','2021-06-16 18:01:26',NULL,NULL,'081320012157','',NULL,'',NULL,0,0,' ','online',NULL,20,'',NULL,NULL,NULL,NULL,NULL,NULL,' ','web','',0,0,0,1,1,1,0),(68,37,0,0,'google_id','kode','kode_lama','rizki@gmail.com','rizki','foto','welcome_message','$2y$10$7rS4va1jjO/Xzph2xKjODe1i3wZIHenBvEtvn00aSCOGK7RhbU22u','Rizki','lnama','Jl. Tol','alamat2','SOREANG','SOREANG','BANDUNG','JAWA BARAT','INDONESIA','40911',0,'tlahir','0000-00-00','0000-00-00 00:00:00','0000-00-00','0000-00-00','0918380144','fb',0,'ig',0,0,0,'image','online',NULL,0,'npwp','0000-00-00','api_reg_token','0000-00-00','api_web_token','0000-00-00','api_mobile_token','fcm_token','device','BQ5XBQ3CCQ',0,0,0,1,1,1,0),(70,NULL,NULL,NULL,'',NULL,NULL,'','','','',NULL,'MS CHANDRA',' ','',NULL,'','','','','Indonesia','',1,'-','1970-01-01','0000-00-00 00:00:00',NULL,NULL,'085721xxxx','',NULL,'',NULL,0,0,' ','online',NULL,20,'',NULL,NULL,NULL,NULL,NULL,NULL,' ','web','',0,0,0,1,1,1,0);
+INSERT INTO `b_user` VALUES (30,402,NULL,NULL,'',NULL,NULL,'','','','','e10adc3949ba59abbe56e057f20f883e','Rezza Muhammad Iqbal',' ','Jl. Kutawaringin No 9 RT 01 RW 07 Desa/Kec. Kutawaringin Kab. Bandung',NULL,'','','','','Indonesia','',1,'-','1970-01-01','0000-00-00 00:00:00',NULL,NULL,'085789701750','',NULL,'',NULL,0,0,' ','online',NULL,20,'',NULL,NULL,NULL,NULL,NULL,NULL,' ','web','',0,0,0,1,1,1,0),(32,31,NULL,NULL,'',NULL,NULL,'rezziqbal@gmail.com','rezziqbal','','','e10adc3949ba59abbe56e057f20f883e','Rezza Muhammad Iqbal',' ','Jl. Kutawaringin Desa KUtawaringin',NULL,'','Kutawaringin','Kabupaten Bandung','Jawa Barat','Indonesia','40911',1,'-','1970-01-01','0000-00-00 00:00:00',NULL,NULL,'08578970175','',NULL,'',NULL,0,0,' ','online',NULL,20,'',NULL,NULL,NULL,NULL,NULL,NULL,' ','web','',0,0,0,1,1,1,0),(37,NULL,NULL,NULL,'',NULL,NULL,'drosanda@outlook.co.id','drosanda','','','$2y$10$YxehvrbD0KguQs12jwFZ4e6CaKpEjlsmOloIISadcO9oeXGHoghDW','Daeng Rosanda',' ','','','','','','','Indonesia','',1,'-','1970-01-01','2021-06-16 16:52:42',NULL,NULL,'6341 5041','',NULL,'',NULL,0,0,' ','online',NULL,20,'',NULL,NULL,NULL,NULL,NULL,NULL,' ','web','4DDB33DCBC',0,0,0,1,1,1,0),(39,NULL,NULL,NULL,'',NULL,NULL,'daeng@cenah.co.id','daeng@cenah.co.id','','','e10adc3949ba59abbe56e057f20f883e','Daeng Rosanda',' ','','','','','','','Indonesia','',1,'-','1970-01-01','2021-06-16 17:51:05',NULL,NULL,'6341 5041','',NULL,'',NULL,0,0,' ','online',NULL,20,'',NULL,NULL,NULL,NULL,NULL,NULL,' ','web','',0,0,0,1,1,1,0),(43,NULL,NULL,NULL,'',NULL,NULL,'vanny@cenah.co.id','vanny@cenah.co.id','','','e10adc3949ba59abbe56e057f20f883e','Vanny Fandhiny',' ','','','','','','','Indonesia','',1,'-','1970-01-01','2021-06-16 18:01:26',NULL,NULL,'081320012157','',NULL,'',NULL,0,0,' ','online',NULL,20,'',NULL,NULL,NULL,NULL,NULL,NULL,' ','web','',0,0,0,1,1,1,0),(68,37,0,0,'google_id','kode','kode_lama','rizki@gmail.com','rizki','foto','welcome_message','$2y$10$7rS4va1jjO/Xzph2xKjODe1i3wZIHenBvEtvn00aSCOGK7RhbU22u','Rizki','lnama','Jl. Tol','alamat2','SOREANG','SOREANG','BANDUNG','JAWA BARAT','INDONESIA','40911',0,'tlahir','0000-00-00','0000-00-00 00:00:00','0000-00-00','0000-00-00','0918380144','fb',0,'ig',0,0,0,'image','online',NULL,0,'npwp','0000-00-00','api_reg_token','0000-00-00','api_web_token','0000-00-00','api_mobile_token','fcm_token','device','BQ5XBQ3CCQ',0,0,0,1,1,1,0),(70,NULL,NULL,NULL,'',NULL,NULL,'','','','',NULL,'MS CHANDRA',' ','',NULL,'','','','','Indonesia','',1,'-','1970-01-01','0000-00-00 00:00:00',NULL,NULL,'085721xxxx','',NULL,'',NULL,0,0,' ','online',NULL,20,'',NULL,NULL,NULL,NULL,NULL,NULL,' ','web','',0,0,0,1,1,1,0),(71,NULL,15,5,'',NULL,NULL,'','','','',NULL,'Dina Ampar',' ','',NULL,'','','','','Indonesia','',1,'-','1970-01-01','2022-12-17 10:09:34',NULL,NULL,'','',NULL,'',NULL,0,0,' ','online',NULL,20,'',NULL,NULL,NULL,NULL,NULL,NULL,' ','web','',0,0,0,1,1,1,0);
 /*!40000 ALTER TABLE `b_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -425,19 +425,20 @@ DROP TABLE IF EXISTS `c_asesmen`;
 CREATE TABLE `c_asesmen` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `a_jpenilaian_id` int(5) NOT NULL,
+  `b_user_id_penilai` int(11) NOT NULL,
   `b_user_id` int(5) NOT NULL,
   `a_ruangan_id` int(11) NOT NULL,
   `value` text NOT NULL,
   `nilai` text NOT NULL,
   `ntype` enum('angka','persen') NOT NULL DEFAULT 'angka' COMMENT 'nilai type',
   `cdate` datetime NOT NULL,
-  `durasi` int(11) NOT NULL,
+  `durasi` decimal(18,2) NOT NULL,
   `stime` time NOT NULL,
   `etime` time NOT NULL,
   `is_active` int(1) NOT NULL DEFAULT 1,
   `is_deleted` int(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -446,6 +447,7 @@ CREATE TABLE `c_asesmen` (
 
 LOCK TABLES `c_asesmen` WRITE;
 /*!40000 ALTER TABLE `c_asesmen` DISABLE KEYS */;
+INSERT INTO `c_asesmen` VALUES (1,2,0,71,13,'{\"indikator\":\"125\",\"aksi\":\"130\"}','','angka','2022-12-17 10:14:46',0.11,'10:03:27','10:14:46',1,0),(2,2,0,71,15,'{\"indikator\":\"127\",\"aksi\":\"131\"}','','angka','2022-12-17 11:21:25',0.10,'11:20:16','11:21:25',1,0);
 /*!40000 ALTER TABLE `c_asesmen` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -458,4 +460,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-16  9:27:51
+-- Dump completed on 2022-12-19 11:48:56

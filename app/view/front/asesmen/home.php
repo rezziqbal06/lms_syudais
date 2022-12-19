@@ -23,7 +23,7 @@
 		<?php if (isset($ajm) && count($ajm)) : ?>
 			<?php foreach ($ajm as $k => $v) : ?>
 				<div class="col-12 col-md-6">
-					<a href="<?= base_url('asesmen/' . $v->slug) ?>">
+					<a href="<?= base_url('asesmen/' . $v->slug) ?>" class="btn-asesmen">
 						<div class="panel-card shadow-sm p-3 mb-5 bg-body rounded">
 							<div class="bar"></div>
 							<p class=""><b><?= $v->nama ?></b></p>

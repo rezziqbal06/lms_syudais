@@ -323,4 +323,73 @@ class Asesmen extends JI_Controller
 		}
 		$this->__json_out($data);
 	}
+
+	/**
+	 * Give json data set result on datatable format
+	 *
+	 * @api
+	 *
+	 * @return void
+	 */
+	public function list()
+	{
+		$d = $this->__init();
+		$data = array();
+		$this->_api_auth_required($data, 'admin');
+
+		$this->status = 200;
+		$this->message = API_ADMIN_ERROR_CODES[$this->status];
+
+		/** advanced filter is_active */
+		$a_jpenilaian_id = $this->input->request('a_jpenilaian_id', '');
+		if (strlen($a_jpenilaian_id)) {
+			$a_jpenilaian_id = intval($a_jpenilaian_id);
+		}
+		$a_ruangan_id = $this->input->request('a_ruangan_id', '');
+		if (strlen($a_ruangan_id)) {
+			$a_ruangan_id = intval($a_ruangan_id);
+		}
+		$b_user_id = $this->input->request('b_user_id', '');
+		if (strlen($b_user_id)) {
+			$b_user_id = intval($b_user_id);
+		}
+		$b_user_id_penilai = $this->input->request('b_user_id_penilai', '');
+		if (strlen($b_user_id_penilai)) {
+			$b_user_id_penilai = intval($b_user_id_penilai);
+		}
+		$is_active = $this->input->request('is_active', '');
+		if (strlen($is_active)) {
+			$is_active = intval($is_active);
+		}
+		$sdate = $this->input->request('sdate', '');
+		$edate = $this->input->request('edate', '');
+		$page = $this->input->request('page', 0);
+		$pagesize = $this->input->request('pagesize', 10);
+		$sort_column = $this->input->request('sort_column', 'id');
+		$sort_direction = $this->input->request('sort_direction', 'desc');
+		$keyword = $this->input->request('keyword', '');
+
+
+		$dcount = $this->cam->count($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $keyword, $is_active);
+		$ddata = $this->cam->data(
+			$page,
+			$pagesize,
+			$sort_column,
+			$sort_direction,
+			$b_user_id,
+			$b_user_id_penilai,
+			$a_jpenilaian_id,
+			$a_ruangan_id,
+			$keyword,
+			$is_active,
+		);
+
+		foreach ($ddata as &$gd) {
+			if (isset($gd->is_active)) {
+				$gd->is_active = $this->cam->label('is_active', $gd->is_active);
+			}
+		}
+
+		$this->__jsonDataTable($ddata, $dcount);
+	}
 }
