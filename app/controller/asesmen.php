@@ -25,10 +25,10 @@ class Asesmen extends JI_Controller
 	{
 		$data = $this->__init();
 
-		// if (!$this->user_login) {
-		// 	redir(base_url('login'));
-		// 	die();
-		// }
+		if (!$this->user_login) {
+			redir(base_url('login'));
+			die();
+		}
 
 		$ajm = $this->ajm->getAll();
 		if (isset($ajm[0]->id)) $data['ajm'] = $ajm;
@@ -45,10 +45,10 @@ class Asesmen extends JI_Controller
 	public function detail($slug = '')
 	{
 		$data = $this->__init();
-		// if (!$this->user_login) {
-		// 	redir(base_url('login'));
-		// 	die();
-		// }
+		if (!$this->user_login) {
+			redir(base_url('login'));
+			die();
+		}
 
 		if (!strlen($slug)) {
 			redir(base_url('asesmen'));
