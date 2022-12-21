@@ -16,7 +16,7 @@ $("#ftambah").on("submit",function(e){
 	$('.icon-submit').addClass('fa-circle-o-notch fa-spin');
 
 	var fd = new FormData($(this)[0]);
-	var url = '<?= base_url("api_front/asesmen/baru/")?>';
+	var url = '<?= base_url("api_front/asesmen/baru")?>';
 	$.ajax({
 		url: url,
 		data: fd,
