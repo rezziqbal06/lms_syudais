@@ -97,18 +97,9 @@ class Asesmen extends JI_Controller
 			$this->__json_out($data);
 			die();
 		}
-		if (!$this->cam->validates()) {
-			$this->status = 444;
-			$this->message = API_ADMIN_ERROR_CODES[$this->status];
-			$validation_message = $this->cam->validation_message();
-			if (strlen($validation_message)) {
-				$this->message = $validation_message;
-			}
-			$this->__json_out($data);
-			die();
-		}
 
-		$ajm = $this->ajm->id($this->input->post('a_jpenilaian_id'));
+
+		$ajm = $this->ajm->id($this->input->request('a_jpenilaian_id'));
 		if (!isset($ajm->id)) {
 			$this->status = 444;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -141,14 +132,6 @@ class Asesmen extends JI_Controller
 		$time2 = new DateTime();
 		$timediff = $time1->diff($time2);
 
-
-
-
-		$this->cam->columns['etime']->value = $etime;
-		$this->cam->columns['cdate']->value = date('Y-m-d H:i:s');
-		$this->cam->columns['b_user_id_penilai']->value = isset($d['sess']->user->id) ? $d['sess']->user->id : 0;
-
-		$this->cam->columns['durasi']->value = $timediff->h . '.' . $timediff->i;
 		$di = [];
 
 		$value = [];
