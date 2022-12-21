@@ -84,7 +84,8 @@ class User extends JI_Controller
     if ($this->user_login) {
       $this->status = 400;
       $this->message = "Sudah Login";
-      redir(base_url("bimbingan"));
+      $this->__json_out($data);
+      die();
     }
 
     $di = $_POST;
@@ -443,6 +444,13 @@ class User extends JI_Controller
   {
     $d = $this->__init();
     $data = [];
+    if (!$this->user_login) {
+      $this->status = 400;
+      $this->message = 'Harus login';
+      header("HTTP/1.0 400 Harus login");
+      $this->__json_out($data);
+      die();
+    }
     if (empty($id)) {
       $this->status = 444;
       $this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -450,15 +458,15 @@ class User extends JI_Controller
       die();
     }
 
-    $slug = $this->input->request('jenis_penilaian') ?? null;
+    $slug = $this->input->request('jenis_penilaian');
     if (isset($slug)) {
       $ajm = $this->ajm->getBySlug($slug);
     }
 
     $data = $this->bum->id($id);
 
-    $user_id = $d['sess']->user->id ?? 0;
-    $asesmen = $this->cam->getByFilter($id, $user_id, $ajm->id ?? 0, date('Y-m-d'), date('Y-m-t'));
+    $user_id = $d['sess']->user->id;
+    $asesmen = $this->cam->getByFilter($id, $user_id, $ajm->id, date('Y-m-d'), date('Y-m-t'));
     $jumlah_penilaian = count($asesmen);
     $progress_penilaian = $jumlah_penilaian > 0 ? $jumlah_penilaian / 10 * 100 : 0;
     $data->jumlah_penilaian = $jumlah_penilaian;

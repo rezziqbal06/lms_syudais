@@ -87,7 +87,13 @@ class Asesmen extends JI_Controller
 	public function baru()
 	{
 		$d = $this->__init();
-
+		if (!$this->user_login) {
+			$this->status = 400;
+			$this->message = 'Harus login';
+			header("HTTP/1.0 400 Harus login");
+			$this->__json_out($data);
+			die();
+		}
 		$data = new \stdClass();
 		if (!$this->cam->validates()) {
 			$this->status = 444;
@@ -108,7 +114,7 @@ class Asesmen extends JI_Controller
 			die();
 		}
 
-		$b_user_id = $this->input->post('b_user_id') ?? null;
+		$b_user_id = isset($this->input->post('b_user_id')) ? $this->input->post('b_user_id') : 0;
 		if (!isset($b_user_id) || !strlen($b_user_id)) {
 			$bum = $this->bum->getByName($this->input->post('user'));
 			if (isset($bum->id)) {
@@ -135,7 +141,7 @@ class Asesmen extends JI_Controller
 
 		$this->cam->columns['etime']->value = $etime;
 		$this->cam->columns['cdate']->value = date('Y-m-d H:i:s');
-		$this->cam->columns['b_user_id_penilai']->value = $d['sess']->user->id ?? 0;
+		$this->cam->columns['b_user_id_penilai']->value = isset($d['sess']->user->id) ? $d['sess']->user->id : 0;
 
 		$this->cam->columns['durasi']->value = $timediff->h . '.' . $timediff->i;
 
@@ -206,7 +212,13 @@ class Asesmen extends JI_Controller
 	{
 		$d = $this->__init();
 		$data = array();
-
+		if (!$this->user_login) {
+			$this->status = 400;
+			$this->message = 'Harus login';
+			header("HTTP/1.0 400 Harus login");
+			$this->__json_out($data);
+			die();
+		}
 		$du = $_POST;
 
 

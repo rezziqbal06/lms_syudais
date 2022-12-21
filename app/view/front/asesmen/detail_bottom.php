@@ -83,7 +83,7 @@ $("#cari_user").select2({
 $("#pilih_user").on('click', function(e){
     e.preventDefault();
     var id = $('#cari_user').find('option:selected').val();
-    $.get('<?=base_url('api_front/user/detail/')?>' + id + '?jenis_penilaian=<?=$ajm->slug?>').done(function(dt){
+    $.get('<?=base_url('api_front/user/detail/')?>' + id + '/' + '?jenis_penilaian=<?=$ajm->slug?>').done(function(dt){
         if(dt.data){
             $("#ib_user_id").val(id);
             $("#iuser").val(dt.data.fnama);
