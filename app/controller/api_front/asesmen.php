@@ -97,9 +97,18 @@ class Asesmen extends JI_Controller
 			$this->__json_out($data);
 			die();
 		}
+		if (!$this->cam->validates()) {
+			$this->status = 444;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$validation_message = $this->cam->validation_message();
+			if (strlen($validation_message)) {
+				$this->message = $validation_message;
+			}
+			$this->__json_out($data);
+			die();
+		}
 
-
-		$ajm = $this->ajm->id($this->input->request('a_jpenilaian_id'));
+		$ajm = $this->ajm->id($this->input->post('a_jpenilaian_id'));
 		if (!isset($ajm->id)) {
 			$this->status = 444;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -111,7 +120,7 @@ class Asesmen extends JI_Controller
 		if (!isset($b_user_id) || !strlen($b_user_id)) {
 			$bum = $this->bum->getByName($this->input->request('user'));
 			if (isset($bum->id)) {
-				$b_user_id = $bum->id;
+				$this->cam->columns['b_user_id']->value = $bum->id;
 			} else {
 				$bu = [];
 				$bu['fnama'] = $this->input->request('user');
@@ -120,7 +129,7 @@ class Asesmen extends JI_Controller
 				$bu['cdate'] = 'now()';
 				$resUser = $this->bum->set($bu);
 				if ($resUser) {
-					$b_user_id = $resUser;
+					$this->cam->columns['b_user_id']->value = $resUser;
 				}
 			}
 		}
@@ -132,7 +141,11 @@ class Asesmen extends JI_Controller
 		$time2 = new DateTime();
 		$timediff = $time1->diff($time2);
 
-		$di = [];
+		$this->cam->columns['etime']->value = $etime;
+		$this->cam->columns['cdate']->value = date('Y-m-d H:i:s');
+		$this->cam->columns['b_user_id_penilai']->value = isset($d['sess']->user->id) ? $d['sess']->user->id : 0;
+
+		$this->cam->columns['durasi']->value = $timediff->h . '.' . $timediff->i;
 
 		$value = [];
 		if ($ajm->slug == 'audit-hand-hygiene') {
@@ -141,23 +154,15 @@ class Asesmen extends JI_Controller
 			$value['aksi'] = $this->input->request('a_aksi_id');
 			$aksi = $this->aim->id($value['aksi']);
 			if (isset($aksi->nama) && ($aksi->nama == 'HW' || $aksi->nama == 'HR')) {
-				$di['nilai'] = 1;
+				$this->cam->columns['nilai']->value = 1;
 			} else {
-				$di['nilai'] = 0;
+				$this->cam->columns['nilai']->value = 0;
 			}
 			$value = json_encode($value);
 		}
-		$di['etime'] = $etime;
-		$di['stime'] = $stime;
-		$di['durasi'] = $timediff->h . '.' . $timediff->i;
-		$di['b_user_id_penilai'] = $d['sess']->user->id;
-		$di['b_user_id'] = $b_user_id;
-		$di['a_jpenilaian_id'] = $this->input->request('a_jpenilaian_id');
-		$di['a_ruangan_id'] = $this->input->request('a_ruangan_id');
-		$di['cdate'] = "now()";
-		$di['value'] = json_encode($value);
+		$this->cam->columns['value']->value = $value;
 
-		$res = $this->cam->set($di);
+		$res = $this->cam->save();
 		if ($res) {
 			$this->status = 200;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -396,7 +401,7 @@ class Asesmen extends JI_Controller
 			$a_jpenilaian_id,
 			$a_ruangan_id,
 			$keyword,
-			$is_active,
+			$is_active
 		);
 
 		foreach ($ddata as &$gd) {
