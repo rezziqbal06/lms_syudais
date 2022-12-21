@@ -8,10 +8,12 @@ class Asesmen extends JI_Controller
 	{
 		parent::__construct();
 		$this->load('a_jpenilaian_concern');
+		$this->load('a_indikator_concern');
 		$this->load('b_user_concern');
 		$this->load('c_asesmen_concern');
 
 		$this->load("api_front/a_jpenilaian_model", 'ajm');
+		$this->load("api_front/a_indikator_model", 'aim');
 		$this->load("api_front/b_user_model", 'bum');
 		$this->load("api_front/c_asesmen_model", 'cam');
 	}
@@ -87,6 +89,7 @@ class Asesmen extends JI_Controller
 	public function baru()
 	{
 		$d = $this->__init();
+		$data = [];
 		if (!$this->user_login) {
 			$this->status = 400;
 			$this->message = 'Harus login';
@@ -94,7 +97,6 @@ class Asesmen extends JI_Controller
 			$this->__json_out($data);
 			die();
 		}
-		$data = new \stdClass();
 		if (!$this->cam->validates()) {
 			$this->status = 444;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -114,7 +116,7 @@ class Asesmen extends JI_Controller
 			die();
 		}
 
-		$b_user_id = isset($this->input->post('b_user_id')) ? $this->input->post('b_user_id') : 0;
+		$b_user_id = !empty((int) $this->input->post('b_user_id')) ? $this->input->post('b_user_id') : 0;
 		if (!isset($b_user_id) || !strlen($b_user_id)) {
 			$bum = $this->bum->getByName($this->input->post('user'));
 			if (isset($bum->id)) {
@@ -150,6 +152,12 @@ class Asesmen extends JI_Controller
 			$value = [];
 			$value['indikator'] = $this->input->post('a_indikator_id');
 			$value['aksi'] = $this->input->post('a_aksi_id');
+			$aksi = $this->aim->id($value['aksi']);
+			if (isset($aksi->nama) && ($aksi->nama == 'HW' || $aksi->nama == 'HR')) {
+				$this->cam->columns['nilai']->value = 1;
+			} else {
+				$this->cam->columns['nilai']->value = 0;
+			}
 			$value = json_encode($value);
 		}
 		$this->cam->columns['value']->value = $value;
@@ -190,7 +198,7 @@ class Asesmen extends JI_Controller
 		$this->message = API_ADMIN_ERROR_CODES[$this->status];
 		$data = $this->cam->id($id);
 		if (!isset($data->id)) {
-			$data = new \stdClass();
+			$data = [];
 			$this->status = 441;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			$this->__json_out($data);
