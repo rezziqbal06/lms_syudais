@@ -116,7 +116,7 @@ class Asesmen extends JI_Controller
 			die();
 		}
 
-		$b_user_id = !empty((int) $this->input->post('b_user_id')) ? $this->input->post('b_user_id') : 0;
+		$b_user_id = !empty((int) $this->input->post('b_user_id')) ? $this->input->post('b_user_id') : '';
 		if (!isset($b_user_id) || !strlen($b_user_id)) {
 			$bum = $this->bum->getByName($this->input->post('user'));
 			if (isset($bum->id)) {
@@ -147,7 +147,7 @@ class Asesmen extends JI_Controller
 
 		// $this->cam->columns['durasi']->value = $timediff->h . '.' . $timediff->i;
 
-		$value = null;
+		$value = [];
 		if ($ajm->slug == 'audit-hand-hygiene') {
 			$value = [];
 			$value['indikator'] = $this->input->post('a_indikator_id');
