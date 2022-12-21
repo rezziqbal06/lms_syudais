@@ -137,15 +137,15 @@ class Asesmen extends JI_Controller
 		date_default_timezone_set('Asia/Jakarta');
 		$stime = $this->input->post('stime');
 		$etime = date('H:i:s');
-		$time1 = new DateTime(date('Y-m-d') . ' ' . $stime);
-		$time2 = new DateTime();
-		$timediff = $time1->diff($time2);
+		// $time1 = new DateTime(date('Y-m-d') . ' ' . $stime);
+		// $time2 = new DateTime();
+		// $timediff = $time1->diff($time2);
 
 		$this->cam->columns['etime']->value = $etime;
 		$this->cam->columns['cdate']->value = date('Y-m-d H:i:s');
 		$this->cam->columns['b_user_id_penilai']->value = isset($d['sess']->user->id) ? $d['sess']->user->id : 0;
 
-		$this->cam->columns['durasi']->value = $timediff->h . '.' . $timediff->i;
+		// $this->cam->columns['durasi']->value = $timediff->h . '.' . $timediff->i;
 
 		$value = null;
 		if ($ajm->slug == 'audit-hand-hygiene') {
