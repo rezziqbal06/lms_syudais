@@ -399,6 +399,14 @@ class Asesmen extends JI_Controller
 			if (isset($gd->cdate)) {
 				$gd->cdate = $this->__dateIndonesia($gd->cdate);
 			}
+
+			if (isset($gd->durasi)) {
+				$durasis = explode('.', $gd->durasi);
+
+				$gd->durasi = '';
+				if ((int) $durasis[0]) $gd->durasi .= $durasis[0] . ' jam ';
+				if ((int) $durasis[1]) $gd->durasi .= $durasis[1] . ' menit';
+			}
 		}
 
 		$data['list'] = $ddata;
