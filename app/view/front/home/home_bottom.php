@@ -99,3 +99,9 @@ $('#btn_filter').on('click', function(e){
 	e.preventDefault();
 	$("#modal_filter").modal('show');
 })
+
+$("#jenis_penilaian").on('change', function(e){
+	e.preventDefault();
+	var fd = new FormData($("#ffilter")[0]);
+	initData(fd);
+})
