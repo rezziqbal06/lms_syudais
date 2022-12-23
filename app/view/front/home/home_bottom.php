@@ -1,4 +1,3 @@
-var s = '';
 function showLoading(){
 	$(".panel-loading").show();
 	$(".panel-empty").hide();
@@ -26,7 +25,8 @@ function initData(fd=[]){
 		success: function(respon){
 			hideLoading();
 			if(respon.status==200){
-				if(respon.data.list){
+				if(respon.data.list && respon.data.list.length > 0){
+					var s = '';
 					$.each(respon.data.list, function(k,v){
 						var is_show = 'd-none'
 						if(v.nilai) is_show = '';
