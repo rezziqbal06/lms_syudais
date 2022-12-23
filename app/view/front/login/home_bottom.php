@@ -44,7 +44,7 @@ $("#form-login").on("submit",function(evt){
 			setTimeout(function(){
 				NProgress.done();
 				window.location =  '<?=base_url('')?>';
-			},3000);
+			},500);
 		}else{
 			$("#iusername").prop("disabled",false);
 			$("#ipassword").prop("disabled",false);
@@ -59,7 +59,7 @@ $("#form-login").on("submit",function(evt){
 				if(login_try>2){
 					window.location = '<?=base_url('login')?>';
 				}
-			},3000);
+			},500);
 		}
 	}).error(function(){
 		$("#iusername").prop("disabled",false);

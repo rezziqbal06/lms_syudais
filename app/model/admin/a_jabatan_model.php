@@ -21,5 +21,10 @@ class A_Jabatan_Model extends \Model\A_Jabatan_Concern
 		$this->db->from($this->tbl, $this->tbl_as);
 		$this->point_of_view = 'admin';
 	}
-	
+
+	public function getAll($is_active = 1)
+	{
+		$this->db->where('is_active', $is_active);
+		return $this->db->get('', 0);
+	}
 }

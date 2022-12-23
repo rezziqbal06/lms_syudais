@@ -27,7 +27,7 @@ $("#ftambah").on("submit",function(e){
 			if(respon.status==200){
 				gritter('<h4>Sukses</h4><p>Data berhasil ditambahkan</p>','success');
 				setTimeout(function(){
-					<!-- window.location = '<?=base_url('home')?>'; -->
+					window.location = '<?=base_url('home')?>';
 				},500);
 			}else{
 				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');

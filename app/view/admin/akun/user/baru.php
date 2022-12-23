@@ -66,7 +66,7 @@
                         <select id="ialamat_select" class="form-control select2"></select>
                     </div>
                 </div> -->
-                <div class="form-group row">
+                <!-- <div class="form-group row">
                     <div class="col-md-4">
                         <label for="iprovinsi">Provinsi</label>
                         <select id="iprovinsi" class="form-control" name="provinsi"></select>
@@ -100,7 +100,7 @@
                 </div>
                 <div class="form-group row">
 
-                </div>
+                </div> -->
                 <div class="form-group row">
                     <div class="col-md-4">
                         <label for="iitelp" class="control-label">Telepon</label>
@@ -109,6 +109,10 @@
                     <div class="col-md-4">
                         <label for="iemail" class="control-label">Email</label>
                         <input id="iemail" type="email" class="form-control" name="email" placeholder="Email" />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="iusername" class="control-label">Username</label>
+                        <input id="iusername" type="username" class="form-control" name="username" placeholder="Username" />
                     </div>
                     <!-- <div class="col-md-4">
                         <label for="ipassword" class="control-label">Password</label>

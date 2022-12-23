@@ -108,8 +108,8 @@ class B_User_Concern extends \JI_Model
     const REQUIREDS = [
         'a_jabatan_id',
         'email',
+        'username',
         'fnama',
-        'alamat',
         'telp',
     ];
     const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

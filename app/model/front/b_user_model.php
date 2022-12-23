@@ -1,10 +1,5 @@
 <?php
 
-namespace Model\Admin;
-
-register_namespace(__NAMESPACE__);
-
-use Model;
 
 /**
  * Scoped `front` model for `b_user` table
@@ -33,8 +28,9 @@ class B_User_Model extends \Model\B_User_Concern
 	{
 		$this->db
 			->select("*")
-			->where_as("email", $this->db->esc($username), "OR")
-			->where_as("username", $this->db->esc($username), "OR");
+			->where_as("is_deleted", $this->db->esc(0), "AND")
+			->where_as("email", $this->db->esc($username), "OR", "=", 1, 0)
+			->where_as("username", $this->db->esc($username), "OR", "=", 0, 1);
 		return $this->db->get_first('object', 0); //
 	}
 
@@ -43,8 +39,8 @@ class B_User_Model extends \Model\B_User_Concern
 		$this->db->select_as("$this->tbl_as.*, $this->tbl_as.id", 'id', 0);
 		$this->db->select_as("COALESCE($this->tbl2_as.nama, '')", 'ruangan', 0);
 		$this->db->select_as("COALESCE($this->tbl3_as.nama, '')", 'profesi', 0);
-		$this->db->join($this->tbl2,$this->tbl2_as,"id",$this->tbl_as,"a_unit_id","left");
-		$this->db->join($this->tbl3,$this->tbl3_as,"id",$this->tbl_as,"a_jabatan_id","left");
+		$this->db->join($this->tbl2, $this->tbl2_as, "id", $this->tbl_as, "a_unit_id", "left");
+		$this->db->join($this->tbl3, $this->tbl3_as, "id", $this->tbl_as, "a_jabatan_id", "left");
 		$this->db->from($this->tbl, $this->tbl_as);
 		$this->db->where("bu.id", $id);
 		return $this->db->get_first('object', 0);
@@ -103,5 +99,11 @@ class B_User_Model extends \Model\B_User_Concern
 		$this->scoped()->_filter($b_user_id, $keyword, $is_active, $sdate, $edate);
 		$this->db->order_by($sortCol, $sortDir)->limit($page, $pagesize);
 		return $this->db->get("object", 0);
+	}
+	public function getAll($is_active = 1)
+	{
+		$this->db->where('is_active', $is_active);
+		$this->db->where('is_deleted', $this->db->esc(0));
+		return $this->db->get('', 0);
 	}
 }

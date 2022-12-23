@@ -11,8 +11,6 @@ register_namespace(__NAMESPACE__);
  */
 class C_Asesmen_Model extends \Model\C_Asesmen_Concern
 {
-  public $tbl2 = 'c_asesmen';
-  public $tbl2_as = 'j';
   public function __construct()
   {
     parent::__construct();
@@ -20,25 +18,43 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     $this->point_of_view = 'front';
   }
 
-  private function filters($keyword = '', $is_active = '')
+  private function filters($b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
   {
-    // if (strlen($b_user_id)) {
-    //   $this->db->where_as("$this->tbl_as.b_user_id", $this->db->esc($b_user_id));
-    // }
+    if (strlen($b_user_id)) {
+      $this->db->where_as("$this->tbl_as.b_user_id", $this->db->esc($b_user_id));
+    }
+    if (strlen($b_user_id_penilai)) {
+      $this->db->where_as("$this->tbl_as.b_user_id_penilai", $this->db->esc($b_user_id_penilai));
+    }
+    if (strlen($a_jpenilaian_id)) {
+      $this->db->where_as("$this->tbl_as.a_jpenilaian_id", $this->db->esc($a_jpenilaian_id));
+    }
+    if (strlen($a_ruangan_id)) {
+      $this->db->where_as("$this->tbl_as.a_ruangan_id", $this->db->esc($a_ruangan_id));
+    }
     if (strlen($is_active)) {
       $this->db->where_as("$this->tbl_as.is_active", $this->db->esc($is_active));
     }
+    if (strlen($sdate) == 10 && strlen($edate) == 10) {
+      $this->db->between("DATE($this->tbl_as.cdate)", 'DATE("' . $sdate . '")', 'DATE("' . $edate . '")');
+    } elseif (strlen($sdate) != 10 && strlen($edate) == 10) {
+      $this->db->where_as("DATE($this->tbl_as.cdate)", 'DATE("' . $edate . '")', "AND", '<=');
+    } elseif (strlen($sdate) == 10 && strlen($edate) != 10) {
+      $this->db->where_as("DATE($this->tbl_as.cdate)", 'DATE("' . $sdate . '")', "AND", '>=');
+    }
     if (strlen($keyword) > 0) {
-      $this->db->where_as("$this->tbl_as.nama", $keyword, "OR", "%like%", 1, 0);
-      $this->db->where_as("$this->tbl_as.deskripsi", $keyword, "AND", "%like%", 0, 0);
-      $this->db->where_as("$this->tbl_as.kd_ruangan", $keyword, "AND", "%like%", 0, 0);
+      $this->db->where_as("COALESCE($this->tbl2_as.fnama, '')", $keyword, "AND", "%like%", 1, 0);
+      $this->db->where_as("COALESCE($this->tbl3_as.fnama, '')", $keyword, "AND", "%like%", 0, 1);
     }
     return $this;
   }
 
   private function join_company()
   {
-    $this->db->join($this->tbl3, $this->tbl3_as, 'id', $this->tbl_as, 'a_unit_id', 'left');
+    $this->db->join($this->tbl2, $this->tbl2_as, 'id', $this->tbl_as, 'b_user_id', 'left');
+    $this->db->join($this->tbl3, $this->tbl3_as, 'id', $this->tbl_as, 'b_user_id_penilai', 'left');
+    $this->db->join($this->tbl4, $this->tbl4_as, 'id', $this->tbl_as, 'a_ruangan_id', 'left');
+    $this->db->join($this->tbl6, $this->tbl6_as, 'id', $this->tbl2_as, 'a_jabatan_id', 'left');
 
     return $this;
   }
@@ -51,20 +67,22 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     return $this;
   }
 
-  public function data($page = 0, $pagesize = 10, $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $keyword = '', $is_active = '')
+  public function data($page = 0, $pagesize = 10, $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
   {
     $this->datatables[$this->point_of_view]->selections($this->db);
     $this->db->from($this->tbl, $this->tbl_as);
-    $this->filters($b_user_id, $keyword, $is_active)->scoped();
+    $this->join_company();
+    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
     $this->db->order_by($sortCol, $sortDir)->limit($page, $pagesize);
     return $this->db->get("object", 0);
   }
 
-  public function count($b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $keyword = '', $is_active = '')
+  public function count($b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
   {
     $this->db->select_as("COUNT($this->tbl_as.id)", "jumlah", 0);
     $this->db->from($this->tbl, $this->tbl_as);
-    $this->filters($b_user_id, $keyword, $is_active)->scoped();
+    $this->join_company();
+    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
     $d = $this->db->get_first("object", 0);
     if (isset($d->jumlah)) {
       return $d->jumlah;

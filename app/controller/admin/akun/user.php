@@ -21,9 +21,12 @@ class User extends \JI_Controller
 		parent::__construct();
 		$this->setTheme('admin');
 		$this->lib("seme_purifier");
+		$this->load("a_jabatan_concern");
+		$this->load("a_ruangan_concern");
 		$this->load("b_user_concern");
 		$this->load("admin/b_user_model", "bum");
-		$this->load("b_user_alamat_concern");
+		$this->load("admin/a_jabatan_model", "ajm");
+		$this->load("admin/a_ruangan_model", "arm");
 		$this->current_parent = 'akun';
 		$this->current_page = 'user';
 	}
@@ -52,7 +55,8 @@ class User extends \JI_Controller
 			die();
 		}
 		$pengguna = $data['sess']->admin;
-
+		$data['jabatans'] = $this->ajm->getAll();
+		$data['units'] = $this->arm->getAll();
 
 		$this->setTitle('Member Baru ' . $this->config_semevar('site_suffix', ''));
 
@@ -85,6 +89,8 @@ class User extends \JI_Controller
 		// 	redir(base_url_admin('akun/user/'));
 		// 	die();
 		// }
+		$data['jabatans'] = $this->ajm->getAll();
+		$data['units'] = $this->arm->getAll();
 
 		$data['bum'] = $bum;
 

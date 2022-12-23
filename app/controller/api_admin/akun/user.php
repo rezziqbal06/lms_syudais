@@ -91,11 +91,13 @@ class User extends JI_Controller
 			$this->__json_out($data);
 			die();
 		}
-		// $this->bum->columns['password']->value = md5($this->input->request('password') ?? 123456);
+		$this->bum->columns['password']->value = md5('123456');
 
 		$res = $this->bum->save();
 		if ($res) {
 			$this->lib("conumtext");
+			$this->status = 200;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			$token = $this->conumtext->genRand($type = "str", 9, 9);
 			$update_apikey = $this->bum->update($res, ['apikey' => $token]);
 		} else {

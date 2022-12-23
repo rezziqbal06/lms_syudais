@@ -1,3 +1,30 @@
+<style>
+	.card {
+		box-shadow: none;
+		border: solid 1px #121212;
+	}
+
+	.pill {
+		padding: 5px;
+		border-radius: 8px;
+		font-size: small;
+		color: white;
+	}
+
+	.pill-warning {
+		color: white;
+		background-color: var(--accent);
+	}
+
+	.select2 {
+		width: 100%;
+	}
+
+	.date-picker {
+		z-index: 1600 !important;
+		/* has to be larger than 1050 */
+	}
+</style>
 <div class="container mb-5">
 	<div class="row gradient-primary p-5" style="border-bottom-left-radius: 16px;border-bottom-right-radius: 16px;">
 		<h6 class="text-white">Statistik</h6>
@@ -19,7 +46,7 @@
 	<div class="panel-statistik"></div>
 	<div class="panel-filter row" style="display: none;">
 		<div class="col-md-1">
-			<i class="fa fa-sliders"></i>
+			<a href="#" id="btn_filter"><i class="fa fa-sliders"></i></a>
 		</div>
 	</div>
 	<div class="panel-list p-2" style="display: none;">
@@ -44,4 +71,5 @@
 			<h5>Penilaian masih kosong</h5>
 		</div>
 	</div>
+
 </div>

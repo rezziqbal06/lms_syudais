@@ -22,9 +22,9 @@ class A_Ruangan_Model extends \Model\A_Ruangan_Concern
 		$this->point_of_view = 'admin';
 	}
 
-	public function getAll()
+	public function getAll($is_active = 1)
 	{
-		$this->db->where('is_active', 1);
+		$this->db->where('is_active', $is_active);
 		return $this->db->get('', 0);
 	}
 }

@@ -66,7 +66,7 @@
                         <select id="iealamat_select" class="form-control select2"></select>
                     </div>
                 </div> -->
-				<div class="form-group row">
+				<!-- <div class="form-group row">
 					<div class="col-md-4">
 						<label for="ieprovinsi">Provinsi</label>
 						<select id="ieprovinsi" class="form-control" name="provinsi"></select>
@@ -100,7 +100,7 @@
 				</div>
 				<div class="form-group row">
 
-				</div>
+				</div> -->
 				<div class="form-group row">
 					<div class="col-md-4">
 						<label for="ieitelp" class="control-label">Telepon</label>
@@ -109,6 +109,10 @@
 					<div class="col-md-4">
 						<label for="ieemail" class="control-label">Email</label>
 						<input id="ieemail" type="email" class="form-control" name="email" placeholder="Email" />
+					</div>
+					<div class="col-md-4">
+						<label for="ieusername" class="control-label">Username</label>
+						<input id="ieusername" type="username" class="form-control" name="username" placeholder="Username" />
 					</div>
 					<!-- <div class="col-md-4">
 						<label for="iepassword" class="control-label">Password</label>

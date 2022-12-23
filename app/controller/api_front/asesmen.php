@@ -362,25 +362,10 @@ class Asesmen extends JI_Controller
 
 		/** advanced filter is_active */
 		$a_jpenilaian_id = $this->input->request('a_jpenilaian_id', '');
-		if (strlen($a_jpenilaian_id)) {
-			$a_jpenilaian_id = intval($a_jpenilaian_id);
-		}
 		$a_ruangan_id = $this->input->request('a_ruangan_id', '');
-		if (strlen($a_ruangan_id)) {
-			$a_ruangan_id = intval($a_ruangan_id);
-		}
 		$b_user_id = $this->input->request('b_user_id', '');
-		if (strlen($b_user_id)) {
-			$b_user_id = intval($b_user_id);
-		}
 		$b_user_id_penilai = $this->input->request('b_user_id_penilai', '');
-		if (strlen($b_user_id_penilai)) {
-			$b_user_id_penilai = intval($b_user_id_penilai);
-		}
 		$is_active = $this->input->request('is_active', '');
-		if (strlen($is_active)) {
-			$is_active = intval($is_active);
-		}
 		$sdate = $this->input->request('sdate', '');
 		$edate = $this->input->request('edate', '');
 		$page = $this->input->request('page', 0);
@@ -390,7 +375,7 @@ class Asesmen extends JI_Controller
 		$keyword = $this->input->request('keyword', '');
 
 
-		$dcount = $this->cam->count($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $keyword, $is_active);
+		$dcount = $this->cam->count($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active);
 		$ddata = $this->cam->data(
 			$page,
 			$pagesize,
@@ -400,6 +385,8 @@ class Asesmen extends JI_Controller
 			$b_user_id_penilai,
 			$a_jpenilaian_id,
 			$a_ruangan_id,
+			$sdate,
+			$edate,
 			$keyword,
 			$is_active
 		);
@@ -408,8 +395,15 @@ class Asesmen extends JI_Controller
 			if (isset($gd->is_active)) {
 				$gd->is_active = $this->cam->label('is_active', $gd->is_active);
 			}
+
+			if (isset($gd->cdate)) {
+				$gd->cdate = $this->__dateIndonesia($gd->cdate);
+			}
 		}
 
-		$this->__jsonDataTable($ddata, $dcount);
+		$data['list'] = $ddata;
+		$data['count'] = $dcount;
+
+		$this->__json_out($data);
 	}
 }

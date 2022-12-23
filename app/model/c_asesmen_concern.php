@@ -16,10 +16,16 @@ class C_Asesmen_Concern extends \JI_Model
 {
     public $tbl = 'c_asesmen';
     public $tbl_as = 'ca';
-    // public $tbl2 = 'b_user_alamat';
-    // public $tbl2_as = 'bua';
-    // public $tbl3 = 'a_company';
-    // public $tbl3_as = 'ac';
+    public $tbl2 = 'b_user';
+    public $tbl2_as = 'bu';
+    public $tbl3 = 'b_user';
+    public $tbl3_as = 'bu2'; // untuk penilai
+    public $tbl4 = 'a_ruangan';
+    public $tbl4_as = 'ar';
+    public $tbl5 = 'a_jpenilaian';
+    public $tbl5_as = 'aj';
+    public $tbl6 = 'a_jabatan';
+    public $tbl6_as = 'ajb';
 
     const COLUMNS = [
         'a_jpenilaian_id',
@@ -86,14 +92,17 @@ class C_Asesmen_Concern extends \JI_Model
             ["$this->tbl_as.is_active", 'is_active', 'Status']
         ]);
 
-        // $this->datatables['front'] = new \Seme_Datatable([
-        //     ["$this->tbl_as.id", 'id', 'ID'],
-        //     ["$this->tbl_as.fnama", 'fnama', 'Nama'],
-        //     ["$this->tbl_as.telp", 'telp', 'Telp'],
-        //     ["$this->tbl_as.email", 'email', 'Email'],
-        //     ["$this->tbl_as.utype", 'utype', 'Utype'],
-        //     ["$this->tbl_as.is_active", 'is_active', 'Status']
-        // ]);
+        $this->datatables['front'] = new \Seme_Datatable([
+            ["$this->tbl_as.id", 'id', 'ID'],
+            ["COALESCE($this->tbl2_as.fnama, '')", 'nama', 'nama'],
+            ["COALESCE($this->tbl3_as.fnama, '')", 'nama_penilai', 'Penilai'],
+            ["COALESCE($this->tbl4_as.nama, '')", 'ruangan', 'Ruangan'],
+            ["COALESCE($this->tbl6_as.nama, '')", 'profesi', 'Profesi'],
+            ["$this->tbl_as.durasi", 'durasi', 'durasi'],
+            ["$this->tbl_as.cdate", 'cdate', 'cdate'],
+            ["$this->tbl_as.nilai", 'nilai', 'Nilai'],
+            ["$this->tbl_as.is_active", 'is_active', 'Status']
+        ]);
 
         // $this->datatables['download'] = new \Seme_Datatable([
         //     ["$this->tbl_as.fnama", 'fnama', 'Nama'],

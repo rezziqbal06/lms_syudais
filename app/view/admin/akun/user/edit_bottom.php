@@ -43,7 +43,7 @@ $("#fedit").on("submit",function(e){
 				gritter('<h4>Sukses</h4><p>Data berhasil diubah</p>','success');
 				setTimeout(function(){
 					window.location = '<?=base_url_admin('akun/user/')?>';
-				},3000);
+				},500);
 			}else{
 				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
 
@@ -186,6 +186,9 @@ $("#iekelurahan").select2({
   foreach($bum as $k => $v){ ?>
     <?php if(isset($v) && strlen($v)){?>
     $("[name='<?=$k?>']").val('<?=$v?>');
+    <?php if($k == 'a_jabatan_id' || $k == 'a_unit_id' || $k == 'a_ruangan_id'){ ?>
+      $("[name='<?=$k?>']").val('<?=$v?>').select2();
+    <?php } ?>
     <?php } ?>
   <?php }
 } ?>

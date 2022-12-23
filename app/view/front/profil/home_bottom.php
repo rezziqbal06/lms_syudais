@@ -105,7 +105,7 @@ $("#fedit-profil").on("submit",function(e){
 				gritter('<h4>Sukses</h4><p>Data berhasil diubah</p>','success');
 				setTimeout(function(){
 					window.location = '<?=base_url('profil/')?>';
-				},3000);
+				},500);
 			}else{
 				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
 
@@ -155,7 +155,7 @@ $("#fchange-password").on("submit",function(e){
           gritter('<h4>Sukses</h4><p>Password berhasil diubah</p>','success');
           setTimeout(function(){
             window.location = '<?=base_url('profil/')?>';
-          },3000);
+          },500);
         }else{
           gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
   

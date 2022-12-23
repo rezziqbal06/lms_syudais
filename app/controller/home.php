@@ -9,9 +9,13 @@ class Home extends JI_Controller
 		$this->current_parent = 'dashboard';
 		$this->current_page = 'dashboard';
 
+		$this->load('a_ruangan_concern');
 		$this->load('a_jpenilaian_concern');
+		$this->load('b_user_concern');
 
 		$this->load('front/a_jpenilaian_model', 'ajm');
+		$this->load('front/a_ruangan_model', 'arm');
+		$this->load('front/b_user_model', 'bum');
 	}
 
 	public function index()
@@ -30,7 +34,20 @@ class Home extends JI_Controller
 		$data['ajm'] = $ajm;
 		unset($ajm);
 
+		$bum = $this->bum->getAll();
+		if (isset($bum[0]->id)) $data['bum'] = $bum;
+
+		$data['bum'] = $bum;
+		unset($bum);
+
+		$arm = $this->arm->getAll();
+		if (isset($arm[0]->id)) $data['arm'] = $arm;
+
+		$data['arm'] = $arm;
+		unset($arm);
+
 		$this->putThemeContent("home/home", $data);
+		$this->putThemeContent("home/home_modal", $data);
 		$this->putJsContent("home/home_bottom", $data);
 		$this->loadLayout('col-1-bar', $data);
 		$this->render();

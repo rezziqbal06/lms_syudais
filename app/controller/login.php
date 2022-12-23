@@ -175,14 +175,11 @@ class Login extends \JI_Controller
 		$this->status = 102;
 		$this->message = 'Gagal, kombinasi username atau password salah';
 		$data['redirect_url'] = base_url('login');
-		$this->status = 102;
-		$this->message = 'Gagal, kombinasi username atau password salah';
-
 		$username = $this->input->post("username");
 		$password = $this->input->post("password");
 		if (strlen($username) > 3 && strlen($password) > 3) {
-			$res = $this->bum->auth($username, $password);
-			
+			$res = $this->bum->auth($username);
+
 			if (isset($res->id)) {
 				if (empty($res->is_active)) {
 					$this->status = 103;
