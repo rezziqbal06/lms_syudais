@@ -409,6 +409,15 @@ class Asesmen extends JI_Controller
 			}
 		}
 
+		$datasets = $this->cam->datasets($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active);
+		foreach ($datasets as $k => $v) {
+			$percent = ($v->nilai / $v->jumlah) * 100;
+			$v->percent = $percent;
+			unset($v->nilai);
+			unset($v->jumlah);
+		}
+
+		$data['datasets'] = $datasets;
 		$data['list'] = $ddata;
 		$data['count'] = $dcount;
 

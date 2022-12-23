@@ -43,13 +43,20 @@
 		</select>
 		<button class="btn btn-secondary bg-accent"><i class="fa fa-search"></i></button>
 	</div>
-	<div class="panel-statistik"></div>
+	<div class="panel-statistik mb-5">
+		<div class="card col-md-6 mx-auto">
+			<div class="p-4" style="width: 100%">
+				<canvas id="asesmenChart"></canvas>
+			</div>
+
+		</div>
+	</div>
 	<div class="panel-filter row" style="display: none;">
 		<div class="col-md-1">
 			<a href="#" id="btn_filter"><i class="fa fa-sliders"></i></a>
 		</div>
 	</div>
-	<div class="panel-list p-2" style="display: none;">
+	<div class="panel-list p-2" style="display: none; ">
 	</div>
 	<div class="panel-loading mt-3">
 		<p class="placeholder-glow">
