@@ -64,12 +64,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="row mb-1">
-								<div class="col-10"></div>
-								<div class="col-2">
-									<button class="btn btn-info float-end btn-tambah-indikator" data-type="tambah"><i class="fa fa-plus"></i></button>
-								</div>
-							</div>
+
 							<div class="row">
 								<table class="my_table mt-3">
 									<thead>
@@ -124,7 +119,12 @@
 									</tbody>
 								</table>
 							</div>
-
+							<div class="row mb-1 mt-1">
+								<div class="col-10"></div>
+								<div class="col-2">
+									<button class="btn btn-info float-end btn-tambah-indikator" data-type="tambah"><i class="fa fa-plus"></i></button>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="row" style="margin-top: 1em; ">
@@ -172,12 +172,7 @@
 									<textarea name="deskripsi" id="iedeskripsi" class="form-control" cols="30" rows="10"></textarea>
 								</div>
 							</div>
-							<div class="row mb-1 mt-1">
-								<div class="col-10"></div>
-								<div class="col-2">
-									<button class="btn btn-info float-end btn-tambah-indikator" data-type="edit"><i class="fa fa-plus"></i></button>
-								</div>
-							</div>
+
 							<div class="row">
 								<table class="my_table mt-3">
 									<thead>
@@ -231,6 +226,12 @@
 										</tr>
 									</tbody>
 								</table>
+							</div>
+							<div class="row mb-1 mt-1 mt-1">
+								<div class="col-10"></div>
+								<div class="col-2">
+									<button class="btn btn-info float-end btn-tambah-indikator" data-type="edit"><i class="fa fa-plus"></i></button>
+								</div>
 							</div>
 						</div>
 					</div>
