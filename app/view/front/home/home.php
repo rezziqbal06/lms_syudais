@@ -44,7 +44,7 @@
 		<button class="btn btn-secondary bg-accent"><i class="fa fa-search"></i></button>
 	</div>
 	<div class="panel-statistik mb-5">
-		<div class="card col-md-6">
+		<div class="card col-md-6 mx-auto">
 			<div style="width: 100%">
 				<canvas id="asesmenChart"></canvas>
 			</div>
