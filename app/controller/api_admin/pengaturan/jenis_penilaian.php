@@ -98,7 +98,7 @@ class Jenis_Penilaian extends JI_Controller
 				$dai = [];
 				foreach ($nama_indikator as $k => $v) {
 					$dai[$k]['nama'] = $v;
-					$dai[$k]['a_ruangan_ids'] = json_encode($_POST['a_ruangan_ids_' . $k]) ?? '';
+					$dai[$k]['a_ruangan_ids'] = isset($_POST['a_ruangan_ids_' . $k]) ? json_encode($_POST['a_ruangan_ids_' . $k]) : '';
 					$dai[$k]['kategori'] = $_POST['kategori'][$k] ?? '';
 					$dai[$k]['subkategori'] = $_POST['subkategori'][$k] ?? '';
 					$dai[$k]['type'] = $_POST['type'][$k] ?? '';
@@ -232,7 +232,7 @@ class Jenis_Penilaian extends JI_Controller
 					$dai = [];
 					foreach ($nama_indikator as $k => $v) {
 						$dai[$k]['nama'] = $v;
-						$dai[$k]['a_ruangan_ids'] = json_encode($_POST['a_ruangan_ids_' . $k]) ?? '';
+						$dai[$k]['a_ruangan_ids'] = isset($_POST['a_ruangan_ids_' . $k]) ? json_encode($_POST['a_ruangan_ids_' . $k]) : '';
 						$dai[$k]['kategori'] = $_POST['kategori'][$k] ?? '';
 						$dai[$k]['subkategori'] = $_POST['subkategori'][$k] ?? '';
 						$dai[$k]['type'] = $_POST['type'][$k] ?? '';
