@@ -12,6 +12,9 @@ function hideLoading(){
 	$(".panel-filter").hide();
 }
 function initData(fd=[]){
+	if(fd){
+		fd.append('a_jpenilaian_id', $('#jenis_penilaian').find('option:selected').val());
+	}
 	showLoading()
 	var url = '<?=base_url("api_front/asesmen/list")?>';
 	$.ajax({
