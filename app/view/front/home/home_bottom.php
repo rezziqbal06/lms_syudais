@@ -10,6 +10,36 @@ function hideLoading(){
 	$(".panel-list").hide();
 	$(".panel-filter").hide();
 }
+function initChart(labels=['January', 'February', 'March', 'April', 'May', 'June', 'July'], datas=[65, 59, 80, 81, 26, 55, 40]){
+	
+	const chartCtx = $("#asesmenChart");
+	
+
+	const data = {
+	labels: labels,
+	datasets: [{
+		label: 'Data Asesmen',
+		data: datas,
+		fill: false,
+		backgroundColor: ['#086867','#6c9b87'],
+		borderColor: 'rgb(75, 192, 192)',
+	}]
+	};
+
+	const config = {
+	type: 'bar',
+	data: data,
+	options: {
+		scales: {
+		y: {
+			beginAtZero: true
+		}
+		}
+	},
+	};
+
+	new Chart(chartCtx, config);
+}
 function initData(fd=[]){
 	if(fd){
 		fd.append('a_jpenilaian_id', $('#jenis_penilaian').find('option:selected').val());
@@ -26,11 +56,19 @@ function initData(fd=[]){
 			hideLoading();
 			if(respon.status==200){
 				if(respon.data.list && respon.data.list.length > 0){
+					let labelSets = [];
+					let nilaiSets = [];
+					$.each(respon.data.datasets, function(k,v){
+						labelSets.push(v.nama);
+						nilaiSets.push(v.percent);
+					});
+					console.log(respon.data.datasets);
+					initChart(labelSets,nilaiSets);
 					var s = '';
 					$.each(respon.data.list, function(k,v){
 						var is_show = 'd-none'
 						if(v.nilai) is_show = '';
-						s += `<div class="card mb-3">
+						s += `<div class="card mx-auto my-3 col-md-5">
 							<div class="card-body">
 								<div class="row">
 									<div class="col-6">
@@ -59,6 +97,7 @@ function initData(fd=[]){
 					$(".panel-list").html(s);
 					$(".panel-filter").show();
 					$(".panel-list").show();
+					$(".panel-list").addClass("row");
 				}else{
 					$(".panel-empty").show();
 				}
@@ -79,29 +118,29 @@ function initData(fd=[]){
 			return false;
 		}
 	});
-}
+};
 $('.select2').select2();
 
 setTimeout(function(){
 	var fd = new FormData($("#ffilter")[0]);
 	initData(fd);
-},300)
+},300);
 
 $('#ffilter').on('submit', function(e){
 	e.preventDefault();
 	var fd = new FormData($(this)[0]);
 	initData(fd);
 	$("#modal_filter").modal('hide');
-})
+});
 
 
 $('#btn_filter').on('click', function(e){
 	e.preventDefault();
 	$("#modal_filter").modal('show');
-})
+});
 
 $("#jenis_penilaian").on('change', function(e){
 	e.preventDefault();
 	var fd = new FormData($("#ffilter")[0]);
 	initData(fd);
-})
+});

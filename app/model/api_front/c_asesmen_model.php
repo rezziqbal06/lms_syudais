@@ -89,6 +89,18 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     }
     return 0;
   }
+
+  public function datasets($b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
+  {
+    $this->db->select_as("$this->tbl2_as.fnama","nama",0);
+    $this->db->select_as("SUM($this->tbl_as.nilai)","nilai",0);
+    $this->db->select_as("COUNT($this->tbl_as.nilai)","jumlah",0);
+    $this->db->from($this->tbl,$this->tbl_as);
+    $this->join_company();
+    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
+    $this->db->group_by("$this->tbl_as.b_user_id");
+    return $this->db->get();
+  }
   public function setMass($dis)
   {
     return $this->db->insert_multi($this->tbl, $dis);
