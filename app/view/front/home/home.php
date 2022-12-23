@@ -45,7 +45,7 @@
 	</div>
 	<div class="panel-statistik mb-5">
 		<div class="card col-md-6 mx-auto">
-			<div style="width: 100%">
+			<div class="p-4" style="width: 100%">
 				<canvas id="asesmenChart"></canvas>
 			</div>
 

@@ -2,6 +2,7 @@ function showLoading(){
 	$(".panel-loading").show();
 	$(".panel-empty").hide();
 	$(".panel-list").hide();
+	$(".panel-statistik").hide();
 	$(".panel-filter").hide();
 }
 function hideLoading(){
@@ -44,7 +45,7 @@ function initData(fd=[]){
 	if(fd){
 		fd.append('a_jpenilaian_id', $('#jenis_penilaian').find('option:selected').val());
 	}
-	showLoading()
+	showLoading();
 	var url = '<?=base_url("api_front/asesmen/list")?>';
 	$.ajax({
 		url: url,
@@ -95,6 +96,7 @@ function initData(fd=[]){
 					});
 					$(".panel-list").html('');
 					$(".panel-list").html(s);
+					$(".panel-statistik").show();
 					$(".panel-filter").show();
 					$(".panel-list").show();
 					$(".panel-list").addClass("row");
