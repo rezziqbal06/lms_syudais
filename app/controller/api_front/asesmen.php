@@ -159,6 +159,16 @@ class Asesmen extends JI_Controller
 				$this->cam->columns['nilai']->value = 0;
 			}
 			$value = json_encode($value);
+		}else if($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'){
+			$value = [];
+			$aksi = $this->input->request("aksi");
+			foreach ($aksi as $k => $v) {
+				$value[] = [
+					"indikator" => "$k",
+					"aksi" => $v
+				];
+			}
+			$value = json_encode($value);
 		}
 		$this->cam->columns['value']->value = $value;
 
@@ -420,6 +430,79 @@ class Asesmen extends JI_Controller
 		$data['datasets'] = $datasets;
 		$data['list'] = $ddata;
 		$data['count'] = $dcount;
+
+		$this->__json_out($data);
+	}
+
+	public function indicatorLists($slug = "",$a_ruangan_id = 0)
+	{
+		$d = $this->__init();
+		$data = array();
+		$this->_api_auth_required($data, 'user');
+
+		$this->status = 200;
+		$this->message = API_ADMIN_ERROR_CODES[$this->status];
+
+		/** advanced filter is_active */
+
+		if (!strlen($slug)) {
+			redir(base_url('asesmen'));
+			die();
+		}
+
+		$ajm = $this->ajm->getBySlug($slug);
+		if (!isset($ajm->id)) {
+			redir(base_url('asesmen'));
+			die();
+		}
+		$data['ajm'] = $ajm;
+
+		$aim = $this->aim->getByIndikator($a_ruangan_id,$ajm->id);
+		if (!isset($aim[0]->id)) {
+			$aim = [];
+		}else{
+			$group_by_kategori = [];
+			foreach ($aim as $key ) {
+				$group_by_kategori[$key->kategori][] = $key;
+			}
+			$aim = $group_by_kategori;
+		}
+		$data['aim'] = $aim;
+		
+
+
+
+
+
+		// $type_form = 1;
+		// if (in_array($ajm->slug, ['audit-hand-hygiene'])) {
+		// 	$type_form = 1;
+		// }else if(in_array($ajm->slug, ['monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'])){
+		// 	$type_form = 2;
+		// 	$group_by_kategori = [];
+		// 	if($a_ruangan_id > 0){
+		// 		dd($aim);
+		// 		foreach ($aim as $k => $v) {
+		// 			if(!in_array($a_ruangan_id,$v->a_ruangan_ids)){
+		// 				array_pop($aim[$k]);
+		// 			}
+		// 		}
+		// 	}
+		// 	foreach ($aim as $key ) {
+		// 		$group_by_kategori[$key->kategori][] = $key;
+		// 	}
+		// 	$data['aim'] = $group_by_kategori;
+		// }
+
+		// $data['type_form'] = $type_form;
+
+		// unset($type_form);
+		// unset($ajm);
+		// unset($aim);
+		// unset($aim);
+
+		// date_default_timezone_set('Asia/Jakarta');
+		// $data['stime'] = date('H:i:s');
 
 		$this->__json_out($data);
 	}

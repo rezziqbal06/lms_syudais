@@ -1,3 +1,4 @@
+var myChart;
 function showLoading(){
 	$(".panel-loading").show();
 	$(".panel-empty").hide();
@@ -39,7 +40,7 @@ function initChart(labels=['January', 'February', 'March', 'April', 'May', 'June
 	},
 	};
 
-	new Chart(chartCtx, config);
+	return new Chart(chartCtx, config);
 }
 function initData(fd=[]){
 	if(fd){
@@ -64,7 +65,7 @@ function initData(fd=[]){
 						nilaiSets.push(v.percent);
 					});
 					console.log(respon.data.datasets);
-					initChart(labelSets,nilaiSets);
+					myChart = initChart(labelSets,nilaiSets);
 					var s = '';
 					$.each(respon.data.list, function(k,v){
 						var is_show = 'd-none'
@@ -144,5 +145,9 @@ $('#btn_filter').on('click', function(e){
 $("#jenis_penilaian").on('change', function(e){
 	e.preventDefault();
 	var fd = new FormData($("#ffilter")[0]);
+	if(myChart){
+		myChart.destroy();
+	}
 	initData(fd);
+	
 });

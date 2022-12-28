@@ -27,4 +27,11 @@ class A_Indikator_Model extends \Model\A_Indikator_Concern
     $this->db->where('a_jpenilaian_id', $id);
     return $this->db->get('', 0);
   }
+  public function getByIndikator($id,$jp_id)
+  {
+    $this->db->select("*");
+    $this->db->where_as("$this->tbl_as.a_jpenilaian_id", $jp_id);
+    $this->db->where_as("$this->tbl_as.a_ruangan_ids", '"'.$id.'"',"AND","%like%");
+    return $this->db->get('',0);
+  }
 }

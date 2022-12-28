@@ -2,6 +2,15 @@
 	.panel-header {
 		background-color: var(--background);
 	}
+
+	.border{
+		border-width: 5px !important;
+	}
+
+	.transition{
+		transition-timing-function: ease-in;
+		transition: 0.3s;
+	}
 </style>
 <form method="POST" id="ftambah">
 	<div class="panel-header p-3 shadow-sm">
@@ -14,7 +23,7 @@
 		<div class="form-group row">
 			<input type="hidden" name="a_jpenilaian_id" id="ia_jpenilaian_id" value="<?= $ajm->id ?>">
 			<input type="hidden" name="stime" id="istime" value="<?= $stime ?? '' ?>">
-			<input type="hidden" name="etime" id="ietime">
+			<!-- <input type="hidden" name="etime" id="ietime"> -->
 			<div class="col-md-4">
 				<label for="iuser">Nama</label>
 				<input type="hidden" name="b_user_id" id="ib_user_id">
@@ -78,6 +87,34 @@
 				<?php endif ?>
 			</div>
 		<?php } ?>
+
+		<?php if ($type_form == 2) : ?>
+			<div class="col-md-12 transition">
+				<div class="row">
+					<div class="col-md-12 text-left" id="panel-judul">
+						<h3>Indikator</h3>
+					</div>
+					<div class="d-flex justify-content-end" id="panel-filter"></div>
+
+				</div>
+				<div id="panel-form-2"></div>
+				<?php if(isset($aim) && count($aim)) : ?>
+					<?php //foreach($aim as $k => $v) : ?>
+						<!-- <div class="card p-5 my-3 " >
+							<h2><?php // $k ?></h2>
+							<div class="d-flex flex-wrap">
+								<?php //foreach($v as $k1 => $v1) : ?>
+									<div class="card p-3 m-2 choice transition" data-id="<?php // $v1->id ?>" id="<?php // $v1->id ?>">
+										<input type="hidden" id="aksi-<?php //$v1->id ?>" name="">
+										<h5><?php // $v1->nama ?></h5>
+									</div>
+								<?php // endforeach ?>
+							</div>
+						</div> -->
+					<?php // endforeach ?>
+				<?php endif ?>
+			</div>
+		<?php endif ?>
 	</div>
 
 	<div class="fixed-bottom row">

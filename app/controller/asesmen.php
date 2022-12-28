@@ -86,9 +86,17 @@ class Asesmen extends JI_Controller
 		$type_form = 1;
 		if (in_array($ajm->slug, ['audit-hand-hygiene'])) {
 			$type_form = 1;
+		}else if(in_array($ajm->slug, ['monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'])){
+			$type_form = 2;
+			$group_by_kategori = [];
+			foreach ($aim as $key ) {
+				$group_by_kategori[$key->kategori][] = $key;
+			}
+			$data['aim'] = $group_by_kategori;
 		}
 
 		$data['type_form'] = $type_form;
+		$data['slug'] = $ajm->slug;
 
 		unset($type_form);
 		unset($ajm);
