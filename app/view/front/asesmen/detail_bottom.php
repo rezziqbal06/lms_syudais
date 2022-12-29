@@ -134,6 +134,43 @@ $(document).on('click', '.choice', function(e){
 	}
 });
 
+$(document).on('click',"#filter-empty",function(e){
+	e.preventDefault();
+	let iempty = $("#aksi-empty").val();
+	if(!iempty || iempty == 'false'){
+		$("#aksi-empty").val('true');
+		$(this).addClass("bg-primary");
+		$("#filter-empty h6").addClass("text-white");
+		$("#filter-empty h6").text("Reset Filter");
+		var isEmpty = false; 
+		$.each($(".choice "), function(key,value){
+			var vals = $(value).val();
+			var data_id = $(value).attr('data-id');
+			var id = $(value).attr('id');
+			var value = $("#aksi-"+data_id).val();
+			console.log(value);
+			if(value || value == 'y'){
+				$("#aksi-"+data_id).parent().hide();
+			}
+		})
+	}else{
+		$(this).removeClass("bg-primary");
+		$("#filter-empty h6").removeClass("text-white");
+		$("#filter-empty h6").text("Tampilkan yang belum diisi");
+		$("#aksi-empty").val('false');
+		$.each($(".choice "), function(key,value){
+			var vals = $(value).val();
+			var data_id = $(value).attr('data-id');
+			var id = $(value).attr('id');
+			var value = $("#aksi-"+data_id).val();
+			console.log(value);
+			if(value || value == 'y'){
+				$("#aksi-"+data_id).parent().show();
+			}
+		})
+	}
+});
+
 
 function initDataByRuanganId(r_id=0){
 	var url = '<?= base_url("api_front/asesmen/indicatorLists/".$slug."/") ?>'+r_id;
@@ -151,20 +188,30 @@ function initDataByRuanganId(r_id=0){
 					$("#panel-judul").removeClass("col-md-12");
 					$("#panel-judul").addClass("col-md-6");
 					$("#panel-filter").addClass("col-md-6");
-					$("#panel-filter").html(`<div class="card col-md-5 p-3">
-						Tampilkan yang belum diisi
+					$("#panel-filter").html(`<div class="card col-md-5 p-3 text-center transition" id="filter-empty">
+						<input type="hidden" id="aksi-empty">
+						<h6>Tampilkan yang belum diisi</h6>
 					</div>`);
 					$.each(respon.data.aim, function(k,v){
 						$.each(v, function(k1,v1){
-							r += `<div class="card p-3 m-2 choice transition" data-id="${v1.id}" id="${v1.id}">
+							r += `
+							<div class="col-md-6">
+							<div class="card p-3 m-2 choice transition" data-id="${v1.id}" id="${v1.id}">
 								<input type="hidden" id="aksi-${v1.id}" name="aksi[${v1.id}]">
-								<h5>${v1.nama}</h5>
-							</div>`;
+								<h6>${v1.nama}</h6>
+							</div>	
+							</div>
+							`;
 						});
-						s += `<div class="card p-5 my-3">
-							<h2>${k}</h2>
-							<div class="d-flex flex-wrap">
-								${r}
+						s += `<div class="card p-2 my-3">
+							<div class="card-header">
+								<h4>${k}</h4>
+								<hr>
+							</div>
+							<div class="card-body">
+								<div class="row">
+									${r}
+								</div>
 							</div>
 						</div>`;
 						r = '';
