@@ -149,17 +149,25 @@ class Asesmen extends JI_Controller
 
 		$value = [];
 		if ($ajm->slug == 'audit-hand-hygiene') {
+			$nilai = 0;
 			$value = [];
-			$value['indikator'] = $this->input->request('a_indikator_id');
-			$value['aksi'] = $this->input->request('a_aksi_id');
-			$aksi = $this->aim->id($value['aksi']);
-			if (isset($aksi->nama) && ($aksi->nama == 'HW' || $aksi->nama == 'HR')) {
-				$this->cam->columns['nilai']->value = 1;
-			} else {
-				$this->cam->columns['nilai']->value = 0;
+			$indikator = $this->input->request('a_indikator_id');
+			if (is_array($indikator) && count($indikator)) {
+				foreach ($indikator as $k => $v) {
+					$value[$k]['indikator'] = $v;
+					$value[$k]['aksi'] = $this->input->request('a_aksi_id_' . $k) ?? null;
+					$aksi = $this->aim->id($value[$k]['aksi']);
+					if (isset($aksi->nama) && ($aksi->nama == 'HW' || $aksi->nama == 'HR')) {
+						$nilai++;
+					}
+				}
+
+				$this->cam->columns['nilai']->value = $nilai;
 			}
+
+
 			$value = json_encode($value);
-		}else if($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'){
+		} else if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
 			$value = [];
 			$aksi = $this->input->request("aksi");
 			foreach ($aksi as $k => $v) {
@@ -241,16 +249,7 @@ class Asesmen extends JI_Controller
 
 
 		$id = (int)$id;
-		$id = isset($du['id']) ? $du['id'] : 0;
 
-
-		if (!$this->admin_login) {
-			$this->status = 400;
-			$this->message = API_ADMIN_ERROR_CODES[$this->status];
-			header("HTTP/1.0 400 Harus login");
-			$this->__json_out($data);
-			die();
-		}
 
 		$id = (int) $id;
 		if ($id <= 0) {
@@ -278,9 +277,82 @@ class Asesmen extends JI_Controller
 			$this->__json_out($data);
 			die();
 		}
+
+		$ajm = $this->ajm->id($this->input->post('a_jpenilaian_id'));
+		if (!isset($ajm->id)) {
+			$this->status = 444;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+			die();
+		}
+
+		$b_user_id = !empty((int) $this->input->request('b_user_id')) ? $this->input->request('b_user_id') : '';
+		if (!isset($b_user_id) || !strlen($b_user_id)) {
+			$bum = $this->bum->getByName($this->input->request('user'));
+			if (isset($bum->id)) {
+				$this->cam->columns['b_user_id']->value = $bum->id;
+			} else {
+				$bu = [];
+				$bu['fnama'] = $this->input->request('user');
+				$bu['a_unit_id'] = $this->input->request('a_ruangan_id');
+				$bu['a_jabatan_id'] = $this->input->request('a_jabatan_id');
+				$bu['cdate'] = 'now()';
+				$resUser = $this->bum->set($bu);
+				if ($resUser) {
+					$this->cam->columns['b_user_id']->value = $resUser;
+				}
+			}
+		}
+
+		date_default_timezone_set('Asia/Jakarta');
+		$stime = $this->input->request('stime');
+		$etime = date('H:i:s');
+		$time1 = new DateTime(date('Y-m-d') . ' ' . $stime);
+		$time2 = new DateTime();
+		$timediff = $time1->diff($time2);
+
+		$this->cam->columns['etime']->value = $etime;
+		$this->cam->columns['cdate']->value = date('Y-m-d H:i:s');
+		$this->cam->columns['b_user_id_penilai']->value = isset($d['sess']->user->id) ? $d['sess']->user->id : 0;
+
+		$this->cam->columns['durasi']->value = $timediff->h . '.' . $timediff->i;
+
+		$value = [];
+		if ($ajm->slug == 'audit-hand-hygiene') {
+			$nilai = 0;
+			$value = [];
+			$indikator = $this->input->request('a_indikator_id');
+			if (is_array($indikator) && count($indikator)) {
+				foreach ($indikator as $k => $v) {
+					$value[$k]['indikator'] = $v;
+					$value[$k]['aksi'] = $this->input->request('a_aksi_id_' . $k) ?? null;
+					$aksi = $this->aim->id($value[$k]['aksi']);
+					if (isset($aksi->nama) && ($aksi->nama == 'HW' || $aksi->nama == 'HR')) {
+						$nilai++;
+					}
+				}
+
+				$this->cam->columns['nilai']->value = $nilai;
+			}
+
+
+			$value = json_encode($value);
+		} else if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
+			$value = [];
+			$aksi = $this->input->request("aksi");
+			foreach ($aksi as $k => $v) {
+				$value[] = [
+					"indikator" => "$k",
+					"aksi" => $v
+				];
+			}
+			$value = json_encode($value);
+		}
+		$this->cam->columns['value']->value = $value;
+
 		if ($id > 0) {
 			unset($du['id']);
-			$res = $this->cam->update($id, $du);
+			$res = $this->cam->save($id);
 			if ($res) {
 				$this->status = 200;
 				$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -434,7 +506,7 @@ class Asesmen extends JI_Controller
 		$this->__json_out($data);
 	}
 
-	public function indicatorLists($slug = "",$a_ruangan_id = 0)
+	public function indicatorLists($slug = "", $a_ruangan_id = 0)
 	{
 		$d = $this->__init();
 		$data = array();
@@ -457,18 +529,18 @@ class Asesmen extends JI_Controller
 		}
 		$data['ajm'] = $ajm;
 
-		$aim = $this->aim->getByIndikator($a_ruangan_id,$ajm->id);
+		$aim = $this->aim->getByIndikator($a_ruangan_id, $ajm->id);
 		if (!isset($aim[0]->id)) {
 			$aim = [];
-		}else{
+		} else {
 			$group_by_kategori = [];
-			foreach ($aim as $key ) {
+			foreach ($aim as $key) {
 				$group_by_kategori[$key->kategori][] = $key;
 			}
 			$aim = $group_by_kategori;
 		}
 		$data['aim'] = $aim;
-		
+
 
 
 

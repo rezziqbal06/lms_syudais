@@ -25,6 +25,7 @@ function initChart(labels=['January', 'February', 'March', 'April', 'May', 'June
 		fill: false,
 		backgroundColor: ['#086867','#6c9b87'],
 		borderColor: 'rgb(75, 192, 192)',
+		borderRadius: 8
 	}]
 	};
 
@@ -70,7 +71,7 @@ function initData(fd=[]){
 					$.each(respon.data.list, function(k,v){
 						var is_show = 'd-none'
 						if(v.nilai) is_show = '';
-						s += `<div class="card mx-auto my-3 col-md-5">
+						s += `<a data-id="${v.id}" href="<?=base_url('asesmen/')?>${v.slug}/${v.id}"><div class="card mx-auto my-3 col-md-5">
 							<div class="card-body">
 								<div class="row">
 									<div class="col-6">
@@ -131,6 +132,9 @@ setTimeout(function(){
 
 $('#ffilter').on('submit', function(e){
 	e.preventDefault();
+	if(myChart){
+		myChart.destroy();
+	}
 	var fd = new FormData($(this)[0]);
 	initData(fd);
 	$("#modal_filter").modal('hide');
@@ -139,6 +143,9 @@ $('#ffilter').on('submit', function(e){
 
 $('#btn_filter').on('click', function(e){
 	e.preventDefault();
+	if(myChart){
+		myChart.destroy();
+	}
 	$("#modal_filter").modal('show');
 });
 

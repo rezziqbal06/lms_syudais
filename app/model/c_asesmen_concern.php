@@ -97,6 +97,7 @@ class C_Asesmen_Concern extends \JI_Model
             ["COALESCE($this->tbl2_as.fnama, '')", 'nama', 'nama'],
             ["COALESCE($this->tbl3_as.fnama, '')", 'nama_penilai', 'Penilai'],
             ["COALESCE($this->tbl4_as.nama, '')", 'ruangan', 'Ruangan'],
+            ["COALESCE($this->tbl5_as.slug, '')", 'slug', 'Slug'],
             ["COALESCE($this->tbl6_as.nama, '')", 'profesi', 'Profesi'],
             ["$this->tbl_as.durasi", 'durasi', 'durasi'],
             ["$this->tbl_as.cdate", 'cdate', 'cdate'],

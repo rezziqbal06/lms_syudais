@@ -54,6 +54,7 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     $this->db->join($this->tbl2, $this->tbl2_as, 'id', $this->tbl_as, 'b_user_id', 'left');
     $this->db->join($this->tbl3, $this->tbl3_as, 'id', $this->tbl_as, 'b_user_id_penilai', 'left');
     $this->db->join($this->tbl4, $this->tbl4_as, 'id', $this->tbl_as, 'a_ruangan_id', 'left');
+    $this->db->join($this->tbl5, $this->tbl5_as, 'id', $this->tbl_as, 'a_jpenilaian_id', 'left');
     $this->db->join($this->tbl6, $this->tbl6_as, 'id', $this->tbl2_as, 'a_jabatan_id', 'left');
 
     return $this;
@@ -92,10 +93,10 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
 
   public function datasets($b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
   {
-    $this->db->select_as("$this->tbl2_as.fnama","nama",0);
-    $this->db->select_as("SUM($this->tbl_as.nilai)","nilai",0);
-    $this->db->select_as("COUNT($this->tbl_as.nilai)","jumlah",0);
-    $this->db->from($this->tbl,$this->tbl_as);
+    $this->db->select_as("$this->tbl2_as.fnama", "nama", 0);
+    $this->db->select_as("SUM($this->tbl_as.nilai)", "nilai", 0);
+    $this->db->select_as("COUNT($this->tbl_as.nilai)*10", "jumlah", 0);
+    $this->db->from($this->tbl, $this->tbl_as);
     $this->join_company();
     $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
     $this->db->group_by("$this->tbl_as.b_user_id");
