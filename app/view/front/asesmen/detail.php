@@ -49,7 +49,7 @@
 					<select type="text" class="form-control select2" placeholder="Nama" id="ia_jabatan_id" name="a_jabatan_id">
 						<?php if (isset($ajbm) && count($ajbm)) : ?>
 							<?php foreach ($ajbm as $k => $v) : ?>
-								<option value="<?= $v->id ?>" <?= $v->id == $cam->a_jpenilaian_id ? 'selected' : '' ?>><?= $v->nama ?></option>
+								<option value="<?= $v->id ?>" <?= isset($cam->a_jpenilaian_id) && $v->id == $cam->a_jpenilaian_id ? 'selected' : '' ?>><?= $v->nama ?></option>
 							<?php endforeach ?>
 						<?php endif ?>
 					</select>
@@ -60,7 +60,7 @@
 				<select type="text" class="form-control select2" placeholder="Nama" id="ia_ruangan_id" name="a_ruangan_id">
 					<?php if (isset($arm) && count($arm)) : ?>
 						<?php foreach ($arm as $k => $v) : ?>
-							<option value="<?= $v->id ?>" <?= $v->id == $cam->a_ruangan_id ? 'selected' : '' ?>><?= $v->nama ?></option>
+							<option value="<?= $v->id ?>" <?= isset($cam->a_ruangan_id) && $v->id == $cam->a_ruangan_id ? 'selected' : '' ?>><?= $v->nama ?></option>
 						<?php endforeach ?>
 					<?php endif ?>
 				</select>
