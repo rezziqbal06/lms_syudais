@@ -97,6 +97,8 @@ class Asesmen extends JI_Controller
 				$group_by_kategori[$key->kategori][] = $key;
 			}
 			$data['aim'] = $group_by_kategori;
+		} else if(in_array($ajm->slug, ['audit-kepatuhan-apd'])){
+			$type_form = 3;
 		}
 
 		$data['type_form'] = $type_form;

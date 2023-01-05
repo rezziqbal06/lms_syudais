@@ -22,6 +22,65 @@
 		text-align: center;
 		float: right;
 	}
+
+	.switch {
+	display: inline-block;
+	height: 34px;
+	position: relative;
+	width: 60px;
+	}
+
+	.switch input {
+	display:none;
+	}
+
+	.slider {
+	background-color: #ccc;
+	bottom: 0;
+	cursor: pointer;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	transition: .4s;
+	}
+
+	.slider:before {
+	background-color: #fff;
+	bottom: 3.2px;
+	content: "";
+	height: 26px;
+	left: 4px;
+	position: absolute;
+	transition: .4s;
+	width: 26px;
+	}
+
+	.switch h5 {
+	width: 200px;
+	position: absolute;
+	top: -5px;
+	left: 55px;
+	font-size: 15px;
+	text-align: justify;
+	margin: 0.75rem;
+	}
+
+	input:checked + .slider {
+	background-color: #66bb6a;
+	}
+
+	input:checked + .slider:before {
+	transform: translateX(26px);
+	}
+
+	.slider.round {
+	border-radius: 34px;
+	}
+
+	.slider.round:before {
+	border-radius: 50%;
+	}
 </style>
 <form method="POST" id="ftambah">
 	<div class="panel-header p-3 shadow-sm">
@@ -81,7 +140,7 @@
 							<?php if (isset($aim) && count($aim)) : ?>
 								<?php foreach ($aim as $k => $v) : ?>
 									<?php if ($v->type == 'indikator') : ?>
-										<option value="<?= $v->id ?>" <?= isset($value[$i]->indikator) && $v->id == $value[$i]->indikator ? 'selected' : '' ?>><?= $v->nama ?></option>
+										<option value="<?= $v->id ?>" <?= is_array($value) && isset($value[$i]->indikator) && $v->id == $value[$i]->indikator ? 'selected' : '' ?>><?= $v->nama ?></option>
 									<?php endif ?>
 								<?php endforeach ?>
 							<?php endif ?>
@@ -93,7 +152,7 @@
 							<?php foreach ($aim as $k => $v) : ?>
 								<?php if ($v->type == 'aksi') : ?>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="a_aksi_id_<?= $i ?>" value="<?= $v->id ?>" id="ia_aksi_id_<?= $i ?>_<?= $v->id ?>" <?= isset($value[$i]->aksi) && $v->id == $value[$i]->aksi ? 'checked' : '' ?>>
+										<input class="form-check-input" type="radio" name="a_aksi_id_<?= $i ?>" value="<?= $v->id ?>" id="ia_aksi_id_<?= $i ?>_<?= $v->id ?>" <?= is_array($value) && isset($value[$i]->aksi) && $v->id == $value[$i]->aksi ? 'checked' : '' ?>>
 										<label class="form-check-label" for="ia_aksi_id_<?= $i ?>_<?= $v->id ?>">
 											<?= $v->nama ?>
 										</label>
@@ -139,6 +198,43 @@
 					<?php // endforeach 
 					?>
 				<?php endif ?>
+			</div>
+		<?php } else if($type_form == 3){?>
+			<div class="col-md-12">
+				<?php //dd($aim); ?>
+				<?php foreach ($aim as $k => $v) : ?>
+					<div class="card p-3 mb-5">
+						<?php if($v->type == "indikator") : ?>
+							<div class="col-md-10 row">
+								<div class="col-md-6  text-center">
+									<h5><?= $v->nama ?></h5>
+									
+								</div>
+								<div class="col-md-6">
+									<label for="iindikator">Aksi</label>
+									<?php if (isset($aim) && count($aim)) : ?>
+										<?php foreach ($aim as $k => $v) : ?>
+											<?php if ($v->type == 'aksi') : ?>
+												<div class="row">
+													<div class="form-group">
+														<label class="switch" for="checkbox_<?= $v->id ?>">
+														<h5><?= $v->nama ?></h5>
+																<input type="checkbox" id="checkbox_<?= $v->id ?>" />
+																<div class="slider round"></div>
+																
+														</label>
+
+													</div>
+													
+												</div>
+											<?php endif ?>
+										<?php endforeach ?>
+									<?php endif ?>
+								</div>
+							</div>
+						<?php endif ?>
+					</div>
+				<?php endforeach ?>
 			</div>
 		<?php } ?>
 	</div>
