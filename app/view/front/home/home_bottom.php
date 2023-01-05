@@ -143,9 +143,7 @@ $('#ffilter').on('submit', function(e){
 
 $('#btn_filter').on('click', function(e){
 	e.preventDefault();
-	if(myChart){
-		myChart.destroy();
-	}
+
 	$("#modal_filter").modal('show');
 });
 
