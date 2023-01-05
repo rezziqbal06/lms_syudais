@@ -8,5 +8,6 @@
   "<script src=\"{{cdn_url}}skin/admin/js/jquery.gritter.min.js\"><\/script>",
   "<script src=\"{{cdn_url}}skin/admin/js/argon-dashboard.min.js\"><\/script>",
   "<script src=\"{{cdn_url}}skin/admin/js/plugins.js\"><\/script>",
+  "<script src=\"{{cdn_url}}skin/front/js/html-docx.js\"><\/script>",
   "<script src=\"{{cdn_url}}skin/admin/js/app.js\"><\/script>"
 ]
