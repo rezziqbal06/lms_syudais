@@ -108,7 +108,7 @@
 					<select type="text" class="form-control select2" placeholder="Nama" id="ia_jabatan_id" name="a_jabatan_id">
 						<?php if (isset($ajbm) && count($ajbm)) : ?>
 							<?php foreach ($ajbm as $k => $v) : ?>
-								<option value="<?= $v->id ?>" <?= isset($cam->a_jpenilaian_id) && $v->id == $cam->a_jpenilaian_id ? 'selected' : '' ?>><?= $v->nama ?></option>
+								<option value="<?= $v->id ?>" <?= isset($user->a_jabatan_id) && $v->id == $user->a_jabatan_id ? 'selected' : '' ?>><?= $v->nama ?></option>
 							<?php endforeach ?>
 						<?php endif ?>
 					</select>
@@ -140,7 +140,7 @@
 							<?php if (isset($aim) && count($aim)) : ?>
 								<?php foreach ($aim as $k => $v) : ?>
 									<?php if ($v->type == 'indikator') : ?>
-										<option value="<?= $v->id ?>" <?= is_array($value) && isset($value[$i]->indikator) && $v->id == $value[$i]->indikator ? 'selected' : '' ?>><?= $v->nama ?></option>
+										<option value="<?= $v->id ?>" <?= isset($value[$i]->indikator) && is_array($value) &&  $v->id == $value[$i]->indikator ? 'selected' : '' ?>><?= $v->nama ?></option>
 									<?php endif ?>
 								<?php endforeach ?>
 							<?php endif ?>
@@ -152,7 +152,7 @@
 							<?php foreach ($aim as $k => $v) : ?>
 								<?php if ($v->type == 'aksi') : ?>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="a_aksi_id_<?= $i ?>" value="<?= $v->id ?>" id="ia_aksi_id_<?= $i ?>_<?= $v->id ?>" <?= is_array($value) && isset($value[$i]->aksi) && $v->id == $value[$i]->aksi ? 'checked' : '' ?>>
+										<input class="form-check-input" type="radio" name="a_aksi_id_<?= $i ?>" value="<?= $v->id ?>" id="ia_aksi_id_<?= $i ?>_<?= $v->id ?>" <?= isset($value[$i]->aksi) && is_array($value) &&  $v->id == $value[$i]->aksi ? 'checked' : '' ?>>
 										<label class="form-check-label" for="ia_aksi_id_<?= $i ?>_<?= $v->id ?>">
 											<?= $v->nama ?>
 										</label>
@@ -200,40 +200,37 @@
 				<?php endif ?>
 			</div>
 		<?php } else if($type_form == 3){?>
-			<div class="col-md-12">
+			<div class="col-md-12" id="panel-3">
 				<?php //dd($aim); ?>
 				<?php foreach ($aim as $k => $v) : ?>
-					<div class="card p-3 mb-5">
-						<?php if($v->type == "indikator") : ?>
-							<div class="col-md-10 row">
-								<div class="col-md-6  text-center">
-									<h5><?= $v->nama ?></h5>
-									
-								</div>
-								<div class="col-md-6">
-									<label for="iindikator">Aksi</label>
-									<?php if (isset($aim) && count($aim)) : ?>
-										<?php foreach ($aim as $k => $v) : ?>
-											<?php if ($v->type == 'aksi') : ?>
-												<div class="row">
-													<div class="form-group">
-														<label class="switch" for="checkbox_<?= $v->id ?>">
-														<h5><?= $v->nama ?></h5>
-																<input type="checkbox" id="checkbox_<?= $v->id ?>" />
-																<div class="slider round"></div>
-																
-														</label>
-
+					<?php if($v->type == "indikator") : ?>
+						<div class="card p-3 mb-5" data-container="<?= $v->id ?>" id="card-data-<?= $v->id ?>">
+								<div class="col-md-10 row">
+									<div class="col-md-6  text-center">
+										<h5><?= $v->nama ?></h5>
+										
+									</div>
+									<div class="col-md-6">
+										<label for="iindikator">Aksi</label>
+										<?php if (isset($aim) && count($aim)) : ?>
+											<?php foreach ($aim as $k1 => $v1) : ?>
+												<?php if ($v1->type == 'aksi') : ?>
+													<div class="row">
+														<div class="form-group">
+															<label class="switch" for="checkbox_<?= $v1->id ?>_<?= $v->id ?>">
+															<h5><?= $v1->nama ?></h5>
+																	<input type="checkbox" name="a_indikator_id[<?= $v->id ?>][<?= $v1->id ?>]" id="checkbox_<?= $v1->id ?>_<?= $v->id ?>" />
+																	<div class="slider round"></div>
+															</label>
+														</div>
 													</div>
-													
-												</div>
-											<?php endif ?>
-										<?php endforeach ?>
-									<?php endif ?>
+												<?php endif ?>
+											<?php endforeach ?>
+										<?php endif ?>
+									</div>
 								</div>
-							</div>
-						<?php endif ?>
-					</div>
+						</div>
+					<?php endif ?>
 				<?php endforeach ?>
 			</div>
 		<?php } ?>

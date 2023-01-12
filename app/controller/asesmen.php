@@ -167,6 +167,7 @@ class Asesmen extends JI_Controller
 			redir(base_url(''));
 			die();
 		}
+		// dd($cam->value);
 
 		$user = $this->bum->id($cam->b_user_id);
 		if (!isset($user)) {
@@ -176,21 +177,20 @@ class Asesmen extends JI_Controller
 		$cam->b_user_name = $user->fnama;
 
 		$value = json_decode($cam->value);
+		// dd($value);
 		$type_form = 1;
 		if (in_array($ajm->slug, ['audit-hand-hygiene'])) {
 			$type_form = 1;
 		} else if (in_array($ajm->slug, ['monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'])) {
 			$type_form = 2;
-			$group_by_kategori = [];
-			foreach ($aim as $key) {
-				$group_by_kategori[$key->kategori][] = $key;
-			}
-			$data['aim'] = $group_by_kategori;
+		} else if (in_array($ajm->slug, ['audit-kepatuhan-apd'])){
+			$type_form = 3;
 		}
 
 		$data['type_form'] = $type_form;
 		$data['slug'] = $ajm->slug;
 		$data['cam'] = $cam;
+		$data['user'] = $user;
 		$data['value'] = $value;
 		$data['id'] = $id;
 		unset($value);
@@ -198,6 +198,7 @@ class Asesmen extends JI_Controller
 		unset($ajm);
 		unset($aim);
 		unset($cam);
+		unset($user);
 
 		date_default_timezone_set('Asia/Jakarta');
 		$data['stime'] = date('H:i:s');
