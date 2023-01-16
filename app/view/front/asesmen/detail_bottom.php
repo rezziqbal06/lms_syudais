@@ -18,11 +18,12 @@ $("#ftambah").on("submit",function(e){
 	var fd = new FormData($(this)[0]);
 	var url = '<?= isset($id) ? base_url("api_front/asesmen/edit/$id") : base_url("api_front/asesmen/baru")?>';
 	var isEmpty = false; 
-	$.each($("input"), function(key,value){
+	$.each($("input[id!='aksi-empty']"), function(key,value){
 		var vals = $(value).val();
 		var data_id = $(value).attr('data-id');
 		var id = $(value).attr('id');
 		console.log(vals,"value");
+		console.log(value,"val");
 		if(!vals){
 			gritter('<p>Beberapa parameter belum terisi</p>','warning');
 			$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
@@ -104,6 +105,7 @@ $("#pilih_user").on('click', function(e){
         if(dt.data){
             $("#ib_user_id").val(id);
             $("#iuser").val(dt.data.fnama);
+			console.log(dt.data);
             $("#ia_jabatan_id").val(dt.data.a_jabatan_id).select2();
             $("#ia_ruangan_id").val(dt.data.a_unit_id).select2();
             $("#modal_cari_user").modal('hide');
@@ -172,7 +174,7 @@ $(document).on('click',"#filter-empty",function(e){
 });
 
 
-function initDataByRuanganId(r_id=0){
+function initDataByRuanganId(r_id=0, val_edit = []){
 	var url = '<?= base_url("api_front/asesmen/indicatorLists/".$slug."/") ?>'+r_id;
 	$.ajax({
 		url: url,
@@ -183,41 +185,92 @@ function initDataByRuanganId(r_id=0){
 		success: function(respon){
 			if(respon.status==200){
 				if(respon.data.aim && Object.keys(respon.data.aim).length > 0){
-					let s = '';
-					let r = '';
-					$("#panel-judul").removeClass("col-md-12");
-					$("#panel-judul").addClass("col-md-6");
-					$("#panel-filter").addClass("col-md-6");
-					$("#panel-filter").html(`<div class="card col-md-5 p-3 text-center transition" id="filter-empty">
-						<input type="hidden" id="aksi-empty">
-						<h6>Tampilkan yang belum diisi</h6>
-					</div>`);
-					$.each(respon.data.aim, function(k,v){
-						$.each(v, function(k1,v1){
-							r += `
-							<div class="col-md-6">
-							<div class="card p-3 m-2 choice transition" data-id="${v1.id}" id="${v1.id}">
-								<input type="hidden" id="aksi-${v1.id}" name="aksi[${v1.id}]">
-								<h6>${v1.nama}</h6>
-							</div>	
-							</div>
-							`;
-						});
-						s += `<div class="card p-2 my-3">
-							<div class="card-header">
-								<h4>${k}</h4>
-								<hr>
-							</div>
-							<div class="card-body">
-								<div class="row">
-									${r}
+					if(val_edit.length < 0){
+						let s = '';
+						let r = '';
+						$("#panel-judul").removeClass("col-md-12");
+						$("#panel-judul").addClass("col-md-6");
+						$("#panel-filter").addClass("col-md-6");
+						$("#panel-filter").html(`<div class="card col-md-5 p-3 text-center transition" id="filter-empty">
+							<input type="hidden" id="aksi-empty">
+							<h6>Tampilkan yang belum diisi</h6>
+						</div>`);
+						$.each(respon.data.aim, function(k,v){
+							$.each(v, function(k1,v1){
+								r += `
+								<div class="col-md-6">
+								<div class="card p-3 m-2 choice transition" data-id="${v1.id}" id="${v1.id}">
+									<input type="hidden" id="aksi-${v1.id}" name="aksi[${v1.id}]">
+									<h6>${v1.nama}</h6>
+								</div>	
 								</div>
-							</div>
-						</div>`;
-						r = '';
-					});
-					$("#panel-form-2").html('');
-					$("#panel-form-2").html(s);
+								`;
+							});
+							s += `<div class="card p-2 my-3">
+								<div class="card-header">
+									<h4>${k}</h4>
+									<hr>
+								</div>
+								<div class="card-body">
+									<div class="row">
+										${r}
+									</div>
+								</div>
+							</div>`;
+							r = '';
+						});
+						$("#panel-form-2").html('');
+						$("#panel-form-2").html(s);
+					}else{
+						let s = '';
+						let r = '';
+						$("#panel-judul").removeClass("col-md-12");
+						$("#panel-judul").addClass("col-md-6");
+						$("#panel-filter").addClass("col-md-6");
+						$("#panel-filter").html(`<div class="card col-md-5 p-3 text-center transition" id="filter-empty">
+							<input type="hidden" id="aksi-empty">
+							<h6>Tampilkan yang belum diisi</h6>
+						</div>`);
+						$.each(respon.data.aim, function(k,v){
+							
+							$.each(v, function(k1,v1){
+								r += `
+								<div class="col-md-6">
+								<div class="card p-3 m-2 choice transition" data-id="${v1.id}" id="${v1.id}">
+									<input type="hidden" id="aksi-${v1.id}" name="aksi[${v1.id}]">
+									<h6>${v1.nama}</h6>
+								</div>	
+								</div>
+								`;
+							});
+							s += `<div class="card p-2 my-3">
+								<div class="card-header">
+									<h4>${k}</h4>
+									<hr>
+								</div>
+								<div class="card-body">
+									<div class="row">
+										${r}
+									</div>
+								</div>
+							</div>`;
+							r = '';
+						});
+						$("#panel-form-2").html('');
+						$("#panel-form-2").html(s);
+						console.log(val_edit);
+						$.each(val_edit, function(k,v){
+							$("#"+v.indikator).removeClass("border border-success border-danger");
+							$("#aksi-"+v.indikator).val(v.aksi);
+							if(v.aksi == 'n'){
+								$("#"+v.indikator).addClass("border border-danger");
+							}else{
+								$("#"+v.indikator).addClass("border border-success");
+							}
+						});
+
+					}
+					
 				}else{
 					$("#panel-form-2").html('');
 				}
@@ -262,8 +315,29 @@ if(<?= $type_form ?> == 2){
 		let selector = $(this).attr("data-id");
 		$("#"+selector).removeClass("border border-success border-danger");
 	});
-	setTimeout(function(){
-		var fd = $("#ia_ruangan_id").val();
-		initDataByRuanganId(fd);
-	},300);
+	var val_edit = <?= isset($value) ? json_encode($value) : json_encode([]) ?>;
+	console.log(val_edit.length);
+	if(val_edit.length < 1){
+		setTimeout(function(){
+			var fd = $("#ia_ruangan_id").val();
+			initDataByRuanganId(fd);
+		},300);
+	}else{
+		setTimeout(function(){
+			var fd = $("#ia_ruangan_id").val();
+			initDataByRuanganId(fd,val_edit);
+		},300);
+	}
+} else if(<?= $type_form ?> == 3){
+	console.log(<?= $type_form ?>);
+	var val_edit = <?= isset($value) ? json_encode($value) : json_encode([]) ?>;
+	if(val_edit.length > 1){
+		console.log(val_edit);
+		$.each(val_edit, function(k,v){
+			$.each(v.aksi,function(k1,v1){
+				console.log(v1);
+				$("#checkbox_"+v1+"_"+v.indikator).prop('checked', true);
+			})
+		});
+	}
 }

@@ -177,6 +177,21 @@ class Asesmen extends JI_Controller
 				];
 			}
 			$value = json_encode($value);
+		}else if($ajm->slug == 'audit-kepatuhan-apd'){
+			$value = [];
+			$indikator = $this->input->request('a_indikator_id');
+			foreach ($indikator as $k => $v) {
+				$aksi = [];
+				foreach ($v as $k1 => $v1) {
+					$aksi[] = $k1;
+				}
+				$value[] = [
+					"indikator" => $k,
+					"aksi" => $aksi
+				];
+				
+			}
+			$value = json_encode($value);
 		}
 		$this->cam->columns['value']->value = $value;
 
@@ -345,6 +360,21 @@ class Asesmen extends JI_Controller
 					"indikator" => "$k",
 					"aksi" => $v
 				];
+			}
+			$value = json_encode($value);
+		} else if ($ajm->slug == 'audit-kepatuhan-apd'){
+			$value = [];
+			$indikator = $this->input->request('a_indikator_id');
+			foreach ($indikator as $k => $v) {
+				$aksi = [];
+				foreach ($v as $k1 => $v1) {
+					$aksi[] = $k1;
+				}
+				$value[] = [
+					"indikator" => $k,
+					"aksi" => $aksi
+				];
+				
 			}
 			$value = json_encode($value);
 		}
