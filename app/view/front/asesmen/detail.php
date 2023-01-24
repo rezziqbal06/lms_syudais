@@ -124,6 +124,12 @@
 					<?php endif ?>
 				</select>
 			</div>
+			<?php if($type_form == 2) : ?>
+				<div class="col-md-12">
+					<label for="tgl_asesmen">Tanggal Asesmen</label>
+					<input type="text" class="form-control" readonly placeholder="Tanggal Asesmen" value="<?= isset($cam->cdate) ? $cam->cdate : ''?>" name="cdate" id="tgl_asesmen">
+				</div>
+			<?php endif ?>
 		</div>
 	</div>
 
