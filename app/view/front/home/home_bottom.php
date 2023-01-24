@@ -12,6 +12,25 @@ function hideLoading(){
 	$(".panel-list").hide();
 	$(".panel-filter").hide();
 }
+function download(file, filename) {
+    if (window.navigator.msSaveOrOpenBlob) {// IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+        return;
+    }
+    let a = document.createElement("a");
+    let url = URL.createObjectURL(file);
+
+    a.href = url;
+    a.download = filename;
+    word.appendChild(a);
+    a.click();
+
+    setTimeout(function() {
+        word.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        window.close()
+    }, 500);
+}
 function initChart(labels=['January', 'February', 'March', 'April', 'May', 'June', 'July'], datas=[65, 59, 80, 81, 26, 55, 40]){
 	
 	const chartCtx = $("#asesmenChart");
@@ -156,3 +175,128 @@ $("#jenis_penilaian").on('change', function(e){
 	initData(fd);
 	
 });
+
+function printHH(respon){
+	var s = '<h4 class="text-center">FORMULIR AUDIT HAND HYGIENE RSU BINA SEHAT</h4><br>';
+	s += '<table style="width: 100%;">'
+	s += '<tbody>'
+	var n = 0;
+	$.each(respon.data.list, function(k,v){
+		if(k == 0){
+			s += '<tr>';
+		}
+		if(n == 3){
+			s += '</tr><tr>';
+			n = 0;
+		}
+		s += `<td>
+				<table class="my_table">
+					<tbody>
+						<tr>
+							<td>Profesi</td>
+							<td colspan="2">${v.profesi}</td>
+						</tr>
+						<tr>
+							<td>Nama</td>
+							<td colspan="2">${v.nama}</td>
+						</tr>
+						<tr>
+							<td>Unit</td>
+							<td colspan="2">${v.ruangan}</td>
+						</tr>
+						<tr>
+							<td>Tanggal</td>
+							<td colspan="2">${v.cdate}</td>
+						</tr>
+						<tr>
+							<td>Lama Audit</td>
+							<td colspan="2">${v.durasi}</td>
+						</tr>
+					</tbody>
+					<tbody>
+						<tr style="background-color: #08686738;">
+							<td>Opp</td>
+							<td>Indikasi</td>
+							<td>Action</td>
+						</tr>`
+						$.each(v.value, function(kvalue, vvalue){
+							s += `<tr>
+								<td>${kvalue+1}</td>
+								<td>`
+								$.each(respon.data.aim, function(kaim,vaim){
+									if(vaim.type == 'indikator'){
+										var ischecked = vvalue.indikator == vaim.id ? '' : '';
+										s += `<p>${ischecked} ${vaim.nama}</p>`
+									}
+								})
+							s += `</td>`
+							s += `<td>`
+								$.each(respon.data.aim, function(kaim,vaim){
+									if(vaim.type == 'aksi'){
+										var ischecked = vvalue.aksi == vaim.id ? 'checked' : '';
+										s += `<p>${ischecked} ${vaim.nama}</p>`
+									}
+								})
+							s += `</td>
+							</tr>`
+						})
+						
+					s += `</tbody>
+				</table>
+			</td>`;
+		if(k == respon.data.list.length - 1){
+			s += '</tr>';
+		}
+		n++;
+	});
+	s += '</tbody>'
+	s += '</table>'
+
+	$("#panel_print").html(s);
+	var html = $("#printed").html();
+	let docx = htmlDocx.asBlob(html);
+	let file = new Blob([docx], {type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+	download(file, 'audit-hand-hygiene.docx');
+}
+
+
+$("#btn_print").on('click', function(e){
+	e.preventDefault();
+	var fd = new FormData($("#ffilter")[0]);
+	if(fd){
+		fd.append('a_jpenilaian_id', $('#jenis_penilaian').find('option:selected').val());
+	}
+	var url = '<?=base_url("api_front/asesmen/list")?>';
+	$.ajax({
+		url: url,
+		data: fd,
+		processData: false,
+		contentType: false,
+		type: 'POST',
+		success: function(respon){
+			if(respon.status==200){
+				if(respon.data.list && respon.data.list.length > 0){
+					if(respon.data.ajm.slug == 'audit-hand-hygiene'){
+						printHH(respon);
+					}
+					
+				}else{
+					gritter('<h4>Info</h4><p>Tidak ada data yang perlu dicetak</p>','info');
+				}
+			}else{
+				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
+				NProgress.done();
+			}
+		},
+		error:function(){
+			setTimeout(function(){
+				gritter('<h4>Error</h4><p>Tidak dapat menambah data, silahkan coba beberapa saat lagi</p>','warning');
+			}, 666);
+
+			$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
+			$('.btn-submit').prop('disabled',false);
+			NProgress.done();
+			return false;
+		}
+	});
+})

@@ -46,7 +46,8 @@
 					</div>
 					<div class="row" style="margin-top: 1em; ">
 						<div class="col-xs-12 btn-group-vertical" style="">
-							<button type="submit" class="btn btn-default btn-block text-left" data-dismiss="modal"><i class="fa fa-filter"></i> Filter</button>
+							<button type="submit" class="btn btn-primary btn-block text-left" data-dismiss="modal"><i class="fa fa-filter"></i> Filter</button>
+							<button id="btn_print" class="btn btn-secondary btn-block text-left"><i class="fa fa-print"></i> Print</button>
 						</div>
 					</div>
 				</form>

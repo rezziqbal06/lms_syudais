@@ -102,6 +102,7 @@ class C_Asesmen_Concern extends \JI_Model
             ["$this->tbl_as.durasi", 'durasi', 'durasi'],
             ["$this->tbl_as.cdate", 'cdate', 'cdate'],
             ["$this->tbl_as.nilai", 'nilai', 'Nilai'],
+            ["$this->tbl_as.value", 'value', 'Value'],
             ["$this->tbl_as.is_active", 'is_active', 'Status']
         ]);
 

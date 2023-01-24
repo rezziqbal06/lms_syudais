@@ -505,6 +505,23 @@ class Asesmen extends JI_Controller
 			$is_active
 		);
 
+
+		$ajm = $this->ajm->id($a_jpenilaian_id);
+		if (!isset($ajm->id)) {
+			redir(base_url('asesmen'));
+			die();
+		}
+		$data['ajm'] = $ajm;
+
+		$aim = $this->aim->getByPenilaianId($ajm->id);
+		if (!isset($aim[0]->id)) {
+			redir(base_url('asesmen'));
+			die();
+		}
+		$data['aim'] = $aim;
+		unset($aim);
+		unset($ajm);
+
 		foreach ($ddata as &$gd) {
 			if (isset($gd->is_active)) {
 				$gd->is_active = $this->cam->label('is_active', $gd->is_active);
@@ -512,6 +529,10 @@ class Asesmen extends JI_Controller
 
 			if (isset($gd->cdate)) {
 				$gd->cdate = $this->__dateIndonesia($gd->cdate);
+			}
+
+			if (isset($gd->value)) {
+				$gd->value = json_decode($gd->value);
 			}
 
 			if (isset($gd->durasi)) {
