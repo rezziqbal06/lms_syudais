@@ -37,5 +37,3 @@
     </style>
     <div id="panel_print"></div>
 </div>
-<div id="word">
-</div>

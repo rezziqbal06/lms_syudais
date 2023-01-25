@@ -177,7 +177,7 @@ class Asesmen extends JI_Controller
 				];
 			}
 			$value = json_encode($value);
-		}else if($ajm->slug == 'audit-kepatuhan-apd'){
+		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$value = [];
 			$indikator = $this->input->request('a_indikator_id');
 			foreach ($indikator as $k => $v) {
@@ -189,7 +189,6 @@ class Asesmen extends JI_Controller
 					"indikator" => $k,
 					"aksi" => $aksi
 				];
-				
 			}
 			$value = json_encode($value);
 		}
@@ -362,7 +361,7 @@ class Asesmen extends JI_Controller
 				];
 			}
 			$value = json_encode($value);
-		} else if ($ajm->slug == 'audit-kepatuhan-apd'){
+		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$value = [];
 			$indikator = $this->input->request('a_indikator_id');
 			foreach ($indikator as $k => $v) {
@@ -374,7 +373,6 @@ class Asesmen extends JI_Controller
 					"indikator" => $k,
 					"aksi" => $aksi
 				];
-				
 			}
 			$value = json_encode($value);
 		}
@@ -628,5 +626,91 @@ class Asesmen extends JI_Controller
 		// $data['stime'] = date('H:i:s');
 
 		$this->__json_out($data);
+	}
+
+	public function printing()
+	{
+		$data = [];
+		$content = $this->input->post('content');
+		if (!isset($content)) {
+			$this->status = 400;
+			$this->message = 'Data tidak ditemukan';
+			$this->__json_out($data);
+			die();
+		}
+		$html = '<!DOCTYPE html>
+		<html lang="en">
+		
+		<head>
+			<meta charset="UTF-8">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>Document</title>
+		</head>
+		
+		<body>';
+		$html .= '<style>
+					.text-center {
+						text-align: center;
+					}
+
+					.my_table {
+						margin-bottom: 0.5rem;
+						width: 100%;
+						border-collapse: collapse;
+					}
+
+					.my_table td {
+						border: 1px solid #ced4da;
+						padding: 0.5rem;
+					}
+
+					.my_table th {
+						border: 1px solid #ced4da;
+						padding: 0.5rem;
+					}
+
+					.check {
+						border: 1px solid #bebebe;
+						width: 1rem;
+						height: 1rem;
+						border-radius: 6px;
+					}
+
+					.checked {
+						border: 1px solid #bebebe;
+						width: 1rem;
+						height: 1rem;
+						border-radius: 6px;
+						background-color: #5e72e4;
+					}
+				</style>';
+
+		$html .= $content;
+
+		$html .= '</body>
+		</html>';
+		$_SESSION['html_print'] = $html;
+
+		$this->status = 200;
+		$this->message = 'Berhasil';
+		$this->__json_out($data);
+	}
+
+	public function print()
+	{
+		require_once 'dompdf/autoload.inc.php';
+		$dompdf = new Dompdf();
+		$html = $_SESSION['html_print'];
+		$dompdf->loadHtml($html);
+
+		// (Optional) Setup the paper size and orientation 
+		$dompdf->setPaper('A4', 'potrait');
+
+		// Render the HTML as PDF 
+		$dompdf->render();
+
+		// Output the generated PDF to Browser 
+		$dompdf->stream();
 	}
 }

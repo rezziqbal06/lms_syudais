@@ -1,4 +1,7 @@
 <?php
+
+use Dompdf\Dompdf;
+
 class Asesmen extends JI_Controller
 {
 	var $media_pengguna = 'media/';
@@ -97,7 +100,7 @@ class Asesmen extends JI_Controller
 				$group_by_kategori[$key->kategori][] = $key;
 			}
 			$data['aim'] = $group_by_kategori;
-		} else if(in_array($ajm->slug, ['audit-kepatuhan-apd'])){
+		} else if (in_array($ajm->slug, ['audit-kepatuhan-apd'])) {
 			$type_form = 3;
 		}
 
@@ -183,7 +186,7 @@ class Asesmen extends JI_Controller
 			$type_form = 1;
 		} else if (in_array($ajm->slug, ['monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'])) {
 			$type_form = 2;
-		} else if (in_array($ajm->slug, ['audit-kepatuhan-apd'])){
+		} else if (in_array($ajm->slug, ['audit-kepatuhan-apd'])) {
 			$type_form = 3;
 		}
 
@@ -210,5 +213,74 @@ class Asesmen extends JI_Controller
 		$this->putJsReady("asesmen/detail_bottom", $data);
 		$this->loadLayout('col-1', $data);
 		$this->render();
+	}
+
+	public function printing()
+	{
+		$data = [];
+		$content = $this->input->post('content');
+		if (!isset($content)) {
+			$this->status = 400;
+			$this->message = 'Data tidak ditemukan';
+			$this->__json_out($data);
+			die();
+		}
+		$html = '<!DOCTYPE html>
+		<html lang="en">
+		
+		<head>
+			<meta charset="UTF-8">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>Document</title>
+		</head>
+		
+		<body>';
+		$html .= '<style>
+					.text-center {
+						text-align: center;
+					}
+
+					.my_table {
+						margin-bottom: 0.5rem;
+						width: 100%;
+						border-collapse: collapse;
+					}
+
+					.my_table td {
+						border: 1px solid #ced4da;
+						padding: 0.5rem;
+					}
+
+					.my_table th {
+						border: 1px solid #ced4da;
+						padding: 0.5rem;
+					}
+
+					.check {
+						border: 1px solid #bebebe;
+						width: 1rem;
+						height: 1rem;
+						border-radius: 6px;
+					}
+
+					.checked {
+						border: 1px solid #bebebe;
+						width: 1rem;
+						height: 1rem;
+						border-radius: 6px;
+						background-color: #5e72e4;
+					}
+				</style>';
+
+		$html .= $content;
+
+		$html .= '</body>
+		</html>';
+		$_SESSION['html_print'] = $html;
+
+		$this->status = 200;
+		$this->message = 'Berhasil';
+		$this->__json_out($data);
 	}
 }

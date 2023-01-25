@@ -225,16 +225,16 @@ function printHH(respon){
 								<td>`
 								$.each(respon.data.aim, function(kaim,vaim){
 									if(vaim.type == 'indikator'){
-										var ischecked = vvalue.indikator == vaim.id ? '' : '';
-										s += `<p>${ischecked} ${vaim.nama}</p>`
+										var ischecked = vvalue.indikator == vaim.id ? 'checked' : 'check';
+										s += `<div class="${ischecked}"></div><p> ${vaim.nama}</p>`
 									}
 								})
 							s += `</td>`
 							s += `<td>`
 								$.each(respon.data.aim, function(kaim,vaim){
 									if(vaim.type == 'aksi'){
-										var ischecked = vvalue.aksi == vaim.id ? 'checked' : '';
-										s += `<p>${ischecked} ${vaim.nama}</p>`
+										var ischecked = vvalue.aksi == vaim.id ? 'checked' : 'check';
+										s += `<div class="${ischecked}"></div><p> ${vaim.nama}</p>`
 									}
 								})
 							s += `</td>
@@ -252,11 +252,12 @@ function printHH(respon){
 	s += '</tbody>'
 	s += '</table>'
 
+	$.post('<?=base_url('api_front/asesmen/printing')?>', {content: s}).done(function(dt){
+		if(dt.status == 200) window.open('<?=base_url('cetak/asesmen/')?>', 'blank');
+	})
+
 	$("#panel_print").html(s);
-	var html = $("#printed").html();
-	let docx = htmlDocx.asBlob(html);
-	let file = new Blob([docx], {type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
-	download(file, 'audit-hand-hygiene.docx');
+	
 }
 
 
