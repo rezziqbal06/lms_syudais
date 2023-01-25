@@ -244,7 +244,7 @@ class Login extends \JI_Controller
 				// 	$sess->user->menus->left[$mo->identifier] = $mo;
 				// }
 				// unset($mo);
-
+				dd($sess);
 
 				$this->setKey($sess);
 
