@@ -176,6 +176,7 @@ class Asesmen extends JI_Controller
 					"aksi" => $v
 				];
 			}
+			$this->cam->columns['cdate']->value = date('Y-m-d',strtotime($this->input->request('cdate')));
 			$value = json_encode($value);
 		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$value = [];
@@ -360,6 +361,7 @@ class Asesmen extends JI_Controller
 					"aksi" => $v
 				];
 			}
+			$this->cam->columns['cdate']->value = date('Y-m-d',strtotime($this->input->request('cdate')));
 			$value = json_encode($value);
 		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$value = [];
