@@ -90,7 +90,7 @@ function initData(fd=[]){
 					$.each(respon.data.list, function(k,v){
 						var is_show = 'd-none'
 						if(v.nilai) is_show = '';
-						s += `<a data-id="${v.id}" href="<?=base_url('asesmen/')?>${v.slug}/${v.id}"><div class="card mx-auto my-3 col-md-5">
+						s += `<a class="col-md-4 mb-3" data-id="${v.id}" href="<?=base_url('asesmen/')?>${v.slug}/${v.id}"><div class="card ">
 							<div class="card-body">
 								<div class="row">
 									<div class="col-6">
@@ -185,7 +185,7 @@ function printHH(respon){
 		if(k == 0){
 			s += '<tr>';
 		}
-		if(n == 3){
+		if(n == 2){
 			s += '</tr><tr>';
 			n = 0;
 		}
@@ -225,16 +225,28 @@ function printHH(respon){
 								<td>`
 								$.each(respon.data.aim, function(kaim,vaim){
 									if(vaim.type == 'indikator'){
-										var ischecked = vvalue.indikator == vaim.id ? 'checked' : 'check';
-										s += `<div class="${ischecked}"></div><p> ${vaim.nama}</p>`
+										var ischecked = vvalue.indikator == vaim.id ? 'checked' : '';
+										s += `<div class="form-check">
+												<input class="form-check-input" type="checkbox" ${ischecked}>
+												<label class="form-check-label" >
+													${vaim.nama}
+												</label>
+											</div>`
+										<!-- s += `<label><input type="checkbox" ${ischecked}> ${vaim.nama}</label>` -->
 									}
 								})
 							s += `</td>`
 							s += `<td>`
 								$.each(respon.data.aim, function(kaim,vaim){
 									if(vaim.type == 'aksi'){
-										var ischecked = vvalue.aksi == vaim.id ? 'checked' : 'check';
-										s += `<div class="${ischecked}"></div><p> ${vaim.nama}</p>`
+										var ischecked = vvalue.aksi == vaim.id ? 'checked' : '';
+										s += `<div class="form-check">
+												<input class="form-check-input" type="checkbox" ${ischecked}>
+												<label class="form-check-label" >
+													${vaim.nama}
+												</label>
+											</div>`
+										<!-- s += `<label><input type="checkbox" ${ischecked}> ${vaim.nama}</label>` -->
 									}
 								})
 							s += `</td>
@@ -256,7 +268,7 @@ function printHH(respon){
 		if(dt.status == 200) window.open('<?=base_url('cetak/asesmen/')?>', 'blank');
 	})
 
-	$("#panel_print").html(s);
+	<!-- $("#panel_print").html(s); -->
 	
 }
 

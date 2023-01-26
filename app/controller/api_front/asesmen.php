@@ -176,7 +176,7 @@ class Asesmen extends JI_Controller
 					"aksi" => $v
 				];
 			}
-			$this->cam->columns['cdate']->value = date('Y-m-d',strtotime($this->input->request('cdate')));
+			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
 			$value = json_encode($value);
 		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$value = [];
@@ -361,7 +361,7 @@ class Asesmen extends JI_Controller
 					"aksi" => $v
 				];
 			}
-			$this->cam->columns['cdate']->value = date('Y-m-d',strtotime($this->input->request('cdate')));
+			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
 			$value = json_encode($value);
 		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$value = [];
@@ -686,6 +686,47 @@ class Asesmen extends JI_Controller
 						border-radius: 6px;
 						background-color: #5e72e4;
 					}
+
+					body {
+						font-size: x-small;
+					}
+
+					.form-check {
+						display: block;
+						padding-left: 2.3em;
+						margin-bottom: 0.125rem;
+					}
+
+					.form-check-label, .form-check-input[type="checkbox"] {
+						cursor: pointer;
+					}
+					.form-check-input[type="checkbox"] {
+						border-radius: 0.25em !important;
+					}
+					.form-check .form-check-input {
+						float: left;
+						margin-left: -1.73em;
+					}
+					.form-check-input {
+						width: 1.23em;
+						height: 1.23em;
+						border-radius: 3px;
+						vertical-align: top;
+						background-color: #fff;
+						background-repeat: no-repeat;
+						background-position: center;
+						background-size: contain;
+						
+						appearance: none;
+						color-adjust: exact;
+					}
+					.form-check-label {
+						font-size: small;
+						font-weight: 400;
+					}
+					.form-check-label, .form-check-input[type="checkbox"] {
+						cursor: pointer;
+					}
 				</style>';
 
 		$html .= $content;
@@ -697,22 +738,5 @@ class Asesmen extends JI_Controller
 		$this->status = 200;
 		$this->message = 'Berhasil';
 		$this->__json_out($data);
-	}
-
-	public function print()
-	{
-		require_once 'dompdf/autoload.inc.php';
-		$dompdf = new Dompdf();
-		$html = $_SESSION['html_print'];
-		$dompdf->loadHtml($html);
-
-		// (Optional) Setup the paper size and orientation 
-		$dompdf->setPaper('A4', 'potrait');
-
-		// Render the HTML as PDF 
-		$dompdf->render();
-
-		// Output the generated PDF to Browser 
-		$dompdf->stream();
 	}
 }

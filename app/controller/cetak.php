@@ -1,10 +1,4 @@
 <?php
-// $vendorDirPath = (SEMEROOT . 'kero/lib/phpoffice/vendor/');
-// $vendorDirPath = realpath($vendorDirPath);
-// require_once $vendorDirPath . '/autoload.php';
-require_once 'dompdf/autoload.inc.php';
-
-use Dompdf\Dompdf;
 
 class Cetak extends JI_Controller
 {
@@ -30,6 +24,8 @@ class Cetak extends JI_Controller
 		$this->load('front/a_jabatan_model', 'ajbm');
 		$this->load('front/b_user_model', 'bum');
 		$this->load('front/c_asesmen_model', 'cam');
+
+		$this->lib('seme_dompdf', 'dompdf');
 	}
 
 	public function index()
@@ -43,16 +39,16 @@ class Cetak extends JI_Controller
 	public function asesmen()
 	{
 		$html = $_SESSION['html_print'];
-		$dompdf = new Dompdf();
-		$dompdf->loadHtml($html);
+		$_SESSION['html_print'] = null;
+		$data = $this->dompdf->download([
+			'filename' => 'Hygiene.pdf',
+			'html' => $html,
+			'ukuran' => 'F4',
+			'rotasi' => 'Potrait'
+		]);
 
-		// (Optional) Setup the paper size and orientation 
-		$dompdf->setPaper('A4', 'potrait');
-
-		// Render the HTML as PDF 
-		$dompdf->render();
-
-		// Output the generated PDF to Browser 
-		$dompdf->stream();
+		if (isset($data['status']) && $data['status'] != 200) {
+			echo $data['message'];
+		}
 	}
 }

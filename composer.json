@@ -10,7 +10,9 @@
     }
   ],
   "minimum-stability": "dev",
-  "require": {},
+  "require": {
+    "dompdf/dompdf": "dev-master"
+  },
   "autoload": {
     "psr-4": {
       "seme\\": "kero/"
