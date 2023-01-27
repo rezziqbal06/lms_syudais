@@ -177,7 +177,7 @@ $("#jenis_penilaian").on('change', function(e){
 });
 
 function printHH(respon){
-	var s = '<h4 class="text-center">FORMULIR AUDIT HAND HYGIENE RSU BINA SEHAT</h4><br>';
+	var s = '<h4 class="text-center mb-n1">FORMULIR AUDIT HAND HYGIENE RSU BINA SEHAT</h4><br>';
 	s += '<table style="width: 100%;">'
 	s += '<tbody>'
 	var n = 0;
@@ -185,7 +185,7 @@ function printHH(respon){
 		if(k == 0){
 			s += '<tr>';
 		}
-		if(n == 2){
+		if(n == 3){
 			s += '</tr><tr>';
 			n = 0;
 		}
@@ -220,6 +220,7 @@ function printHH(respon){
 							<td>Action</td>
 						</tr>`
 						$.each(v.value, function(kvalue, vvalue){
+							if(kvalue == 9) return;
 							s += `<tr>
 								<td>${kvalue+1}</td>
 								<td>`

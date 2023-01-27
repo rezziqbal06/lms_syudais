@@ -652,8 +652,18 @@ class Asesmen extends JI_Controller
 		
 		<body>';
 		$html .= '<style>
+					@page { margin: 3px; }
+					body { 
+						margin-left: 3px; 
+						margin-right: 3px; 
+						font-family: "Helvetica", "Arial", sans-serif;
+					}
 					.text-center {
 						text-align: center;
+					}
+
+					h4{
+						margin-bottom:0px;
 					}
 
 					.my_table {
@@ -663,13 +673,14 @@ class Asesmen extends JI_Controller
 					}
 
 					.my_table td {
-						border: 1px solid #ced4da;
-						padding: 0.5rem;
+						border: 1px solid #121212;
+						padding-left: 0.5rem;
+						padding-bottom: 0.4rem;
 					}
 
 					.my_table th {
-						border: 1px solid #ced4da;
-						padding: 0.5rem;
+						border: 1px solid #121212;
+						padding: 0.1rem;
 					}
 
 					.check {
@@ -721,8 +732,7 @@ class Asesmen extends JI_Controller
 						color-adjust: exact;
 					}
 					.form-check-label {
-						font-size: small;
-						font-weight: 400;
+						font-size: x-small;
 					}
 					.form-check-label, .form-check-input[type="checkbox"] {
 						cursor: pointer;
