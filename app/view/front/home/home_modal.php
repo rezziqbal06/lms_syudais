@@ -1,5 +1,5 @@
 <!-- modal filter -->
-<div id="modal_filter" class="modal fade " tabindex="-1" role="dialog" aria-hidden="true">
+<div id="modal_filter" class="modal fade" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 

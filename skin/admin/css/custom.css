@@ -3,6 +3,10 @@
     --accent:#d7a510;
     --secondary:#086867;
     --background:#f5f3e6;
+    --dark-primary:#50577A;
+    --dark-accent:#6B728E;
+    --dark-secondary:#474E68;
+    --dark-background:#404258;
 }
 
 .gradient-primary{
@@ -101,4 +105,167 @@
 .progress{
     height: 25px;
     border-radius: 0.25rem;
+}
+
+@media (prefers-color-scheme:light){
+    .bg-primary{
+        background-color: var(--primary) !important;
+    }
+    
+    .bg-accent{
+        background-color: var(--accent) !important; 
+    }
+    
+    .bg-secondary{
+        background-color: var(--secondary) !important;
+    }
+    
+    .bg-background{
+        background-color: var(--background) !important;
+    }
+    
+    .text-primary{
+        color: var(--primary) !important;
+    }
+    
+    .text-accent{
+        color: var(--accent) !important; 
+    }
+    
+    .text-secondary{
+        color: var(--secondary) !important;
+    }
+    
+    .text-background{
+        color: var(--background) !important;
+    }
+
+    .bg-nav{
+        background-color: white !important;
+    }
+}
+
+@media (prefers-color-scheme:dark){
+    .bg-primary{
+        background-color: var(--dark-primary) !important;
+        color: white !important;
+    }
+    
+    .bg-accent{
+        background-color: var(--dark-accent) !important; 
+        color: white !important;
+    }
+    
+    .bg-secondary{
+        background-color: var(--dark-secondary) !important;
+        color: white !important;
+    }
+    
+    .bg-background{
+        background-color: var(--dark-background) !important;
+        color: white !important;
+    }
+
+    .gradient-primary{
+        background: var(--dark-secondary);
+        background: linear-gradient(149deg, var(--dark-secondary) 11%, var(--dark-primary) 76%);
+    }
+    
+    .text-primary{
+        color: var(--dark-primary) !important;
+    }
+    
+    .text-accent{
+        color: var(--dark-accent) !important; 
+    }
+    
+    .text-secondary{
+        color: wheat !important;
+    }
+    
+    .text-background{
+        color: var(--dark-background) !important;
+    }
+
+    .form-control{
+        background-color: var(--dark-secondary) !important;
+        color: white !important;
+    }
+
+    .form-control:focus{
+        color: white !important;
+
+    }
+
+    .select2-container .select2-selection--single {
+        background-color: var(--dark-secondary) !important;
+        color: white !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered{
+        color: white;
+    }
+
+    .select2-container--open .select2-dropdown--below{
+        background-color: var(--dark-secondary) !important;
+    }
+
+    .select2-search--dropdown .select2-search__field{
+        background-color: var(--dark-secondary) !important;
+    }
+
+    .select2-container .select2-selection--single :focus{
+        color: white !important;
+
+    }
+
+    h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+        font-weight: 400;
+        line-height: 1.2;
+        color: #ededed;
+    }
+
+    .fa{
+        color: white !important;
+    }
+
+    .bg-nav{
+        background-color: var(--dark-secondary) !important;
+        color:white;
+    }
+
+    .bg-nav a{
+        color:white !important;
+    }
+
+    .card{
+        background-color: var(--dark-primary) !important;
+        color: white;
+    }
+
+    .card-header{
+        background-color: var(--dark-primary) !important;
+        color: white;
+    }
+
+    .panel-card{
+        background-color: var(--dark-primary) !important;
+        color: white;
+    }
+    
+    .modal-content{
+        background-color: var(--dark-background) !important;
+    }
+
+    .panel-header{
+        background-color: var(--dark-primary) !important;
+        color: white;
+    }
+    
+    label{
+        color: white;
+    }
+
 }

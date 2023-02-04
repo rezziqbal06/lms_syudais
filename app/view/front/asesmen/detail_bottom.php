@@ -136,6 +136,16 @@ $(document).on('click', '.choice', function(e){
 	}
 });
 
+$(document).off('dblclick', '.choice');
+$(document).on('dblclick', '.choice', function(e){
+	e.preventDefault();
+	let selector = $(this).attr("data-id");
+	$("#"+selector).removeClass("border border-success border-danger");
+	let aksi = $("#aksi-"+selector).val();
+	$("#aksi-"+selector).val('n');
+	$("#"+selector).addClass("border border-danger");
+});
+
 $(document).on('click',"#filter-empty",function(e){
 	e.preventDefault();
 	let iempty = $("#aksi-empty").val();
@@ -199,7 +209,7 @@ function initDataByRuanganId(r_id=0, val_edit = []){
 							$.each(v, function(k1,v1){
 								r += `
 								<div class="col-md-6">
-								<div class="card p-3 m-2 choice transition" data-id="${v1.id}" id="${v1.id}">
+								<div class="card p-3 m-1 choice transition" data-id="${v1.id}" id="${v1.id}">
 									<input type="hidden" id="aksi-${v1.id}" name="aksi[${v1.id}]">
 									<h6>${v1.nama}</h6>
 								</div>	
@@ -236,7 +246,7 @@ function initDataByRuanganId(r_id=0, val_edit = []){
 							$.each(v, function(k1,v1){
 								r += `
 								<div class="col-md-6">
-								<div class="card p-3 m-2 choice transition" data-id="${v1.id}" id="${v1.id}">
+								<div class="card p-3 m-1 choice transition" data-id="${v1.id}" id="${v1.id}">
 									<input type="hidden" id="aksi-${v1.id}" name="aksi[${v1.id}]">
 									<h6>${v1.nama}</h6>
 								</div>	

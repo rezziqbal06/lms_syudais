@@ -1,10 +1,10 @@
 <?php
-	$admin_foto = '';
-	if(isset($sess->admin->foto))$admin_foto = $sess->admin->foto;
-	if(empty($admin_foto)) $admin_foto = 'media/pengguna/default.png';
-	$admin_foto = base_url($admin_foto);
+$admin_foto = '';
+if (isset($sess->admin->foto)) $admin_foto = $sess->admin->foto;
+if (empty($admin_foto)) $admin_foto = 'media/pengguna/default.png';
+$admin_foto = base_url($admin_foto);
 ?>
-<header class="navbar navbar-default">
+<header class="navbar navbar-default bg-secondary">
 	<!-- Left Header Navigation -->
 	<ul class="nav navbar-nav-custom">
 		<!-- Main Sidebar Toggle Button -->
@@ -43,7 +43,7 @@
 	<!-- END Left Header Navigation -->
 
 	<!-- Search Form -->
-	<form id="fmenu_cari" action="<?=base_url('cari/'); ?>" method="post" class="navbar-form-custom" onsubmit="return false;">
+	<form id="fmenu_cari" action="<?= base_url('cari/'); ?>" method="post" class="navbar-form-custom" onsubmit="return false;">
 		<div class="form-group">
 			<input id="top-search" type="text" name="keyword" class="form-control" placeholder="Cari menu/modul..">
 		</div>
@@ -66,19 +66,19 @@
 		<!-- User Dropdown -->
 		<li class="dropdown">
 			<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-				<img src="<?=$admin_foto?>" alt="avatar" onerror="this.null;this.src='<?=base_url('media/pengguna/default.png')?>';"> <i class="fa fa-angle-down"></i>
+				<img src="<?= $admin_foto ?>" alt="avatar" onerror="this.null;this.src='<?= base_url('media/pengguna/default.png') ?>';"> <i class="fa fa-angle-down"></i>
 			</a>
 			<ul class="dropdown-menu dropdown-custom dropdown-menu-right">
 				<li class="dropdown-header text-center">Account</li>
 				<li>
-					<a href="<?=base_url('profil')?>" title="Profil">
+					<a href="<?= base_url('profil') ?>" title="Profil">
 						<i class="fa fa-user fa-fw pull-right"></i>
 						Profil
 					</a>
 				</li>
 				<li class="divider"></li>
 				<li>
-					<a href="<?=base_url('logout'); ?>"><i class="fa fa-ban fa-fw pull-right"></i> Logout</a>
+					<a href="<?= base_url('logout'); ?>"><i class="fa fa-ban fa-fw pull-right"></i> Logout</a>
 				</li>
 			</ul>
 		</li>

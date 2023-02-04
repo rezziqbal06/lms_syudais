@@ -4,7 +4,7 @@
         max-height: 49px;
     }
 </style>
-<header class="navbar navbar-default navbar-fixed-top p-05">
+<header class="navbar navbar-default navbar-fixed-top p-05 bg-secondary">
 
     <!-- Navbar Header -->
     <div class="navbar-header">

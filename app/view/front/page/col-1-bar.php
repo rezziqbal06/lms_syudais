@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 <?php $this->getThemeElement("page/html/head", $__forward); ?>
 
-<body style="overflow-x: hidden;">
+<body style="overflow-x: hidden;" class="bg-background">
 	<!-- Page Wrapper -->
 	<div id="page-wrapper" class="page-loading">
 		<!-- Preloader -->

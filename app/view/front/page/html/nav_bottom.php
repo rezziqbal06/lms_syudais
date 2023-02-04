@@ -1,6 +1,6 @@
 <!-- Top Navbar -->
 
-<nav class="navbar navbar-expand-lg fixed-top bg-white d-none d-md-block  mb-5">
+<nav class="navbar navbar-expand-lg fixed-top bg-nav d-none d-md-block  mb-5">
     <div class="container-fluid">
         <a class="navbar-brand" href="<?= base_url('') ?>">
             <img src="<?= base_url('media/logo.png') ?>" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
@@ -20,7 +20,7 @@
 </nav>
 
 <!-- Bottom Navbar -->
-<nav class="navbar navbar-dark bg-white navbar-expand d-md-none d-lg-none d-xl-none fixed-bottom border-top">
+<nav class="navbar navbar-dark bg-white navbar-expand d-md-none d-lg-none d-xl-none fixed-bottom border-top bg-nav">
     <ul class="navbar-nav nav-justified w-100">
         <li class="nav-item">
             <a href="<?= base_url('') ?>" class="nav-link">

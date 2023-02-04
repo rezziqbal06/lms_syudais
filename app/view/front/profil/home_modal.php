@@ -60,7 +60,7 @@
 					<div class="d-flex flex-wrap">
 						<a class="btn btn-danger" style="width:50%" href="<?= base_url('logout') ?>" id="btn_action_logout"><i class="fa fa-door-open"></i> Logout</a>
 						<button type="button" class="btn btn-default" style="width:50%" data-dismiss="modal" id="btn_close_modal_logout"><i class="fa fa-close"></i> Tutup</button>
-						
+
 					</div>
 				</div>
 				<!-- END Modal Body -->
@@ -116,7 +116,7 @@
 </div>
 
 <!-- modal edit -->
-<div id="modal_edit_profil" class="modal fade "   role="dialog" aria-hidden="true">
+<div id="modal_edit_profil" class="modal fade " role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 
@@ -140,20 +140,21 @@
 								<div class="col-md-6">
 									<label for="ieruangan" class="control-label">Ruangan</label>
 									<select id="ieruangan" name="a_unit_id" class="form-control select2" style="width: 100%;">
-										<?php foreach ($arm as $key ) : ?>
-											<option value="<?= $key->id ?>" <?= $key->id==$ue->a_unit_id ? "selected" : "" ?>><?= $key->nama ?></option>
+										<option value="">Tidak Ada Ruangan</option>
+										<?php foreach ($arm as $key) : ?>
+											<option value="<?= $key->id ?>" <?= $key->id == $ue->a_unit_id ? "selected" : "" ?>><?= $key->nama ?></option>
 										<?php endforeach; ?>
 									</select>
 								</div>
 								<div class="col-md-6">
 									<label for="ieprofesi" class="control-label">Profesi</label>
 									<select id="ieprofesi" name="a_jabatan_id" class="form-control select2" style="width: 100%;">
-										<?php 
-											foreach ($ajm as $key ) :
-										?>
-											<option value="<?= $key->id ?>" <?= $key->id==$ue->a_jabatan_id ? "selected" : "" ?>><?= $key->nama ?></option>
 										<?php
-											endforeach;
+										foreach ($ajm as $key) :
+										?>
+											<option value="<?= $key->id ?>" <?= $key->id == $ue->a_jabatan_id ? "selected" : "" ?>><?= $key->nama ?></option>
+										<?php
+										endforeach;
 										?>
 									</select>
 								</div>

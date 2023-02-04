@@ -42,7 +42,7 @@ function initChart(labels=['January', 'February', 'March', 'April', 'May', 'June
 		label: 'Data Asesmen',
 		data: datas,
 		fill: false,
-		backgroundColor: ['#086867','#6c9b87'],
+		backgroundColor: ['#ff6361', '#ffa600', '#58508d','#bc5090'],
 		borderColor: 'rgb(75, 192, 192)',
 		borderRadius: 8
 	}]
@@ -90,7 +90,7 @@ function initData(fd=[]){
 					$.each(respon.data.list, function(k,v){
 						var is_show = 'd-none'
 						if(v.nilai) is_show = '';
-						s += `<a class="col-md-4 mb-3" data-id="${v.id}" href="<?=base_url('asesmen/')?>${v.slug}/${v.id}"><div class="card ">
+						s += `<a class="col-md-4 mb-3" data-id="${v.id}" href="<?=base_url('asesmen/')?>${v.slug}/${v.id}"><div class="card">
 							<div class="card-body">
 								<div class="row">
 									<div class="col-6">
@@ -100,7 +100,7 @@ function initData(fd=[]){
 										<span class="pill pill-warning ${is_show} float-end">${v.nilai} poin</span>
 									</div>
 								</div>
-								<p class="text-dark"><b>${v.nama}</b></p>
+								<p class=""><b>${v.nama}</b></p>
 								<figcaption class="blockquote-footer">
 									${v.profesi}
 								</figcaption>
