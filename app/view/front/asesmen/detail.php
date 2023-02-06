@@ -94,14 +94,16 @@
 			<input type="hidden" name="a_jpenilaian_id" id="ia_jpenilaian_id" value="<?= $ajm->id ?>">
 			<input type="hidden" name="stime" id="istime" value="<?= $stime ?? '' ?>">
 			<!-- <input type="hidden" name="etime" id="ietime"> -->
-			<div class="col-md-4">
-				<label for="iuser">Nama</label>
-				<input type="hidden" name="b_user_id" id="ib_user_id" value="<?= $cam->b_user_id ?? '' ?>">
-				<div class="input-group">
-					<input type="text" class="form-control" placeholder="Nama" aria-label="Nama" id="iuser" name="user" value="<?= $cam->b_user_name ?? '' ?>">
-					<button class="btn btn-secondary" type="button" id="btn_cari_user">Cari</button>
+			<?php if($type_form != 2) { ?>
+				<div class="col-md-4">
+					<label for="iuser">Nama</label>
+					<input type="hidden" name="b_user_id" id="ib_user_id" value="<?= $cam->b_user_id ?? '' ?>">
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="Nama" aria-label="Nama" id="iuser" name="user" value="<?= $cam->b_user_name ?? '' ?>">
+						<button class="btn btn-secondary" type="button" id="btn_cari_user">Cari</button>
+					</div>
 				</div>
-			</div>
+			<?php } ?>
 			<div class="col-md-4">
 				<label for="ijabatan">Profesi</label>
 				<div class="input-group">
@@ -124,12 +126,10 @@
 					<?php endif ?>
 				</select>
 			</div>
-			<?php if($type_form == 2) : ?>
-				<div class="col-md-12">
-					<label for="tgl_asesmen">Tanggal Asesmen</label>
-					<input type="text" class="form-control" readonly placeholder="Tanggal Asesmen" value="<?= isset($cam->cdate) ? $cam->cdate : ''?>" name="cdate" id="tgl_asesmen">
-				</div>
-			<?php endif ?>
+			<div class="col-md-12">
+				<label for="tgl_asesmen">Tanggal Asesmen</label>
+				<input type="text" class="form-control" readonly placeholder="Tanggal Asesmen" value="<?= isset($cam->cdate) ? $cam->cdate : ''?>" name="cdate" id="tgl_asesmen">
+			</div>
 		</div>
 	</div>
 

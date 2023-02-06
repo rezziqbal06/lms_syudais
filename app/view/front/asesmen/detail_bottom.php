@@ -316,9 +316,9 @@ function initDataByRuanganId(r_id=0, val_edit = []){
 	});
 }
 
+$('#tgl_asesmen').datepicker({format: 'yyyy-mm-dd'})
 
 if(<?= $type_form ?> == 2){
-	$('#tgl_asesmen').datepicker({format: 'yyyy-mm-dd'})
 	$("#ia_ruangan_id").on('change', function(e){
 		e.preventDefault();
 		let ruangan_id = this.value;

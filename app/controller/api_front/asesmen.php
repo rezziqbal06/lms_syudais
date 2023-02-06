@@ -166,6 +166,7 @@ class Asesmen extends JI_Controller
 			}
 
 
+			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
 			$value = json_encode($value);
 		} else if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
 			$value = [];
@@ -191,6 +192,7 @@ class Asesmen extends JI_Controller
 					"aksi" => $aksi
 				];
 			}
+			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
 			$value = json_encode($value);
 		}
 		$this->cam->columns['value']->value = $value;
