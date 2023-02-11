@@ -2,14 +2,14 @@
 
 register_namespace(__NAMESPACE__);
 /**
- * Scoped `front` model for `c_asesmen` table
+ * Scoped `front` model for `d_value` table
  *
  * @version 5.4.1
  *
  * @package Model\Front
  * @since 1.0.0
  */
-class C_Asesmen_Model extends \Model\C_Asesmen_Concern
+class D_Value_Model extends \Model\D_Value_Concern
 {
   public function __construct()
   {
@@ -91,17 +91,6 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     return 0;
   }
 
-  public function datasets($b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
-  {
-    $this->db->select_as("$this->tbl2_as.fnama", "nama", 0);
-    $this->db->select_as("SUM($this->tbl_as.nilai)", "nilai", 0);
-    $this->db->select_as("COUNT($this->tbl_as.nilai)*10", "jumlah", 0);
-    $this->db->from($this->tbl, $this->tbl_as);
-    $this->join_company();
-    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
-    $this->db->group_by("$this->tbl_as.b_user_id");
-    return $this->db->get();
-  }
   public function setMass($dis)
   {
     return $this->db->insert_multi($this->tbl, $dis);
@@ -115,31 +104,15 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     return $this->db->get('', 0);
   }
 
-  public function print($page = '', $pagesize = '', $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
-  {
-    $this->datatables[$this->point_of_view]->selections($this->db);
-    $this->db->from($this->tbl, $this->tbl_as);
-    $this->join_company();
-    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
-    $this->db->order_by($sortCol, $sortDir);
-    if (strlen($page) && strlen($pagesize)) $this->db->limit($page, $pagesize);
-    return $this->db->get("object", 0);
-  }
-
-  public function print_ppi($page = '', $pagesize = '', $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
-  {
-    $this->datatables[$this->point_of_view]->selections($this->db);
-    $this->db->from($this->tbl, $this->tbl_as);
-    $this->join_company();
-    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
-    $this->db->order_by('a_ruangan_id', 'ASC')->order_by('cdate', 'ASC');
-    if (strlen($page) && strlen($pagesize)) $this->db->limit($page, $pagesize);
-    return $this->db->get("object", 0);
-  }
-
   public function delById($id)
   {
     $this->db->where('id', $id);
+    return $this->db->delete($this->tbl);
+  }
+
+  public function delByAsesmenId($id)
+  {
+    $this->db->where('c_asesmen_id', $id);
     return $this->db->delete($this->tbl);
   }
 }

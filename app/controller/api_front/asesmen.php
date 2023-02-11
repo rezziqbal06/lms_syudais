@@ -11,11 +11,13 @@ class Asesmen extends JI_Controller
 		$this->load('a_indikator_concern');
 		$this->load('b_user_concern');
 		$this->load('c_asesmen_concern');
+		$this->load('d_value_concern');
 
 		$this->load("api_front/a_jpenilaian_model", 'ajm');
 		$this->load("api_front/a_indikator_model", 'aim');
 		$this->load("api_front/b_user_model", 'bum');
 		$this->load("api_front/c_asesmen_model", 'cam');
+		$this->load("api_front/d_value_model", 'dvm');
 	}
 
 	/**
@@ -167,7 +169,6 @@ class Asesmen extends JI_Controller
 
 
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
-			$value = json_encode($value);
 		} else if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
 			$value = [];
 			$aksi = $this->input->request("aksi");
@@ -178,7 +179,6 @@ class Asesmen extends JI_Controller
 				];
 			}
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
-			$value = json_encode($value);
 		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$value = [];
 			$indikator = $this->input->request('a_indikator_id');
@@ -193,12 +193,21 @@ class Asesmen extends JI_Controller
 				];
 			}
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
-			$value = json_encode($value);
 		}
-		$this->cam->columns['value']->value = $value;
+		$json_value = json_encode($value);
+		$this->cam->columns['value']->value = $json_value;
 
 		$res = $this->cam->save();
 		if ($res) {
+			if ($value) {
+				foreach ($value as $k => $v) {
+					$value[$k]['c_asesmen_id'] = $res;
+				}
+			}
+			$resValue = $this->dvm->setMass($value);
+			if (!$resValue) {
+				$this->cam->delById($res);
+			}
 			$this->status = 200;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 		} else {
@@ -341,6 +350,7 @@ class Asesmen extends JI_Controller
 			$indikator = $this->input->request('a_indikator_id');
 			if (is_array($indikator) && count($indikator)) {
 				foreach ($indikator as $k => $v) {
+					$value[$k]['c_asesmen_id'] = $id;
 					$value[$k]['indikator'] = $v;
 					$value[$k]['aksi'] = $this->input->request('a_aksi_id_' . $k) ?? null;
 					$aksi = $this->aim->id($value[$k]['aksi']);
@@ -351,20 +361,17 @@ class Asesmen extends JI_Controller
 
 				$this->cam->columns['nilai']->value = $nilai;
 			}
-
-
-			$value = json_encode($value);
 		} else if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
 			$value = [];
 			$aksi = $this->input->request("aksi");
 			foreach ($aksi as $k => $v) {
 				$value[] = [
+					"c_asesmen_id" => $id,
 					"indikator" => "$k",
 					"aksi" => $v
 				];
 			}
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
-			$value = json_encode($value);
 		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$value = [];
 			$indikator = $this->input->request('a_indikator_id');
@@ -374,18 +381,20 @@ class Asesmen extends JI_Controller
 					$aksi[] = $k1;
 				}
 				$value[] = [
+					"c_asesmen_id" => $id,
 					"indikator" => $k,
 					"aksi" => $aksi
 				];
 			}
-			$value = json_encode($value);
 		}
-		$this->cam->columns['value']->value = $value;
-
+		$json_value = json_encode($value);
+		$this->cam->columns['value']->value = $json_value;
 		if ($id > 0) {
 			unset($du['id']);
 			$res = $this->cam->save($id);
 			if ($res) {
+				$resDeleteValue = $this->dvm->delByAsesmenId($id);
+				$resValue = $this->dvm->setMass($value);
 				$this->status = 200;
 				$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			} else {
