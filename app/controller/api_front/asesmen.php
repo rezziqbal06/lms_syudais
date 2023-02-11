@@ -488,6 +488,24 @@ class Asesmen extends JI_Controller
 		$sort_direction = $this->input->request('sort_direction', 'desc');
 		$keyword = $this->input->request('keyword', '');
 
+		$ajm = $this->ajm->id($a_jpenilaian_id);
+		if (!isset($ajm->id)) {
+			$this->status = 400;
+			$this->message = "Data tidak ditemukan";
+			$this->__json_out($data);
+			die();
+		}
+		$data['ajm'] = $ajm;
+
+		$aim = $this->aim->getByPenilaianId($ajm->id);
+		if (!isset($aim[0]->id)) {
+			$this->status = 400;
+			$this->message = "Data tidak ditemukan";
+			$this->__json_out($data);
+			die();
+		}
+		$data['aim'] = $aim;
+
 
 		$dcount = $this->cam->count($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active);
 		$ddata = $this->cam->data(
@@ -505,20 +523,6 @@ class Asesmen extends JI_Controller
 			$is_active
 		);
 
-
-		$ajm = $this->ajm->id($a_jpenilaian_id);
-		if (!isset($ajm->id)) {
-			redir(base_url('asesmen'));
-			die();
-		}
-		$data['ajm'] = $ajm;
-
-		$aim = $this->aim->getByPenilaianId($ajm->id);
-		if (!isset($aim[0]->id)) {
-			redir(base_url('asesmen'));
-			die();
-		}
-		$data['aim'] = $aim;
 		unset($aim);
 		unset($ajm);
 
@@ -745,10 +749,137 @@ class Asesmen extends JI_Controller
 
 		$html .= '</body>
 		</html>';
-		$_SESSION['html_print'] = $html;
+		$_SESSION['content'] = $html;
 
 		$this->status = 200;
 		$this->message = 'Berhasil';
+		$this->__json_out($data);
+	}
+
+	public function printing_xls()
+	{
+		$data = [];
+		$content = $this->input->post('content');
+		if (!isset($content)) {
+			$this->status = 400;
+			$this->message = 'Data tidak ditemukan';
+			$this->__json_out($data);
+			die();
+		}
+
+		$_SESSION['content'] = $content;
+
+		$this->status = 200;
+		$this->message = 'Berhasil';
+		$this->__json_out($data);
+	}
+
+	/**
+	 * Give json data set result on datatable format
+	 *
+	 * @api
+	 *
+	 * @return void
+	 */
+	public function list_for_print()
+	{
+		$d = $this->__init();
+		$data = array();
+		$this->_api_auth_required($data, 'user');
+
+		$this->status = 200;
+		$this->message = API_ADMIN_ERROR_CODES[$this->status];
+
+		/** advanced filter is_active */
+		$a_jpenilaian_id = $this->input->request('a_jpenilaian_id', '');
+		$a_ruangan_id = $this->input->request('a_ruangan_id', '');
+		$b_user_id = $this->input->request('b_user_id', '');
+		$b_user_id_penilai = $this->input->request('b_user_id_penilai', '');
+		$is_active = $this->input->request('is_active', '');
+		$sdate = $this->input->request('sdate', '');
+		$edate = $this->input->request('edate', '');
+		$page = $this->input->request('page', '');
+		$pagesize = $this->input->request('pagesize', '');
+		$sort_column = $this->input->request('sort_column', 'id');
+		$sort_direction = $this->input->request('sort_direction', 'desc');
+		$keyword = $this->input->request('keyword', '');
+
+		$ajm = $this->ajm->id($a_jpenilaian_id);
+		if (!isset($ajm->id)) {
+			$this->status = 400;
+			$this->message = "Data tidak ditemukan";
+			$this->__json_out($data);
+			die();
+		}
+		$data['ajm'] = $ajm;
+
+		$aim = $this->aim->getByPenilaianId($ajm->id);
+		if (!isset($aim[0]->id)) {
+			$this->status = 400;
+			$this->message = "Data tidak ditemukan";
+			$this->__json_out($data);
+			die();
+		}
+		$data['aim'] = $aim;
+
+		if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
+			$ddata = $this->cam->print_ppi(
+				$page,
+				$pagesize,
+				$sort_column,
+				$sort_direction,
+				$b_user_id,
+				$b_user_id_penilai,
+				$a_jpenilaian_id,
+				$a_ruangan_id,
+				$sdate,
+				$edate,
+				$keyword,
+				$is_active
+			);
+		} else {
+			$ddata = $this->cam->print(
+				$page,
+				$pagesize,
+				$sort_column,
+				$sort_direction,
+				$b_user_id,
+				$b_user_id_penilai,
+				$a_jpenilaian_id,
+				$a_ruangan_id,
+				$sdate,
+				$edate,
+				$keyword,
+				$is_active
+			);
+		}
+
+
+		foreach ($ddata as &$gd) {
+			if (isset($gd->is_active)) {
+				$gd->is_active = $this->cam->label('is_active', $gd->is_active);
+			}
+
+			if (isset($gd->cdate)) {
+				$gd->cdate = $this->__dateIndonesia($gd->cdate);
+			}
+
+			if (isset($gd->value)) {
+				$gd->value = json_decode($gd->value);
+			}
+
+			if (isset($gd->durasi)) {
+				$durasis = explode('.', $gd->durasi);
+
+				$gd->durasi = '';
+				if ((int) $durasis[0]) $gd->durasi .= $durasis[0] . ' jam ';
+				if ((int) $durasis[1]) $gd->durasi .= $durasis[1] . ' menit';
+			}
+		}
+		unset($aim);
+		unset($ajm);
+		$data['list'] = $ddata;
+
 		$this->__json_out($data);
 	}
 }

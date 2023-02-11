@@ -18,14 +18,14 @@ $("#ftambah").on("submit",function(e){
 	var fd = new FormData($(this)[0]);
 	var url = '<?= isset($id) ? base_url("api_front/asesmen/edit/$id") : base_url("api_front/asesmen/baru")?>';
 	var isEmpty = false; 
-	$.each($("input[id!='aksi-empty']"), function(key,value){
+	$.each($("input[id*='aksi']:not([id='aksi-empty'])"), function(key,value){
 		var vals = $(value).val();
 		var data_id = $(value).attr('data-id');
 		var id = $(value).attr('id');
 		console.log(vals,"value");
 		console.log(value,"val");
 		if(!vals){
-			gritter('<p>Beberapa parameter belum terisi</p>','warning');
+			gritter('<p>Beberapa belum terisi</p>','warning');
 			$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
 			$('.btn-submit').prop('disabled',false);
 			NProgress.done();
@@ -33,6 +33,7 @@ $("#ftambah").on("submit",function(e){
 			return false;
 		}
 	})
+	
 	if(!isEmpty){
 		$.ajax({
 			url: url,

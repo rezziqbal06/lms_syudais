@@ -1,5 +1,7 @@
 <?php
 
+
+
 class Cetak extends JI_Controller
 {
 	var $media_pengguna = 'media/';
@@ -26,6 +28,7 @@ class Cetak extends JI_Controller
 		$this->load('front/c_asesmen_model', 'cam');
 
 		$this->lib('seme_dompdf', 'dompdf');
+		$this->lib('seme_spreadsheet', 'ss');
 	}
 
 	public function index()
@@ -36,10 +39,10 @@ class Cetak extends JI_Controller
 		die();
 	}
 
-	public function asesmen()
+	public function hh()
 	{
-		$html = $_SESSION['html_print'];
-		$_SESSION['html_print'] = null;
+		$html = $_SESSION['content'];
+		$_SESSION['content'] = null;
 		$data = $this->dompdf->download([
 			'filename' => 'Hygiene.pdf',
 			'html' => $html,
@@ -50,5 +53,23 @@ class Cetak extends JI_Controller
 		if (isset($data['status']) && $data['status'] != 200) {
 			echo $data['message'];
 		}
+	}
+
+	public function monev()
+	{
+		$content = $_SESSION['content'];
+		// $_SESSION['content'] = null;
+		$ajm = $content['data']['ajm'];
+		$aim = $content['data']['aim'];
+		$list = $content['data']['list'];
+		dd($list);
+
+		$ssheet = $this->ss->newSpreadSheet();
+		$ssheet->setActiveSheetIndex(0);
+		$sheet = $ssheet->getActiveSheet();
+		$sheet->setTitle("MONITORING KEGIATAN HARIAN PENCEGAHAN PENGENDALIAN INFEKSI DI RUMAH SAKIT UMUM BINA SEHAT");
+
+		$rowIdx = 1;
+		$colIdx = 0;
 	}
 }

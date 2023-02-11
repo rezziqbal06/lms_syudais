@@ -84,7 +84,6 @@ function initData(fd=[]){
 						labelSets.push(v.nama);
 						nilaiSets.push(v.percent);
 					});
-					console.log(respon.data.datasets);
 					myChart = initChart(labelSets,nilaiSets);
 					var s = '';
 					$.each(respon.data.list, function(k,v){
@@ -94,15 +93,15 @@ function initData(fd=[]){
 							<div class="card-body">
 								<div class="row">
 									<div class="col-6">
-										<span class="" style="font-size: smaller;">${v.ruangan}</span>
+										<span class="" style="font-size: smaller;">${v.slug != 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi' ? v.ruangan : ''}</span>
 									</div>
 									<div class="col-6">
 										<span class="pill pill-warning ${is_show} float-end">${v.nilai} poin</span>
 									</div>
 								</div>
-								<p class=""><b>${v.nama}</b></p>
+								<p class=""><b>${v.slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi' ? v.ruangan : v.nama}</b></p>
 								<figcaption class="blockquote-footer">
-									${v.profesi}
+									${v.slug != 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi' ? v.profesi : ''}
 								</figcaption>
 								<div class="row">
 									<div class="col-8">
@@ -162,7 +161,12 @@ $('#ffilter').on('submit', function(e){
 
 $('#btn_filter').on('click', function(e){
 	e.preventDefault();
-
+	var jp = $("#jenis_penilaian").find('option:selected').val();
+	if(jp == 4){
+		$("#panel_b_user_id").hide();
+	}else{
+		$("#panel_b_user_id").show();
+	}
 	$("#modal_filter").modal('show');
 });
 
@@ -266,10 +270,17 @@ function printHH(respon){
 	s += '</table>'
 
 	$.post('<?=base_url('api_front/asesmen/printing')?>', {content: s}).done(function(dt){
-		if(dt.status == 200) window.open('<?=base_url('cetak/asesmen/')?>', 'blank');
+		if(dt.status == 200) window.open('<?=base_url('cetak/hh/')?>', 'blank');
 	})
 
 	<!-- $("#panel_print").html(s); -->
+	
+}
+
+function printMonev(respon){
+	$.post('<?=base_url('api_front/asesmen/printing_xls')?>', {content: respon}).done(function(dt){
+		if(dt.status == 200) window.open('<?=base_url('cetak/monev/')?>', 'blank');
+	})
 	
 }
 
@@ -280,7 +291,7 @@ $("#btn_print").on('click', function(e){
 	if(fd){
 		fd.append('a_jpenilaian_id', $('#jenis_penilaian').find('option:selected').val());
 	}
-	var url = '<?=base_url("api_front/asesmen/list")?>';
+	var url = '<?=base_url("api_front/asesmen/list_for_print")?>';
 	$.ajax({
 		url: url,
 		data: fd,
@@ -292,6 +303,8 @@ $("#btn_print").on('click', function(e){
 				if(respon.data.list && respon.data.list.length > 0){
 					if(respon.data.ajm.slug == 'audit-hand-hygiene'){
 						printHH(respon);
+					}else if(respon.data.ajm.slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'){
+						printMonev(respon)
 					}
 					
 				}else{

@@ -114,4 +114,26 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     $this->db->between("DATE($this->tbl_as.cdate)", "DATE('$sdate')", "DATE('$edate')");
     return $this->db->get('', 0);
   }
+
+  public function print($page = '', $pagesize = '', $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
+  {
+    $this->datatables[$this->point_of_view]->selections($this->db);
+    $this->db->from($this->tbl, $this->tbl_as);
+    $this->join_company();
+    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
+    $this->db->order_by($sortCol, $sortDir);
+    if (strlen($page) && strlen($pagesize)) $this->db->limit($page, $pagesize);
+    return $this->db->get("object", 0);
+  }
+
+  public function print_ppi($page = '', $pagesize = '', $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
+  {
+    $this->datatables[$this->point_of_view]->selections($this->db);
+    $this->db->from($this->tbl, $this->tbl_as);
+    $this->join_company();
+    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
+    $this->db->order_by('a_ruangan_id', 'ASC')->order_by('cdate', 'ASC');
+    if (strlen($page) && strlen($pagesize)) $this->db->limit($page, $pagesize);
+    return $this->db->get("object", 0);
+  }
 }

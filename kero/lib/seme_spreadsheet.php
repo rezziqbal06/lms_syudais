@@ -11,6 +11,27 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx as XlsxWriter;
 
 class Seme_Spreadsheet extends JI_Controller
 {
+    public $colAlpha = [
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+        'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+        'U', 'V', 'W', 'X', 'Y', 'Z',
+        'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ',
+        'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT',
+        'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
+        'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ',
+        'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT',
+        'BU', 'BV', 'BW', 'BX', 'BY', 'BZ',
+        'CA', 'CB', 'CC', 'CD', 'CE', 'CF', 'CG', 'CH', 'CI', 'CJ',
+        'CK', 'CL', 'CM', 'CN', 'CO', 'CP', 'CQ', 'CR', 'CS', 'CT',
+        'CU', 'CV', 'CW', 'CX', 'CY', 'CZ',
+        'DA', 'DB', 'DC', 'DD', 'DE', 'DF', 'DG', 'DH', 'DI', 'DJ',
+        'DK', 'DL', 'DM', 'DN', 'DO', 'DP', 'DQ', 'DR', 'DS', 'DT',
+        'DU', 'DV', 'DW', 'DX', 'DY', 'DZ',
+        'EA', 'EB', 'EC', 'ED', 'EE', 'EF', 'EG', 'EH', 'EI', 'EJ',
+        'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'EQ', 'ER', 'ES', 'ET',
+        'EU', 'EV', 'EW', 'EX', 'EY', 'EZ',
+    ];
+
     public function __construct()
     {
     }
@@ -49,6 +70,11 @@ class Seme_Spreadsheet extends JI_Controller
         return new XlsxReader();
     }
 
+    public function newSpreadSheet()
+    {
+        return new Spreadsheet();
+    }
+
     /*
     Request: 
         - title*
@@ -78,8 +104,7 @@ class Seme_Spreadsheet extends JI_Controller
         $data = $request->data;
         $filename = $request->filename;
 
-        $colAlpha = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
-        if (count($head) > count($colAlpha)) {
+        if (count($head) > count($this->colAlpha)) {
             echo "Outbound data";
             die();
         }
@@ -98,12 +123,12 @@ class Seme_Spreadsheet extends JI_Controller
         $rowIdx = 1;
         $colIdx = 0;
 
-        $sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, 'No');
-        $sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->_textBorderBold())->getAlignment()->applyFromArray($this->_textCenter());
+        $sheet->setCellValue($this->colAlpha[$colIdx] . $rowIdx, 'No');
+        $sheet->getStyle($this->colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->_textBorderBold())->getAlignment()->applyFromArray($this->_textCenter());
         $colIdx++;
         foreach ($head as $k => $v) {
-            $sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $v);
-            $sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->_textBorderBold())->getAlignment()->applyFromArray($this->_textCenter());
+            $sheet->setCellValue($this->colAlpha[$colIdx] . $rowIdx, $v);
+            $sheet->getStyle($this->colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->_textBorderBold())->getAlignment()->applyFromArray($this->_textCenter());
             $colIdx++;
         }
         unset($head);
@@ -113,12 +138,12 @@ class Seme_Spreadsheet extends JI_Controller
 
         foreach ($data as $dt) {
             $colIdx = 0;
-            $sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $nomor);
-            $sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->_cellBordered());
+            $sheet->setCellValue($this->colAlpha[$colIdx] . $rowIdx, $nomor);
+            $sheet->getStyle($this->colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->_cellBordered());
             $colIdx++;
             foreach ($dt as $k => $v) {
-                $sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, (isset($v) ? $v : ''));
-                $sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->_cellBordered());
+                $sheet->setCellValue($this->colAlpha[$colIdx] . $rowIdx, (isset($v) ? $v : ''));
+                $sheet->getStyle($this->colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->_cellBordered());
                 $colIdx++;
             }
             $nomor++;

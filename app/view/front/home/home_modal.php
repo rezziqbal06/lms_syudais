@@ -15,7 +15,7 @@
 					<div class="row">
 						<div class="form-group">
 							<input type="hidden" name="b_user_id_penilai" value="<?= $sess->user->id ?>" id="ib_user_id_penilai">
-							<div class="col-md-12">
+							<div id="panel_b_user_id" class="col-md-12">
 								<label for="ib_user_id">Nama</label>
 								<select class="form-control select2" style="width: 100%;" name="b_user_id" id="ib_user_id">
 									<option value="">-- Pilih Nama --</option>
