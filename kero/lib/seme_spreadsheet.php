@@ -40,6 +40,15 @@ class Seme_Spreadsheet extends JI_Controller
     {
         return array('horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
     }
+    public function _textBold()
+    {
+        return array(
+            'font'  => array(
+                'bold'  => true
+            ),
+            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+        );
+    }
     public function _textBorderBold()
     {
         return array(
@@ -73,6 +82,17 @@ class Seme_Spreadsheet extends JI_Controller
     public function newSpreadSheet()
     {
         return new Spreadsheet();
+    }
+
+    public function newWriter($ssheet)
+    {
+        return new XlsxWriter($ssheet);
+    }
+
+    public function setDataCell($sheet, $colIdx, $rowIdx, $value)
+    {
+        $sheet->setCellValue($this->colAlpha[$colIdx] . $rowIdx, $value);
+        $sheet->getStyle($this->colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->_textBorderBold())->getAlignment()->applyFromArray($this->_textCenter());
     }
 
     /*

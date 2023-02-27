@@ -281,7 +281,12 @@ function printMonev(respon){
 	$.post('<?=base_url('api_front/asesmen/printing_xls')?>', {content: respon}).done(function(dt){
 		if(dt.status == 200) window.open('<?=base_url('cetak/monev/')?>', 'blank');
 	})
-	
+}
+
+function printApd(respon){
+	$.post('<?=base_url('api_front/asesmen/printing_xls')?>', {content: respon}).done(function(dt){
+		if(dt.status == 200) window.open('<?=base_url('cetak/apd/')?>', 'blank');
+	})
 }
 
 
@@ -305,6 +310,8 @@ $("#btn_print").on('click', function(e){
 						printHH(respon);
 					}else if(respon.data.ajm.slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'){
 						printMonev(respon)
+					}else if(respon.data.ajm.slug == 'audit-kepatuhan-apd'){
+						printApd(respon);
 					}
 					
 				}else{

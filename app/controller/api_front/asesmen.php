@@ -199,15 +199,18 @@ class Asesmen extends JI_Controller
 
 		$res = $this->cam->save();
 		if ($res) {
-			if ($value) {
-				foreach ($value as $k => $v) {
-					$value[$k]['c_asesmen_id'] = $res;
+			if ($ajm->slug != 'audit-kepatuhan-apd') {
+				if ($value) {
+					foreach ($value as $k => $v) {
+						$value[$k]['c_asesmen_id'] = $res;
+					}
+				}
+				$resValue = $this->dvm->setMass($value);
+				if (!$resValue) {
+					$this->cam->delById($res);
 				}
 			}
-			$resValue = $this->dvm->setMass($value);
-			if (!$resValue) {
-				$this->cam->delById($res);
-			}
+
 			$this->status = 200;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 		} else {
@@ -394,7 +397,8 @@ class Asesmen extends JI_Controller
 			$res = $this->cam->save($id);
 			if ($res) {
 				$resDeleteValue = $this->dvm->delByAsesmenId($id);
-				$resValue = $this->dvm->setMass($value);
+
+				if ($ajm->slug != 'audit-kepatuhan-apd') $resValue = $this->dvm->setMass($value);
 				$this->status = 200;
 				$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			} else {
@@ -812,6 +816,9 @@ class Asesmen extends JI_Controller
 		$sort_column = $this->input->request('sort_column', 'id');
 		$sort_direction = $this->input->request('sort_direction', 'desc');
 		$keyword = $this->input->request('keyword', '');
+
+		$data['mindate'] = $sdate;
+		$data['maxdate'] = $edate;
 
 		$ajm = $this->ajm->id($a_jpenilaian_id);
 		if (!isset($ajm->id)) {
