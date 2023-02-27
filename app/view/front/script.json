@@ -64,6 +64,10 @@
     {
       "src":"https://cdn.jsdelivr.net/npm/chart.js",
       "type": "module"
+    },
+    {
+      "src":"https://cdn.jsdelivr.net/npm/apexcharts",
+      "type": "module"
     }
     
   ]
