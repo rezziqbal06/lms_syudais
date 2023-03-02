@@ -1,3 +1,4 @@
+
 var myChart;
 function showLoading(){
 	$(".panel-loading").show();
@@ -31,37 +32,135 @@ function download(file, filename) {
         window.close()
     }, 500);
 }
-function initChart(labels=['January', 'February', 'March', 'April', 'May', 'June', 'July'], datas=[65, 59, 80, 81, 26, 55, 40]){
-	
-	const chartCtx = $("#asesmenChart");
-	
+	const chartCtx = document.querySelector("#asesmenChart");
+	let today = new Date();
+	let categories = [];
 
-	const data = {
-	labels: labels,
-	datasets: [{
-		label: 'Data Asesmen',
-		data: datas,
-		fill: false,
-		backgroundColor: ['#ff6361', '#ffa600', '#58508d','#bc5090'],
-		borderColor: 'rgb(75, 192, 192)',
-		borderRadius: 8
-	}]
+	for (let i = 6; i >= 0; i--) {
+		let date = new Date(today);
+		date.setDate(date.getDate() - i);
+		categories.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+	}
+
+	let optionsAO = {
+		series: [
+		{
+			name: 'Audit Hand Hygiene',
+			data: [0,0,0,0,0,0,0]
+		},
+		{
+			name: 'Monitoring Kegiatan Harian Pencegahan Pengendalian Infeksi (PPI)',
+			data: [0,0,0,0,0,0,0]
+		},
+		{
+			name: 'Audit Kepatuhan APD',
+			data: [0,0,0,0,0,0,0]
+		},
+		
+		],
+		chart: {
+		height: 350,
+		type: 'area',
+		fontFamily: 'Lexend Deca, sans-serif',
+		},
+		dataLabels: {
+		enabled: false
+		},
+		stroke: {
+		curve: 'smooth'
+		},
+		xaxis: {
+		type: 'string',
+		categories: categories,
+		},
+		tooltip: {
+			x: {
+				format: undefined,
+			},
+		},
 	};
 
-	const config = {
-	type: 'bar',
-	data: data,
-	options: {
-		scales: {
-		y: {
-			beginAtZero: true
-		}
-		}
-	},
-	};
+  	let chartAO = new ApexCharts(chartCtx, optionsAO);
 
-	return new Chart(chartCtx, config);
+	$(document).on('ready',() => {
+		chartAO.render();		
+		setTimeout(function(){
+			var fd = new FormData($("#ffilter")[0]);
+			initData(fd);
+		},300);
+	})
+
+
+function grafik_asesmen(){
+	$.get('<?= base_url("api_front/asesmen/chart_asesmen") ?>', {
+		'asesor_id' : $('#asesor').val()
+	}).done((res) => {
+		console.log(res);
+		let today = new Date();
+		let categories = [];
+
+		for (let i = 6; i >= 0; i--) {
+			let date = new Date(today);
+			date.setDate(date.getDate() - i);
+			categories.push(date.toLocaleDateString('en-US', { day: 'numeric' }));
+		}
+
+
+		let hh_series = [];
+		let apd_series = [];
+		let monev_series = [];
+
+		let hh = res.data.hh;
+		let apd = res.data.apd;
+		let monev = res.data.monev;
+
+		categories.forEach(category => {
+        let count_hh = 0;
+        let count_apd = 0;
+        let count_monev = 0;
+        hh.forEach(item => {
+          if (item.day === category) {
+            count_hh = item.nilai;
+          }
+        });
+        apd.forEach(item => {
+          if (item.day === category) {
+            count_apd = item.nilai;
+          }
+        });
+        monev.forEach(item => {
+          if (item.day === category) {
+            count_monev = item.nilai;
+          }
+        });
+        hh_series.push(count_hh);
+        apd_series.push(count_apd);
+        monev_series.push(count_monev);
+      });
+
+
+		setTimeout(() => {
+        chartAO.updateSeries([
+          {
+            name: 'Audit Hand Hygiene',
+            data: hh_series
+          },
+          {
+            name: 'Monitoring Kegiatan Harian Pencegahan Pengendalian Infeksi (PPI)',
+            data: apd_series
+          },
+          {
+            name: 'Audit Kepatuhan APD',
+            data: monev_series
+          }
+        ])
+      }, 100)
+
+	}).fail((xhr) => {
+		console.log(xhr)
+	});
 }
+
 function initData(fd=[]){
 	if(fd){
 		fd.append('a_jpenilaian_id', $('#jenis_penilaian').find('option:selected').val());
@@ -78,13 +177,6 @@ function initData(fd=[]){
 			hideLoading();
 			if(respon.status==200){
 				if(respon.data.list && respon.data.list.length > 0){
-					let labelSets = [];
-					let nilaiSets = [];
-					$.each(respon.data.datasets, function(k,v){
-						labelSets.push(v.nama);
-						nilaiSets.push(v.percent);
-					});
-					myChart = initChart(labelSets,nilaiSets);
 					var s = '';
 					$.each(respon.data.list, function(k,v){
 						var is_show = 'd-none'
@@ -143,10 +235,6 @@ function initData(fd=[]){
 };
 $('.select2').select2();
 
-setTimeout(function(){
-	var fd = new FormData($("#ffilter")[0]);
-	initData(fd);
-},300);
 
 $('#ffilter').on('submit', function(e){
 	e.preventDefault();
@@ -158,6 +246,9 @@ $('#ffilter').on('submit', function(e){
 	$("#modal_filter").modal('hide');
 });
 
+$("#asesor").on('change', function(e){
+	grafik_asesmen();
+});
 
 $('#btn_filter').on('click', function(e){
 	e.preventDefault();

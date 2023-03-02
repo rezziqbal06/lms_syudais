@@ -49,9 +49,19 @@
 		</div>
 	</div>
 	<div class="panel-statistik mb-5">
-		<div class="col-md-6 mx-auto">
+		<div class="card col-md-6 p-3 mx-auto">
+		<h4 class="mb-5">Grafik Penilaian Kumulatif</h4>
+		<select name="" id="asesor" class="form-control select2">
+			<?php if (isset($bum) && count($bum)) : ?>
+				<?php foreach ($bum as $k => $v) : ?>
+					<option value="<?= $v->id ?>"><?= $v->fnama ?></option>
+				<?php endforeach ?>
+			<?php endif ?>
+		</select>
 			<div class="p-4" style="width: 100%">
-				<canvas id="asesmenChart"></canvas>
+			<div id="asesmenChart">
+              </div>
+
 			</div>
 
 		</div>

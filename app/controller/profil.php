@@ -13,6 +13,7 @@ class Profil extends JI_Controller
 		$this->load('a_ruangan_concern');
 		$this->load('b_user_alamat_concern');
 		$this->load('b_user_concern');
+		$this->load('c_asesmen_concern');
 
 		// $this->load('front/a_pengguna_model', 'apm');
 		// $this->load('front/a_company_model', 'acm');
@@ -20,6 +21,7 @@ class Profil extends JI_Controller
 		$this->load('front/a_ruangan_model', 'arm');
 		$this->load('front/b_user_alamat_model', 'buam');
 		$this->load('front/b_user_model', 'bum');
+		$this->load('front/c_asesmen_model', 'cam');
 	}
 
 	public function index()
@@ -50,6 +52,13 @@ class Profil extends JI_Controller
 		$user_exist = $this->bum->getUserById($data['sess']->user->id);
 		if(isset($user_exist)) $data['ue'] = $user_exist;
 		unset($user_exist);
+		
+		$count_hygiene = $this->cam->getByUserPenilaiId($data['sess']->user->id, 2);
+		if (isset($count_hygiene)) $data['count_hygiene'] = $count_hygiene->count;
+		$count_apd = $this->cam->getByUserPenilaiId($data['sess']->user->id, 3);
+		if (isset($count_apd)) $data['count_apd'] = $count_apd->count;
+		$count_monev = $this->cam->getByUserPenilaiId($data['sess']->user->id, 4);
+		if (isset($count_monev)) $data['count_monev'] = $count_monev->count;
 
 		
 
