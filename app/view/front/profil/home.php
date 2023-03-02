@@ -88,77 +88,47 @@
 	</div>
 	<div class="m-4">
 		<div class="row">
-			<div class="col-md-6 info-asesmen">
-				<div class="card p-5">
-					<h4 class="text-secondary">Informasi Asesmen</h4>
-					<div class="d-flex justify-content-around flex-wrap">
-						<div class="p-3" style="flex: 50%;">
-							<div class="card text-primary">
-								<div class="card-body">
-									<h5 class="text-primary card-title">Monitoring Kegiatan Harian Pencegahan Pengendalian Infeksi </h5>
-									<h1 class="text-primary card-text mt-5">100</h1>
-									<!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
-									<!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-								</div>
-							</div>
-						</div>
-						<div class="p-3" style="flex: 50%;">
-							<div class="card text-primary">
-								<div class="card-body">
-									<h5 class="text-primary card-title">Survei Pencegahan Pengendalian Infeksi </h5>
-									<h1 class="text-primary card-text mt-5">100</h1>
-									<!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
-									<!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-								</div>
-							</div>
-
-						</div>
-						<div class="p-3" style="flex: 50%;">
-							<div class="card text-primary">
-								<div class="card-body">
-									<h5 class="text-primary card-title">Monitoring Infeksi Luka Operasi </h5>
-									<h1 class="text-primary card-text mt-5">100</h1>
-									<!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
-									<!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-								</div>
-							</div>
-
-						</div>
-						<div class="p-3" style="flex: 50%;">
-							<div class="card text-primary">
-								<div class="card-body">
-									<h5 class="text-primary card-title">Audit Kepatuhan APD </h5>
-									<h1 class="text-primary card-text mt-5">100</h1>
-									<!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
-									<!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-								</div>
-							</div>
-
-						</div>
-						<div class="p-3" style="flex: 50%;">
-							<div class="card text-primary">
-								<div class="card-body">
-									<h5 class="text-primary card-title">Audit Hand Hygiene </h5>
-									<h1 class="text-primary card-text mt-5">100</h1>
-									<!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
-									<!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-								</div>
-							</div>
-
-						</div>
-
+			<div class="p-3 col-md-4">
+				<div class="card text-primary">
+					<div class="card-body">
+						<h5 class="text-primary card-title">Audit Hand Hygiene </h5>
+						<h1 class="text-primary card-text mt-5"><?= $count_hygiene ?></h1>
+						<!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+						<!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
 					</div>
 				</div>
+
 			</div>
-			<div class="col-md-6 info-asesmen">
-				<div class="card p-5">
-					<h4 class="text-secondary">Grafik Asesmen</h4>
-					<div>
-						<canvas id="asesmenChart"></canvas>
+			<div class="p-3 col-md-4">
+				<div class="card text-primary">
+					<div class="card-body">
+						<h5 class="text-primary card-title">Audit Kepatuhan APD </h5>
+						<h1 class="text-primary card-text mt-5"><?= $count_apd ?></h1>
+						<!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+						<!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
 					</div>
 				</div>
+
 			</div>
-		</div>
+			<div class="p-3 col-md-4">
+				<div class="card text-primary">
+					<div class="card-body">
+						<h5 class="text-primary card-title">Monitoring Kegiatan Harian Pencegahan Pengendalian Infeksi (PPI) </h5>
+						<h1 class="text-primary card-text mt-5"><?= $count_monev ?></h1>
+						<!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+						<!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+					</div>
+				</div>
+
+			</div>
+			<!-- <div class="p-3 col-md-3">
+				<div class="card text-primary">
+					<div class="card-body">
+						<h5 class="text-primary card-title">Surveilan Pencegahan Dan Pengendalian Infeksi </h5>
+						<h1 class="text-primary card-text mt-5"><?= $count_monev ?></h1>
+					</div>
+				</div>
+			</div> -->
 
 	</div>
 

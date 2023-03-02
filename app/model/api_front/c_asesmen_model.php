@@ -102,6 +102,18 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     $this->db->group_by("$this->tbl_as.b_user_id");
     return $this->db->get();
   }
+ 
+  public function asesmen_series($penilai_id, $jenis_penilaian)
+  {
+    $this->db->select_as("DAY($this->tbl_as.cdate)","day",0);
+    $this->db->select_as("SUM($this->tbl_as.nilai)","nilai",0);
+    $this->db->from($this->tbl, $this->tbl_as);
+    $this->db->where_as("$this->tbl_as.b_user_id_penilai",$penilai_id);
+    $this->db->where_as("$this->tbl_as.a_jpenilaian_id",$jenis_penilaian);
+    $this->db->group_by("day");
+    return $this->db->get();
+  }
+
   public function setMass($dis)
   {
     return $this->db->insert_multi($this->tbl, $dis);

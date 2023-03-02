@@ -133,10 +133,24 @@
 						<div class="form-group">
 							<input type="hidden" name="id" id="ieid" value="<?= $ue->id ?>">
 							<div class="col-md-12">
-								<label for="iefnama" class="control-label">Nama Depan</label>
+								<label for="iefnama" class="control-label">Nama Lengkap</label>
 								<input id="iefnama" type="text" name="fnama" value="<?= $ue->fnama ?>" class="form-control" required>
 							</div>
+							<div class="col-md-12">
+								<label for="ietelp" class="control-label">No. Telpon</label>
+								<input type="text" id="ietelp" class="form-control" name="telp" value="<?= $ue->telp ?>" required>
+							</div>
 							<div class="row">
+								<div class="col-md-6">
+									<label for="ieemail" class="control-label">Email</label>
+									<input type="text" id="ieemail" class="form-control" name="email" value="<?= $ue->email ?>" required>
+								</div>
+								<div class="col-md-6">
+									<label for="ietelp" class="control-label">No. Telpon</label>
+									<input type="text" id="ietelp" class="form-control" name="telp" value="<?= $ue->telp ?>" required>
+								</div>
+							</div>
+							<!-- <div class="row">
 								<div class="col-md-6">
 									<label for="ieruangan" class="control-label">Ruangan</label>
 									<select id="ieruangan" name="a_unit_id" class="form-control select2" style="width: 100%;">
@@ -159,7 +173,7 @@
 									</select>
 								</div>
 
-							</div>
+							</div> -->
 						</div>
 					</div>
 					<div class="row" style="margin-top: 1em; ">

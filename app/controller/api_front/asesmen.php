@@ -172,26 +172,48 @@ class Asesmen extends JI_Controller
 		} else if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
 			$value = [];
 			$aksi = $this->input->request("aksi");
+			$poin = 0;
 			foreach ($aksi as $k => $v) {
 				$value[] = [
 					"indikator" => "$k",
 					"aksi" => $v
 				];
+				if($v == "y"){
+					$poin++;
+				}
 			}
+			$nilai = ( $poin / count($aksi) ) * 100;
+			$nilai = ceil($nilai);
+			$this->cam->columns['nilai']->value = $nilai;
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
+			
 		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$value = [];
 			$indikator = $this->input->request('a_indikator_id');
+			$aksi = $this->aim->getByPenilaian('aksi',$ajm->id);
+			$params = [];
+			foreach ($aksi as $key => $v) {
+				$params[] = $v->id;
+			}
+			$persentase = 0;
 			foreach ($indikator as $k => $v) {
 				$aksi = [];
+				$nilai_per_item = 0;
 				foreach ($v as $k1 => $v1) {
 					$aksi[] = $k1;
+					if (in_array($k1,$params)) {
+						$nilai_per_item++;
+					}
 				}
+				$persentase += ($nilai_per_item/count($params)) * 100;
+				// dd($persentase);
 				$value[] = [
 					"indikator" => $k,
 					"aksi" => $aksi
 				];
 			}
+			$total_persentase = ($persentase/(count($indikator) * 100)) * 100;
+			$this->cam->columns['nilai']->value = ceil($total_persentase);
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
 		}
 		$json_value = json_encode($value);
@@ -574,6 +596,28 @@ class Asesmen extends JI_Controller
 		$data['count'] = $dcount;
 
 		$this->__json_out($data);
+	}
+
+	public function chart_asesmen()
+	{
+		$d = $this->__init();
+		$data = array();
+		$this->_api_auth_required($data, 'user');
+
+		$this->status = 200;
+		$this->message = API_ADMIN_ERROR_CODES[$this->status];
+
+		$b_user_id = $this->input->request('asesor_id', '');
+		$b_user = $this->bum->getUserById($b_user_id);
+		$hand_hygiene = $this->cam->asesmen_series($b_user_id,2);
+		$apd = $this->cam->asesmen_series($b_user_id,3);
+		$monev = $this->cam->asesmen_series($b_user_id,4);
+		$data = [
+			"hh" => $hand_hygiene,
+			"apd" => $apd,
+			"monev" => $monev
+		];
+		dd($this->__json_out($data));
 	}
 
 	public function indicatorLists($slug = "", $a_ruangan_id = 0)

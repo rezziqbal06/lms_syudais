@@ -1,6 +1,5 @@
 <?php
 
-namespace Model;
 
 register_namespace(__NAMESPACE__);
 /**
@@ -26,5 +25,14 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
 	{
 		$this->db->where('is_active', $is_active);
 		return $this->db->get('', 0);
+	}
+
+	public function getByUserPenilaiId($user_id,$jenis_penilaian)
+	{
+		$this->db->select_as("COUNT($this->tbl_as.id)","count",0);
+		$this->db->from($this->tbl, $this->tbl_as);
+		$this->db->where_as("$this->tbl_as.b_user_id_penilai",$user_id);
+		$this->db->where_as("$this->tbl_as.a_jpenilaian_id",$jenis_penilaian);
+		return $this->db->get_first();
 	}
 }
