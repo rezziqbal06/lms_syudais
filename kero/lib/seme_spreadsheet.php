@@ -8,6 +8,7 @@ require_once $vendorDirPath . '/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx as XlsxWriter;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing as XlsxDrawing;
 
 class Seme_Spreadsheet extends JI_Controller
 {
@@ -87,6 +88,11 @@ class Seme_Spreadsheet extends JI_Controller
     public function newWriter($ssheet)
     {
         return new XlsxWriter($ssheet);
+    }
+
+    public function newDrawing()
+    {
+        return new XlsxDrawing();
     }
 
     public function setDataCell($sheet, $colIdx, $rowIdx, $value)

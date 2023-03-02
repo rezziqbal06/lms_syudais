@@ -164,8 +164,12 @@ $('#btn_filter').on('click', function(e){
 	var jp = $("#jenis_penilaian").find('option:selected').val();
 	if(jp == 4){
 		$("#panel_b_user_id").hide();
+		$("#panel_tgl").hide();
+		$("#panel_bulan").show();
 	}else{
 		$("#panel_b_user_id").show();
+		$("#panel_tgl").show();
+		$("#panel_bulan").hide();
 	}
 	$("#modal_filter").modal('show');
 });
@@ -224,8 +228,8 @@ function printHH(respon){
 							<td>Action</td>
 						</tr>`
 						$.each(v.value, function(kvalue, vvalue){
-							if(kvalue == 9) return;
-							s += `<tr>
+							var isPageBreak = kvalue == 4 ? '' : '';
+							s += `<tr class="${isPageBreak}">
 								<td>${kvalue+1}</td>
 								<td>`
 								$.each(respon.data.aim, function(kaim,vaim){

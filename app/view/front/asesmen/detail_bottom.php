@@ -353,3 +353,9 @@ if(<?= $type_form ?> == 2){
 		});
 	}
 }
+
+<?php if($sess->user->profesi == 'Komite Mutu'){ ?>
+	$(".btn-submit").hide();
+<?php }else{ ?>
+	$(".btn-submit").show();
+<?php } ?>

@@ -102,7 +102,7 @@ class Asesmen extends JI_Controller
 			$data['aim'] = $group_by_kategori;
 		} else if (in_array($ajm->slug, ['audit-kepatuhan-apd'])) {
 			$type_form = 3;
-		} else if(in_array($ajm->slug, ['surveilan-pencegahan-dan-pengendalian-infeksi'])){
+		} else if (in_array($ajm->slug, ['surveilan-pencegahan-dan-pengendalian-infeksi'])) {
 			$type_form = 4;
 		}
 
@@ -116,16 +116,15 @@ class Asesmen extends JI_Controller
 
 		date_default_timezone_set('Asia/Jakarta');
 		$data['stime'] = date('H:i:s');
-		
-		if($type_form != 4){
+		if ($type_form != 4) {
 			$this->setTitle('Asesmen' . $this->config->semevar->site_suffix);
 			$this->putThemeContent("asesmen/detail_modal", $data);
 			$this->putThemeContent("asesmen/detail", $data);
-	
+
 			$this->putJsReady("asesmen/detail_bottom", $data);
 			$this->loadLayout('col-1', $data);
 			$this->render();
-		}else{
+		} else {
 			$this->setTitle('Asesmen' . $this->config->semevar->site_suffix);
 			$this->putThemeContent("asesmen/detail_modal", $data);
 			$this->putThemeContent("asesmen/survei", $data);
