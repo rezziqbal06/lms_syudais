@@ -23,10 +23,14 @@ class User extends \JI_Controller
 		$this->lib("seme_purifier");
 		$this->load("a_jabatan_concern");
 		$this->load("a_ruangan_concern");
+		$this->load("a_jpenilaian_concern");
 		$this->load("b_user_concern");
+		$this->load("b_user_module_concern");
 		$this->load("admin/b_user_model", "bum");
 		$this->load("admin/a_jabatan_model", "ajm");
 		$this->load("admin/a_ruangan_model", "arm");
+		$this->load("admin/a_jpenilaian_model", "ajpm");
+		$this->load("admin/b_user_module_model", "bumm");
 		$this->current_parent = 'akun';
 		$this->current_page = 'user';
 	}
@@ -129,6 +133,51 @@ class User extends \JI_Controller
 
 		$this->putThemeContent("akun/user/detail", $data);
 		$this->putJsContent("akun/user/detail_bottom", $data);
+		$this->loadLayout('col-2-left', $data);
+		$this->render();
+	}
+	public function module($id)
+	{
+		$data = $this->__init();
+		if (!$this->admin_login) {
+			redir(base_url_admin('login'));
+			die();
+		}
+		$id = (int) $id;
+		if ($id <= 0) {
+			redir(base_url_admin('akun/user/'));
+			die();
+		}
+		$bum = $this->bum->id($id);
+		if (!isset($bum->id)) {
+			redir(base_url_admin('akun/user/'));
+			die();
+		}
+		$ajpm = $this->ajpm->getAll();
+		if (!isset($ajpm[0]->id)) {
+			redir(base_url_admin('akun/user/'));
+			die();
+		}
+		$bumm = $this->bumm->getByJabatanAndUser('', $id);
+
+		$new_bumm = [];
+		if (isset($bumm[0]->id)) {
+			foreach ($bumm as $bm) {
+				$new_bumm[$bm->a_jpenilaian_id . '-' . $bm->type] = $bm;
+			}
+		}
+		$this->setTitle('Manage User Module #' . $bum->id . ' ' . $this->config_semevar('site_suffix', ''));
+
+		$data['bum'] = $bum;
+		$data['ajpm'] = $ajpm;
+		$data['bumm'] = $new_bumm;
+		unset($bum);
+		unset($ajpm);
+		unset($bumm);
+		unset($new_bumm);
+
+		$this->putThemeContent("akun/user/module", $data);
+		$this->putJsContent("akun/user/module_bottom", $data);
 		$this->loadLayout('col-2-left', $data);
 		$this->render();
 	}

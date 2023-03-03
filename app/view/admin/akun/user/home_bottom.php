@@ -42,6 +42,7 @@ if(jQuery('#drTable').length>0){
 						})
 						$("#adetail").attr("href","<?=base_url_admin("akun/user/detail/")?>"+ieid);
 						$("#aedit").attr("href","<?=base_url_admin("akun/user/edit/")?>"+ieid);
+						$("#amodule").attr("href","<?=base_url_admin("akun/user/module/")?>"+ieid);
 						$("#areseller").attr("href","<?=base_url_admin("partner/reseller/baru/")?>"+ieid);
 						$("#modal_option").modal("show");
 					});

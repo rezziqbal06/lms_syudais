@@ -22,7 +22,11 @@ class Jabatan extends \JI_Controller
 		$this->setTheme('admin');
 		$this->lib("seme_purifier");
 		$this->load("a_jabatan_concern");
+		$this->load("c_asesmen_concern");
+		$this->load("b_user_module_concern");
 		$this->load("admin/a_jabatan_model", "ajm");
+		$this->load("admin/c_asesmen_model", "cam");
+		$this->load("admin/b_user_module_model", "bumm");
 		$this->current_parent = 'pengaturan';
 		$this->current_page = 'jabatan';
 	}

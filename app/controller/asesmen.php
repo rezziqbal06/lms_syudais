@@ -187,7 +187,7 @@ class Asesmen extends JI_Controller
 			redir(base_url(''));
 			die();
 		}
-		$cam->b_user_name = $user->fnama;
+		$cam->b_user_name = $user->fnama ?? '';
 
 		$value = json_decode($cam->value);
 		// dd($value);
@@ -213,6 +213,7 @@ class Asesmen extends JI_Controller
 		unset($cam);
 		unset($user);
 
+		// dd($data['value']);
 		date_default_timezone_set('Asia/Jakarta');
 		$data['stime'] = date('H:i:s');
 

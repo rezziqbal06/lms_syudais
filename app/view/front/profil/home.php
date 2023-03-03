@@ -90,9 +90,9 @@
 		<div class="row">
 			<div class="p-3 col-md-4">
 				<div class="card text-primary">
-					<div class="card-body">
-						<h5 class="text-primary card-title">Audit Hand Hygiene </h5>
-						<h1 class="text-primary card-text mt-5"><?= $count_hygiene ?></h1>
+					<div class="card-body" style="min-height:12em">
+						<h1 class="text-primary card-text"><?= $count_hygiene ?></h1>
+						<p class="text-dark card-title">Audit Hand Hygiene </p>
 						<!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
 						<!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
 					</div>
@@ -101,9 +101,9 @@
 			</div>
 			<div class="p-3 col-md-4">
 				<div class="card text-primary">
-					<div class="card-body">
-						<h5 class="text-primary card-title">Audit Kepatuhan APD </h5>
-						<h1 class="text-primary card-text mt-5"><?= $count_apd ?></h1>
+					<div class="card-body" style="min-height:12em">
+						<h1 class="text-primary card-text"><?= $count_apd ?></h1>
+						<p class="text-dark card-title">Audit Kepatuhan APD </p>
 						<!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
 						<!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
 					</div>
@@ -112,9 +112,9 @@
 			</div>
 			<div class="p-3 col-md-4">
 				<div class="card text-primary">
-					<div class="card-body">
-						<h5 class="text-primary card-title">Monitoring Kegiatan Harian Pencegahan Pengendalian Infeksi (PPI) </h5>
-						<h1 class="text-primary card-text mt-5"><?= $count_monev ?></h1>
+					<div class="card-body" style="min-height:12em">
+						<h1 class="text-primary card-text"><?= $count_monev ?></h1>
+						<p class="text-dark card-title">Monitoring Kegiatan Harian Pencegahan Pengendalian Infeksi (PPI) </p>
 						<!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
 						<!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
 					</div>
@@ -130,6 +130,6 @@
 				</div>
 			</div> -->
 
-	</div>
+		</div>
 
-</div>
+	</div>

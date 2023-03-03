@@ -9,17 +9,16 @@
     --dark-background:#404258;
 }
 
+
+
 .gradient-primary{
     background: var(--secondary);
     background: linear-gradient(149deg, var(--secondary) 11%, var(--primary) 76%);
 }
 
-.btn{
-    margin-bottom:0;
-}
 
-.btn-group-vertical a{
-    margin:0;
+.btn-group-vertical .btn{
+    margin-bottom:0 !important;
 }
 .bg-primary{
     background-color: var(--primary) !important;
@@ -142,6 +141,12 @@
 
     .bg-nav{
         background-color: white !important;
+    }
+
+    
+    a:hover{
+        text-decoration: none;
+        color: var(--dark-secondary)
     }
 }
 
@@ -266,6 +271,12 @@
     
     label{
         color: white;
+    }
+
+    
+    a:hover{
+        text-decoration: none;
+        color: var(--background)
     }
 
 }

@@ -7,7 +7,9 @@ class Jabatan extends JI_Controller
 	{
 		parent::__construct();
 		$this->load('a_jabatan_concern');
+		$this->load('b_user_module_concern');
 		$this->load("api_admin/a_jabatan_model", 'ajm');
+		$this->load("api_admin/b_user_module_model", 'bumm');
 	}
 
 	/**
@@ -93,7 +95,7 @@ class Jabatan extends JI_Controller
 			$this->__json_out($data);
 			die();
 		}
-		
+
 
 		$res = $this->ajm->save();
 		if ($res) {
@@ -158,7 +160,7 @@ class Jabatan extends JI_Controller
 		$data = array();
 
 		$du = $_POST;
-		
+
 
 		$id = (int)$id;
 		$id = isset($du['id']) ? $du['id'] : 0;
@@ -200,7 +202,7 @@ class Jabatan extends JI_Controller
 		}
 		if ($id > 0) {
 			unset($du['id']);
-			$res = $this->ajm->update($id,$du);
+			$res = $this->ajm->update($id, $du);
 			if ($res) {
 				$this->status = 200;
 				$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -208,13 +210,13 @@ class Jabatan extends JI_Controller
 				$this->status = 901;
 				$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			}
-		}else{
+		} else {
 			$this->status = 444;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			$this->__json_out($data);
 			die();
 		}
-		
+
 		$this->__json_out($data);
 	}
 
@@ -436,5 +438,127 @@ class Jabatan extends JI_Controller
 		$data = $this->ajm->cari($keyword);
 		array_unshift($data, $p);
 		$this->__json_select2($data);
+	}
+
+	/**
+	 * Create new data
+	 *
+	 * @api
+	 *
+	 * @return void
+	 */
+	public function module_baru()
+	{
+		$d = $this->__init();
+
+		$data = new \stdClass();
+		$a_jpenilaian_id = $this->input->request('a_jpenilaian_id');
+		$b_user_id = $this->input->request('b_user_id', null);
+		$a_jabatan_id = $this->input->request('a_jabatan_id', null);
+
+		if (!is_array($a_jpenilaian_id) || !count($a_jpenilaian_id)) {
+			$this->status = 444;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+			die();
+		}
+
+		$di = [];
+		foreach ($a_jpenilaian_id as $k => $v) {
+			$type = $this->input->request('type_' . $v);
+			if (is_array($type)) {
+				foreach ($type as $ktype => $vtype) {
+					$obj = [];
+					$obj['a_jpenilaian_id'] = $v;
+					if (isset($a_jabatan_id)) $obj['a_jabatan_id'] = $a_jabatan_id;
+					if (isset($b_user_id)) $obj['b_user_id'] = $b_user_id;
+					$obj['type'] = $vtype;
+					$obj['cdate'] = 'NOW()';
+					$di[] = $obj;
+				}
+			}
+		}
+		$res = $this->bumm->setMass($di);
+		if ($res) {
+			$this->status = 200;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->lib("conumtext");
+			$token = $this->conumtext->genRand($type = "str", 9, 9);
+			// $update_apikey = $this->ajm->update($res, ['apikey' => $token]);
+		} else {
+			$this->status = 110;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+		}
+		$this->__json_out($data);
+	}
+
+	/**
+	 * Create new data
+	 *
+	 * @api
+	 *
+	 * @return void
+	 */
+	public function module_edit()
+	{
+		$d = $this->__init();
+
+		$data = new \stdClass();
+		$a_jpenilaian_id = $this->input->request('a_jpenilaian_id');
+		$b_user_id = $this->input->request('b_user_id', null);
+		$a_jabatan_id = $this->input->request('a_jabatan_id', null);
+
+		if (!is_array($a_jpenilaian_id) || !count($a_jpenilaian_id)) {
+			$this->status = 444;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+			die();
+		}
+
+		if (isset($a_jabatan_id)) {
+			$resDelete = $this->bumm->delByPenilaianDanJabatan($a_jpenilaian_id, $a_jabatan_id);
+		} else {
+			$resDelete = $this->bumm->delByPenilaianDanUser($a_jpenilaian_id, $b_user_id);
+		}
+		if (!$resDelete) {
+			$this->status = 902;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+			die();
+		}
+
+		$di = [];
+		foreach ($a_jpenilaian_id as $k => $v) {
+			$type = $this->input->request('type_' . $v);
+			if (is_array($type)) {
+				foreach ($type as $ktype => $vtype) {
+					$obj = [];
+					$obj['a_jpenilaian_id'] = $v;
+					if (isset($a_jabatan_id)) $obj['a_jabatan_id'] = $a_jabatan_id;
+					if (isset($b_user_id)) $obj['b_user_id'] = $b_user_id;
+					$obj['type'] = $vtype;
+					$obj['cdate'] = 'NOW()';
+					$di[] = $obj;
+				}
+			}
+		}
+		if (!count($di)) {
+			$this->status = 200;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+			die();
+		}
+		$res = $this->bumm->setMass($di);
+		if ($res) {
+			$this->status = 200;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->lib("conumtext");
+			$token = $this->conumtext->genRand($type = "str", 9, 9);
+			// $update_apikey = $this->ajm->update($res, ['apikey' => $token]);
+		} else {
+			$this->status = 110;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+		}
+		$this->__json_out($data);
 	}
 }

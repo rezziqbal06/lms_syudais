@@ -149,6 +149,7 @@ class Asesmen extends JI_Controller
 
 		$this->cam->columns['durasi']->value = $timediff->h . '.' . $timediff->i;
 
+		$penilais = $this->input->request('b_user_id_penilais');
 		$value = [];
 		if ($ajm->slug == 'audit-hand-hygiene') {
 			$nilai = 0;
@@ -156,8 +157,9 @@ class Asesmen extends JI_Controller
 			$indikator = $this->input->request('a_indikator_id');
 			if (is_array($indikator) && count($indikator)) {
 				foreach ($indikator as $k => $v) {
+					$value[$k]['b_user_id'] = isset($penilais[$k]) ? $penilais[$k] : 0;
 					$value[$k]['indikator'] = $v;
-					$value[$k]['aksi'] = $this->input->request('a_aksi_id_' . $k) ?? null;
+					$value[$k]['aksi'] = $this->input->request('a_aksi_id_' . $k, null);
 					$aksi = $this->aim->id($value[$k]['aksi']);
 					if (isset($aksi->nama) && ($aksi->nama == 'HW' || $aksi->nama == 'HR')) {
 						$nilai++;
@@ -175,22 +177,22 @@ class Asesmen extends JI_Controller
 			$poin = 0;
 			foreach ($aksi as $k => $v) {
 				$value[] = [
+					"b_user_id" => isset($penilais[$k]) ? $penilais[$k] : 0,
 					"indikator" => "$k",
 					"aksi" => $v
 				];
-				if($v == "y"){
+				if ($v == "y") {
 					$poin++;
 				}
 			}
-			$nilai = ( $poin / count($aksi) ) * 100;
+			$nilai = ($poin / count($aksi)) * 100;
 			$nilai = ceil($nilai);
 			$this->cam->columns['nilai']->value = $nilai;
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
-			
 		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$value = [];
 			$indikator = $this->input->request('a_indikator_id');
-			$aksi = $this->aim->getByPenilaian('aksi',$ajm->id);
+			$aksi = $this->aim->getByPenilaian('aksi', $ajm->id);
 			$params = [];
 			foreach ($aksi as $key => $v) {
 				$params[] = $v->id;
@@ -201,18 +203,19 @@ class Asesmen extends JI_Controller
 				$nilai_per_item = 0;
 				foreach ($v as $k1 => $v1) {
 					$aksi[] = $k1;
-					if (in_array($k1,$params)) {
+					if (in_array($k1, $params)) {
 						$nilai_per_item++;
 					}
 				}
-				$persentase += ($nilai_per_item/count($params)) * 100;
+				$persentase += ($nilai_per_item / count($params)) * 100;
 				// dd($persentase);
 				$value[] = [
+					"b_user_id" => isset($penilais[$k]) ? $penilais[$k] : 0,
 					"indikator" => $k,
 					"aksi" => $aksi
 				];
 			}
-			$total_persentase = ($persentase/(count($indikator) * 100)) * 100;
+			$total_persentase = ($persentase / (count($indikator) * 100)) * 100;
 			$this->cam->columns['nilai']->value = ceil($total_persentase);
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
 		}
@@ -630,9 +633,9 @@ class Asesmen extends JI_Controller
 
 		$b_user_id = $this->input->request('asesor_id', '');
 		$b_user = $this->bum->getUserById($b_user_id);
-		$hand_hygiene = $this->cam->asesmen_series($b_user_id,2);
-		$apd = $this->cam->asesmen_series($b_user_id,3);
-		$monev = $this->cam->asesmen_series($b_user_id,4);
+		$hand_hygiene = $this->cam->asesmen_series($b_user_id, 2);
+		$apd = $this->cam->asesmen_series($b_user_id, 3);
+		$monev = $this->cam->asesmen_series($b_user_id, 4);
 		$data = [
 			"hh" => $hand_hygiene,
 			"apd" => $apd,
