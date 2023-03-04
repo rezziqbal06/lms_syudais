@@ -626,6 +626,8 @@ class Asesmen extends JI_Controller
 	{
 		$d = $this->__init();
 		$data = array();
+		$this->_api_auth_required($data, 'user');
+
 		$this->status = 200;
 		$this->message = API_ADMIN_ERROR_CODES[$this->status];
 
