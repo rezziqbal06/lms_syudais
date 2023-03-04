@@ -631,17 +631,14 @@ class Asesmen extends JI_Controller
 		$this->status = 200;
 		$this->message = API_ADMIN_ERROR_CODES[$this->status];
 
-		$b_user_id = $this->input->request('asesor_id', '');
-		$b_user = $this->bum->getUserById($b_user_id);
-		$hand_hygiene = $this->cam->asesmen_series($b_user_id, 2);
-		$apd = $this->cam->asesmen_series($b_user_id, 3);
-		$monev = $this->cam->asesmen_series($b_user_id, 4);
+		$slug_penilaian = $this->input->request('slug', '');
+		$jenis_penilaian = $this->ajm->getBySlug($slug_penilaian);
+		$hand_hygiene = $this->cam->chart_series($jenis_penilaian->id);
+		// dd($hand_hygiene);
 		$data = [
-			"hh" => $hand_hygiene,
-			"apd" => $apd,
-			"monev" => $monev
+			"data" => $hand_hygiene,
 		];
-		dd($this->__json_out($data));
+		$this->__json_out($data);
 	}
 
 	public function indicatorLists($slug = "", $a_ruangan_id = 0)

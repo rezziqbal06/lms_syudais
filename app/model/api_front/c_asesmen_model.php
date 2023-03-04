@@ -113,6 +113,18 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     $this->db->group_by("day");
     return $this->db->get();
   }
+ 
+  public function chart_series($jenis_penilaian)
+  {
+    $this->db->select_as("MONTH($this->tbl_as.cdate)","month",0);
+    $this->db->select_as("SUM($this->tbl_as.nilai) / COUNT($this->tbl_as.nilai)","nilai",0);
+    $this->db->select_as("$this->tbl_as.a_ruangan_id","a_ruangan_id",0);
+    $this->db->from($this->tbl, $this->tbl_as);
+    $this->db->where_as("$this->tbl_as.a_jpenilaian_id",$jenis_penilaian);
+    $this->db->where_as("MONTH($this->tbl_as.cdate)",date('m'));
+    $this->db->group_by("$this->tbl_as.a_ruangan_id, month");
+    return $this->db->get();
+  }
 
   public function setMass($dis)
   {
