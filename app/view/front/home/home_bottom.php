@@ -32,10 +32,30 @@ function download(file, filename) {
         window.close()
     }, 500);
 }
-	const chartCtx = document.querySelector("#asesmenChart");
-	let today = new Date();
-	let categories = [];
 
+// =========================================================
+// initial chart 
+// =========================================================
+	let jenis_penilaian = "";
+	$("#card-hygiene-chart").hide();
+	$("#card-apd-chart").hide();
+	$("#card-monev-chart").hide();
+	const chartCtx = document.querySelector("#asesmenChart");
+	const hygieneCtx = document.querySelector("#hygieneChart");
+	const apdCtx = document.querySelector("#apdChart");
+	const monevCtx = document.querySelector("#monevChart");
+
+	let today = new Date();
+	let ruangan_categories = <?= json_encode($arm) ?>;
+
+	let categories = [];
+	let ruangan_cats = []
+	let hygiene_series = [];
+	$.each(ruangan_categories, function(v,k){
+		hygiene_series.push(0);
+		ruangan_cats.push(k.nama)
+	});
+	console.log(ruangan_cats);
 	for (let i = 6; i >= 0; i--) {
 		let date = new Date(today);
 		date.setDate(date.getDate() - i);
@@ -56,7 +76,6 @@ function download(file, filename) {
 			name: 'Audit Kepatuhan APD',
 			data: [0,0,0,0,0,0,0]
 		},
-		
 		],
 		chart: {
 		height: 350,
@@ -82,8 +101,49 @@ function download(file, filename) {
 
   	let chartAO = new ApexCharts(chartCtx, optionsAO);
 
+	let optionsHygiene = {
+		series: [
+			{
+				name: jenis_penilaian,
+				data: hygiene_series
+			},
+		],
+		chart: {
+			height: 350,
+			type: 'area',
+			fontFamily: 'Lexend Deca, sans-serif'
+		},
+		dataLabels: {
+			enabled: false
+		},
+		stroke: {
+			curve: 'smooth'
+		},
+		xaxis: {
+			type: 'string',
+			categories: ruangan_cats,
+			labels: {
+				rotate: -45,
+          		rotateAlways: true,
+				hideOverlappingLabels: true
+			}
+		},
+		tooltip: {
+			x: {
+				format: undefined,
+			},
+		},
+	};
+
+	let chartHygiene = new ApexCharts(hygieneCtx, optionsHygiene);
+	let chartApd = new ApexCharts(apdCtx, optionsHygiene);
+	let chartMonev = new ApexCharts(monevCtx, optionsHygiene);
+
 	$(document).on('ready',() => {
 		chartAO.render();		
+		chartHygiene.render();
+		chartApd.render();
+		chartMonev.render();
 		setTimeout(function(){
 			var fd = new FormData($("#ffilter")[0]);
 			initData(fd);
@@ -161,6 +221,10 @@ function grafik_asesmen(){
 	});
 }
 
+// ===============================================================
+// end initial chart 
+// ===============================================================
+
 function initData(fd=[]){
 	if(fd){
 		fd.append('a_jpenilaian_id', $('#jenis_penilaian').find('option:selected').val());
@@ -178,6 +242,20 @@ function initData(fd=[]){
 			if(respon.status==200){
 				if(respon.data.list && respon.data.list.length > 0){
 					var s = '';
+					var slug = respon.data.list[0].slug;
+					if(slug == 'audit-hand-hygiene'){
+						$("#card-apd-chart").hide();
+						$("#card-monev-chart").hide();
+						$("#card-hygiene-chart").show();
+					} else if(slug == 'audit-kepatuhan-apd'){
+						$("#card-monev-chart").hide();
+						$("#card-hygiene-chart").hide();
+						$("#card-apd-chart").show();
+					} else if (slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'){
+						$("#card-hygiene-chart").hide();
+						$("#card-apd-chart").hide();
+						$("#card-monev-chart").show();
+					}
 					$.each(respon.data.list, function(k,v){
 						var is_show = 'd-none'
 						if(v.nilai) is_show = '';
@@ -272,7 +350,6 @@ $("#jenis_penilaian").on('change', function(e){
 		myChart.destroy();
 	}
 	initData(fd);
-	
 });
 
 function printHH(respon){

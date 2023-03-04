@@ -103,29 +103,40 @@
 						<button class="btn btn-secondary" type="button" id="btn_cari_user">Cari</button>
 					</div>
 				</div>
-			<?php } ?>
-			<div class="col-md-4">
-				<label for="ijabatan">Profesi</label>
-				<div class="input-group">
-					<select type="text" class="form-control select2" placeholder="Nama" id="ia_jabatan_id" name="a_jabatan_id">
-						<?php if (isset($ajbm) && count($ajbm)) : ?>
-							<?php foreach ($ajbm as $k => $v) : ?>
-								<option value="<?= $v->id ?>" <?= isset($user->a_jabatan_id) && $v->id == $user->a_jabatan_id ? 'selected' : '' ?>><?= $v->nama ?></option>
+				<div class="col-md-4">
+					<label for="ijabatan">Profesi</label>
+					<div class="input-group">
+						<select type="text" class="form-control select2" placeholder="Nama" id="ia_jabatan_id" name="a_jabatan_id">
+							<?php if (isset($ajbm) && count($ajbm)) : ?>
+								<?php foreach ($ajbm as $k => $v) : ?>
+									<option value="<?= $v->id ?>" <?= isset($user->a_jabatan_id) && $v->id == $user->a_jabatan_id ? 'selected' : '' ?>><?= $v->nama ?></option>
+								<?php endforeach ?>
+							<?php endif ?>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<label for="ia_ruangan_id">Ruangan/Unit</label>
+					<select type="text" class="form-control select2" placeholder="Nama" id="ia_ruangan_id" name="a_ruangan_id">
+						<?php if (isset($arm) && count($arm)) : ?>
+							<?php foreach ($arm as $k => $v) : ?>
+								<option value="<?= $v->id ?>" <?= isset($cam->a_ruangan_id) && $v->id == $cam->a_ruangan_id ? 'selected' : '' ?>><?= $v->nama ?></option>
 							<?php endforeach ?>
 						<?php endif ?>
 					</select>
 				</div>
-			</div>
-			<div class="col-md-4">
-				<label for="ia_ruangan_id">Ruangan/Unit</label>
-				<select type="text" class="form-control select2" placeholder="Nama" id="ia_ruangan_id" name="a_ruangan_id">
-					<?php if (isset($arm) && count($arm)) : ?>
-						<?php foreach ($arm as $k => $v) : ?>
-							<option value="<?= $v->id ?>" <?= isset($cam->a_ruangan_id) && $v->id == $cam->a_ruangan_id ? 'selected' : '' ?>><?= $v->nama ?></option>
-						<?php endforeach ?>
-					<?php endif ?>
-				</select>
-			</div>
+			<?php } else {  ?>
+				<div class="col-md-12">
+					<label for="ia_ruangan_id">Ruangan/Unit</label>
+					<select type="text" class="form-control select2" placeholder="Nama" id="ia_ruangan_id" name="a_ruangan_id">
+						<?php if (isset($arm) && count($arm)) : ?>
+							<?php foreach ($arm as $k => $v) : ?>
+								<option value="<?= $v->id ?>" <?= isset($cam->a_ruangan_id) && $v->id == $cam->a_ruangan_id ? 'selected' : '' ?>><?= $v->nama ?></option>
+							<?php endforeach ?>
+						<?php endif ?>
+					</select>
+				</div>
+			<?php } ?>
 			<div class="col-md-12">
 				<label for="tgl_asesmen">Tanggal Asesmen</label>
 				<input type="text" class="form-control" readonly placeholder="Tanggal Asesmen" value="<?= isset($cam->cdate) ? $cam->cdate : '' ?>" name="cdate" id="tgl_asesmen">
