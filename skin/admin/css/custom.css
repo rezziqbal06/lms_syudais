@@ -53,6 +53,22 @@
     color: var(--background) !important;
 }
 
+.bg-orange {
+    background-color: #fb6340 !important;
+}
+
+.bg-blue {
+    background-color: #5e72e4 !important;
+}
+
+.bg-green {
+    background-color: #2dce89 !important;
+}
+
+.bg-yellow {
+    background-color: #ffd600 !important;
+}
+
 .my_table {
     margin-bottom: 0.5rem;
 }

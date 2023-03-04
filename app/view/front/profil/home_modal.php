@@ -150,30 +150,6 @@
 									<input type="text" id="ietelp" class="form-control" name="telp" value="<?= $ue->telp ?>" required>
 								</div>
 							</div>
-							<!-- <div class="row">
-								<div class="col-md-6">
-									<label for="ieruangan" class="control-label">Ruangan</label>
-									<select id="ieruangan" name="a_unit_id" class="form-control select2" style="width: 100%;">
-										<option value="">Tidak Ada Ruangan</option>
-										<?php foreach ($arm as $key) : ?>
-											<option value="<?= $key->id ?>" <?= $key->id == $ue->a_unit_id ? "selected" : "" ?>><?= $key->nama ?></option>
-										<?php endforeach; ?>
-									</select>
-								</div>
-								<div class="col-md-6">
-									<label for="ieprofesi" class="control-label">Profesi</label>
-									<select id="ieprofesi" name="a_jabatan_id" class="form-control select2" style="width: 100%;">
-										<?php
-										foreach ($ajm as $key) :
-										?>
-											<option value="<?= $key->id ?>" <?= $key->id == $ue->a_jabatan_id ? "selected" : "" ?>><?= $key->nama ?></option>
-										<?php
-										endforeach;
-										?>
-									</select>
-								</div>
-
-							</div> -->
 						</div>
 					</div>
 					<div class="row" style="margin-top: 1em; ">
