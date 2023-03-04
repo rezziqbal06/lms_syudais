@@ -622,7 +622,7 @@ class Asesmen extends JI_Controller
 		$this->__json_out($data);
 	}
 
-	public function chart()
+	public function chart_asesmen()
 	{
 		$d = $this->__init();
 		$data = array();
