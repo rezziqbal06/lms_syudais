@@ -633,7 +633,7 @@ class Asesmen extends JI_Controller
 			$this->__json_out($data);
 			die();
 		}
-
+		dd($this->user_login);
 		$this->status = 200;
 		$this->message = API_ADMIN_ERROR_CODES[$this->status];
 
