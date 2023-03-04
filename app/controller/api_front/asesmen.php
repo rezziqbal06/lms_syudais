@@ -647,11 +647,6 @@ class Asesmen extends JI_Controller
 	public function chart_asesmen()
 	{
 		$d = $this->__init();
-		$data = array();
-		$this->_api_auth_required($data, 'user');
-
-		$this->status = 200;
-		$this->message = API_ADMIN_ERROR_CODES[$this->status];
 
 		$slug_penilaian = $this->input->request('slug', '');
 		$jenis_penilaian = $this->ajm->getBySlug($slug_penilaian);
