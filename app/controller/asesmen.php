@@ -18,6 +18,7 @@ class Asesmen extends JI_Controller
 		$this->load('a_ruangan_concern');
 		$this->load('a_jabatan_concern');
 		$this->load('b_user_concern');
+		$this->load('b_user_module_concern');
 		$this->load('c_asesmen_concern');
 
 		$this->load('front/a_jpenilaian_model', 'ajm');
@@ -25,6 +26,7 @@ class Asesmen extends JI_Controller
 		$this->load('front/a_ruangan_model', 'arm');
 		$this->load('front/a_jabatan_model', 'ajbm');
 		$this->load('front/b_user_model', 'bum');
+		$this->load('front/b_user_module_model', 'bumm');
 		$this->load('front/c_asesmen_model', 'cam');
 	}
 
@@ -37,9 +39,11 @@ class Asesmen extends JI_Controller
 			die();
 		}
 
-		$ajm = $this->ajm->getAll();
+		$user = $data['sess']->user;
+		$ajm = $this->ajm->getAllPermit($user->a_jabatan_id, $user->id);
 		if (isset($ajm[0]->id)) $data['ajm'] = $ajm;
 		unset($ajm);
+
 
 		$this->setTitle('Asesmen ' . $this->config->semevar->site_suffix);
 		$this->putThemeContent("asesmen/home_modal", $data);
