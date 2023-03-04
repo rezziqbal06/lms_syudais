@@ -26,10 +26,9 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="card-footer text-center pt-0 px-lg-2 px-1 d-none">
+                            <div class="card-footer text-center pt-0 px-lg-2 px-1">
                                 <p class="mb-4 text-sm mx-auto">
-                                    Don't have an account?
-                                    <a href="javascript:;" class="text-primary text-gradient font-weight-bold">Sign up</a>
+                                    <a href="javascript:;" class="text-primary text-gradient font-weight-bold">Lupa password</a>
                                 </p>
                             </div>
                         </div>
