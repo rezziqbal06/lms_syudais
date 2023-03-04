@@ -622,7 +622,7 @@ class Asesmen extends JI_Controller
 		$this->__json_out($data);
 	}
 
-	public function chart_asesmen()
+	public function chart()
 	{
 		$d = $this->__init();
 		$data = array();
@@ -631,12 +631,12 @@ class Asesmen extends JI_Controller
 		$this->status = 200;
 		$this->message = API_ADMIN_ERROR_CODES[$this->status];
 
-		// $slug_penilaian = $this->input->request('slug', '');
-		// $jenis_penilaian = $this->ajm->getBySlug($slug_penilaian);
-		// $hand_hygiene = $this->cam->chart_series($jenis_penilaian->id);
+		$slug_penilaian = $this->input->request('slug', '');
+		$jenis_penilaian = $this->ajm->getBySlug($slug_penilaian);
+		$hand_hygiene = $this->cam->chart_series($jenis_penilaian->id);
 		// dd($hand_hygiene);
 		$data = [
-			"data" => 'tes',
+			"data" => $hand_hygiene,
 		];
 		$this->__json_out($data);
 	}
@@ -891,7 +891,6 @@ class Asesmen extends JI_Controller
 		if ($d['sess']->user->profesi == 'IPCN' || $d['sess']->user->profesi == 'Komite Mutu') {
 			$b_user_id_penilai = '';
 		}
-
 		if (strlen($bulan)) {
 			$sdate = $bulan;
 			$dates = explode('-', $sdate);

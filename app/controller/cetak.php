@@ -58,6 +58,7 @@ class Cetak extends JI_Controller
 	public function monev()
 	{
 		$content = $_SESSION['content'];
+		dd($content);
 		// $_SESSION['content'] = null;
 		$ajm = $content['data']['ajm'];
 		$aim = $content['data']['aim'];
