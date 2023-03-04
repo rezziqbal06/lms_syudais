@@ -622,31 +622,14 @@ class Asesmen extends JI_Controller
 		$this->__json_out($data);
 	}
 
-	// public function chart_asesmen()
-	// {
-	// 	$d = $this->__init();
-	// 	$data = array();
-	// 	$this->_api_auth_required($data, 'user');
-
-	// 	$this->status = 200;
-	// 	$this->message = API_ADMIN_ERROR_CODES[$this->status];
-
-	// 	$b_user_id = $this->input->request('asesor_id', '');
-	// 	$b_user = $this->bum->getUserById($b_user_id);
-	// 	$hand_hygiene = $this->cam->asesmen_series($b_user_id, 2);
-	// 	$apd = $this->cam->asesmen_series($b_user_id, 3);
-	// 	$monev = $this->cam->asesmen_series($b_user_id, 4);
-	// 	$data = [
-	// 		"hh" => $hand_hygiene,
-	// 		"apd" => $apd,
-	// 		"monev" => $monev
-	// 	];
-	// 	dd($this->__json_out($data));
-	// }
-
 	public function chart_asesmen()
 	{
 		$d = $this->__init();
+		$data = array();
+		$this->_api_auth_required($data, 'user');
+
+		$this->status = 200;
+		$this->message = API_ADMIN_ERROR_CODES[$this->status];
 
 		$slug_penilaian = $this->input->request('slug', '');
 		$jenis_penilaian = $this->ajm->getBySlug($slug_penilaian);
