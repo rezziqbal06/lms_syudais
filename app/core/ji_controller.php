@@ -693,7 +693,7 @@ class JI_Controller extends \SENE_Controller
     {
         $is_login = $this->{$pov . '_login'};
         // if ($pov == 'user') $is_login = $this->user_login ?? $this->reseller_login ?? 0;
-        if ($utype == 'session' && !$is_login) {
+        if (!$is_login) {
             $this->status = 400;
             $this->message = API_ADMIN_ERROR_CODES[$this->status];
             header("HTTP/1.0 $this->status $this->message");

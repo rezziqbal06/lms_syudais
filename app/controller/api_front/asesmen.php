@@ -604,6 +604,9 @@ class Asesmen extends JI_Controller
 			$is_active
 		);
 
+		$jenis_penilaian = $this->ajm->getBySlug($ajm->slug);
+		$hand_hygiene = $this->cam->chart_series($jenis_penilaian->id);
+
 		unset($aim);
 		unset($ajm);
 
@@ -637,9 +640,11 @@ class Asesmen extends JI_Controller
 			unset($v->jumlah);
 		}
 
+
 		$data['datasets'] = $datasets;
 		$data['list'] = $ddata;
 		$data['count'] = $dcount;
+		$data['data'] = $hand_hygiene;
 
 		$this->__json_out($data);
 	}
@@ -648,6 +653,8 @@ class Asesmen extends JI_Controller
 	{
 		$d = $this->__init();
 		$data = array();
+		$this->_api_auth_required($data, 'user');
+
 		$this->status = 200;
 		$this->message = API_ADMIN_ERROR_CODES[$this->status];
 
@@ -911,7 +918,6 @@ class Asesmen extends JI_Controller
 		if ($d['sess']->user->profesi == 'IPCN' || $d['sess']->user->profesi == 'Komite Mutu') {
 			$b_user_id_penilai = '';
 		}
-
 		if (strlen($bulan)) {
 			$sdate = $bulan;
 			$dates = explode('-', $sdate);
