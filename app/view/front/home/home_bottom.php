@@ -221,103 +221,76 @@ function grafik_asesmen(){
 	});
 }
 
-function grafik_hygiene(slug){
-	$.get('<?= base_url("api_front/asesmen/chart_asesmen") ?>', {
-		'slug' : slug
-	}).done((res) => {
-		console.log(res.data);
-		let today = new Date();
-		let series = [];
-		let respon = res.data.data;
+function grafik_hygiene(respon){
+	let today = new Date();
+	let series = [];
 
-		$.each(ruangan_categories, function(v,k){
-			let nilai = 0;
-			$.each(respon, function(v1,k1){
-				if(k.id == k1.a_ruangan_id){
-					nilai = parseInt(k1.nilai);
-				}
-			});
-			series.push(nilai);
+	$.each(ruangan_categories, function(v,k){
+		let nilai = 0;
+		$.each(respon, function(v1,k1){
+			if(k.id == k1.a_ruangan_id){
+				nilai = parseInt(k1.nilai);
+			}
 		});
-
-		setTimeout(() => {
-			chartHygiene.updateSeries([
-				{
-					name: '',
-					data: series
-				}
-			])
-		}, 100)
-
-	}).fail((xhr) => {
-		console.log(xhr)
+		series.push(nilai);
 	});
+
+	setTimeout(() => {
+		chartHygiene.updateSeries([
+			{
+				name: '',
+				data: series
+			}
+		])
+	}, 100)
 }
 
-function grafik_apd(slug){
-	$.get('<?= base_url("api_front/asesmen/chart_asesmen") ?>', {
-		'slug' : slug
-	}).done((res) => {
-		console.log(res.data);
-		let today = new Date();
-		let series = [];
-		let respon = res.data.data;
+function grafik_apd(respon){
+	let today = new Date();
+	let series = [];
 
-		$.each(ruangan_categories, function(v,k){
-			let nilai = 0;
-			$.each(respon, function(v1,k1){
-				if(k.id == k1.a_ruangan_id){
-					nilai = parseInt(k1.nilai);
-				}
-			});
-			series.push(nilai);
+	$.each(ruangan_categories, function(v,k){
+		let nilai = 0;
+		$.each(respon, function(v1,k1){
+			if(k.id == k1.a_ruangan_id){
+				nilai = parseInt(k1.nilai);
+			}
 		});
-
-		setTimeout(() => {
-			chartApd.updateSeries([
-				{
-					name: '',
-					data: series
-				}
-			])
-		}, 100)
-
-	}).fail((xhr) => {
-		console.log(xhr)
+		series.push(nilai);
 	});
+
+	setTimeout(() => {
+		chartApd.updateSeries([
+			{
+				name: '',
+				data: series
+			}
+		])
+	}, 100)
 }
 
-function grafik_monev(slug){
-	$.get('<?= base_url("api_front/asesmen/chart_asesmen") ?>', {
-		'slug' : slug
-	}).done((res) => {
-		console.log(res.data);
-		let today = new Date();
-		let series = [];
-		let respon = res.data.data;
+function grafik_monev(respon){
+	let today = new Date();
+	let series = [];
 
-		$.each(ruangan_categories, function(v,k){
-			let nilai = 0;
-			$.each(respon, function(v1,k1){
-				if(k.id == k1.a_ruangan_id){
-					nilai = parseInt(k1.nilai);
-				}
-			});
-			series.push(nilai);
+	$.each(ruangan_categories, function(v,k){
+		let nilai = 0;
+		$.each(respon, function(v1,k1){
+			if(k.id == k1.a_ruangan_id){
+				nilai = parseInt(k1.nilai);
+			}
 		});
-
-		setTimeout(() => {
-			chartMonev.updateSeries([
-				{
-					name: '',
-					data: series
-				}
-			])
-		}, 100)
-
-	}).fail((xhr) => {
-		console.log(xhr)
+		series.push(nilai);
 	});
+
+	setTimeout(() => {
+		chartMonev.updateSeries([
+			{
+				name: '',
+				data: series
+			}
+		])
+	}, 100)
 }
 
 
@@ -347,18 +320,18 @@ function initData(fd=[]){
 						$("#card-apd-chart").hide();
 						$("#card-monev-chart").hide();
 						$("#card-hygiene-chart").show();
-						grafik_hygiene(slug);
+						grafik_hygiene(respon.data.data);
 					} else if(slug == 'audit-kepatuhan-apd'){
 						$("#card-monev-chart").hide();
 						$("#card-hygiene-chart").hide();
 						$("#card-apd-chart").show();
 						console.log("apd wowy");
-						grafik_apd(slug);
+						grafik_apd(respon.data.data);
 					} else if (slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'){
 						$("#card-hygiene-chart").hide();
 						$("#card-apd-chart").hide();
 						$("#card-monev-chart").show();
-						grafik_monev(slug);
+						grafik_monev(respon.data.data);
 					}
 					$.each(respon.data.list, function(k,v){
 						var is_show = 'd-none'
@@ -572,41 +545,6 @@ $("#btn_print").on('click', function(e){
 	if(fd){
 		fd.append('a_jpenilaian_id', $('#jenis_penilaian').find('option:selected').val());
 	}
-	var url = '<?=base_url("api_front/asesmen/list_for_print")?>';
-	$.ajax({
-		url: url,
-		data: fd,
-		processData: false,
-		contentType: false,
-		type: 'POST',
-		success: function(respon){
-			if(respon.status==200){
-				if(respon.data.list && respon.data.list.length > 0){
-					if(respon.data.ajm.slug == 'audit-hand-hygiene'){
-						printHH(respon);
-					}else if(respon.data.ajm.slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'){
-						printMonev(respon)
-					}else if(respon.data.ajm.slug == 'audit-kepatuhan-apd'){
-						printApd(respon);
-					}
-					
-				}else{
-					gritter('<h4>Info</h4><p>Tidak ada data yang perlu dicetak</p>','info');
-				}
-			}else{
-				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
-				NProgress.done();
-			}
-		},
-		error:function(){
-			setTimeout(function(){
-				gritter('<h4>Error</h4><p>Tidak dapat menambah data, silahkan coba beberapa saat lagi</p>','warning');
-			}, 666);
-
-			$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
-			$('.btn-submit').prop('disabled',false);
-			NProgress.done();
-			return false;
-		}
-	});
+	window.open('<?=base_url('cetak/?')?>'+fd);
+	
 })

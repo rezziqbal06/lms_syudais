@@ -582,6 +582,9 @@ class Asesmen extends JI_Controller
 			$is_active
 		);
 
+		$jenis_penilaian = $this->ajm->getBySlug($ajm->slug);
+		$hand_hygiene = $this->cam->chart_series($jenis_penilaian->id);
+
 		unset($aim);
 		unset($ajm);
 
@@ -615,9 +618,11 @@ class Asesmen extends JI_Controller
 			unset($v->jumlah);
 		}
 
+
 		$data['datasets'] = $datasets;
 		$data['list'] = $ddata;
 		$data['count'] = $dcount;
+		$data['data'] = $hand_hygiene;
 
 		$this->__json_out($data);
 	}

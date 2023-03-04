@@ -34,7 +34,7 @@ class Cetak extends JI_Controller
 	public function index()
 	{
 		$data = $this->__init();
-
+		dd($_REQUEST);
 		echo 'Page for printing';
 		die();
 	}
