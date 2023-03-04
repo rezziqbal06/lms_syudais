@@ -221,6 +221,106 @@ function grafik_asesmen(){
 	});
 }
 
+function grafik_hygiene(slug){
+	$.get('<?= base_url("api_front/asesmen/chart_asesmen") ?>', {
+		'slug' : slug
+	}).done((res) => {
+		console.log(res.data);
+		let today = new Date();
+		let series = [];
+		let respon = res.data.data;
+
+		$.each(ruangan_categories, function(v,k){
+			let nilai = 0;
+			$.each(respon, function(v1,k1){
+				if(k.id == k1.a_ruangan_id){
+					nilai = parseInt(k1.nilai);
+				}
+			});
+			series.push(nilai);
+		});
+
+		setTimeout(() => {
+			chartHygiene.updateSeries([
+				{
+					name: '',
+					data: series
+				}
+			])
+		}, 100)
+
+	}).fail((xhr) => {
+		console.log(xhr)
+	});
+}
+
+function grafik_apd(slug){
+	$.get('<?= base_url("api_front/asesmen/chart_asesmen") ?>', {
+		'slug' : slug
+	}).done((res) => {
+		console.log(res.data);
+		let today = new Date();
+		let series = [];
+		let respon = res.data.data;
+
+		$.each(ruangan_categories, function(v,k){
+			let nilai = 0;
+			$.each(respon, function(v1,k1){
+				if(k.id == k1.a_ruangan_id){
+					nilai = parseInt(k1.nilai);
+				}
+			});
+			series.push(nilai);
+		});
+
+		setTimeout(() => {
+			chartApd.updateSeries([
+				{
+					name: '',
+					data: series
+				}
+			])
+		}, 100)
+
+	}).fail((xhr) => {
+		console.log(xhr)
+	});
+}
+
+function grafik_monev(slug){
+	$.get('<?= base_url("api_front/asesmen/chart_asesmen") ?>', {
+		'slug' : slug
+	}).done((res) => {
+		console.log(res.data);
+		let today = new Date();
+		let series = [];
+		let respon = res.data.data;
+
+		$.each(ruangan_categories, function(v,k){
+			let nilai = 0;
+			$.each(respon, function(v1,k1){
+				if(k.id == k1.a_ruangan_id){
+					nilai = parseInt(k1.nilai);
+				}
+			});
+			series.push(nilai);
+		});
+
+		setTimeout(() => {
+			chartMonev.updateSeries([
+				{
+					name: '',
+					data: series
+				}
+			])
+		}, 100)
+
+	}).fail((xhr) => {
+		console.log(xhr)
+	});
+}
+
+
 // ===============================================================
 // end initial chart 
 // ===============================================================
@@ -247,14 +347,18 @@ function initData(fd=[]){
 						$("#card-apd-chart").hide();
 						$("#card-monev-chart").hide();
 						$("#card-hygiene-chart").show();
+						grafik_hygiene(slug);
 					} else if(slug == 'audit-kepatuhan-apd'){
 						$("#card-monev-chart").hide();
 						$("#card-hygiene-chart").hide();
 						$("#card-apd-chart").show();
+						console.log("apd wowy");
+						grafik_apd(slug);
 					} else if (slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'){
 						$("#card-hygiene-chart").hide();
 						$("#card-apd-chart").hide();
 						$("#card-monev-chart").show();
+						grafik_monev(slug);
 					}
 					$.each(respon.data.list, function(k,v){
 						var is_show = 'd-none'
