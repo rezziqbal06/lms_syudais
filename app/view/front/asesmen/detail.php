@@ -229,7 +229,7 @@
 							<div class="col-md-10 row">
 								<div class="col-md-6  text-center">
 									<h5><?= $v->nama ?></h5>
-									<input type="hidden" id="ib_user_id_penilais_<?= $i ?>" name="b_user_id_penilais[]" value="<?= isset($sess->user->id) ? $sess->user->id : '' ?>">
+									<input type="hidden" id="ib_user_id_penilais" name="b_user_id_penilais[]" value="<?= isset($sess->user->id) ? $sess->user->id : '' ?>">
 
 								</div>
 								<div class="col-md-6">
