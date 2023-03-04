@@ -349,7 +349,7 @@ if(<?= $type_form ?> == 1){
 	var val_edit = <?= isset($value) ? json_encode($value) : json_encode([]) ?>;
 	$('.progress-bar').removeClass('bg-warning');
 	if(val_edit.length >= 10){
-		$(".btn-submit").hide();
+		<!-- $(".btn-submit").hide(); -->
 		$('.progress-bar').addClass('bg-warning');
 	}
 	var items = val_edit.length;
