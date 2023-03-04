@@ -21,41 +21,40 @@ class D_Value_Model extends \Model\D_Value_Concern
   private function filters($b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
   {
     if (strlen($b_user_id)) {
-      $this->db->where_as("$this->tbl_as.b_user_id", $this->db->esc($b_user_id));
+      // $this->db->where_as("$this->tbl_as.b_user_id", $this->db->esc($b_user_id));
     }
     if (strlen($b_user_id_penilai)) {
-      $this->db->where_as("$this->tbl_as.b_user_id_penilai", $this->db->esc($b_user_id_penilai));
+      $this->db->where_as("$this->tbl2_as.b_user_id_penilai", $this->db->esc($b_user_id_penilai));
     }
     if (strlen($a_jpenilaian_id)) {
-      $this->db->where_as("$this->tbl_as.a_jpenilaian_id", $this->db->esc($a_jpenilaian_id));
+      $this->db->where_as("$this->tbl2_as.a_jpenilaian_id", $this->db->esc($a_jpenilaian_id));
     }
     if (strlen($a_ruangan_id)) {
-      $this->db->where_as("$this->tbl_as.a_ruangan_id", $this->db->esc($a_ruangan_id));
+      $this->db->where_as("$this->tbl2_as.a_ruangan_id", $this->db->esc($a_ruangan_id));
     }
     if (strlen($is_active)) {
-      $this->db->where_as("$this->tbl_as.is_active", $this->db->esc($is_active));
+      // $this->db->where_as("$this->tbl_as.is_active", $this->db->esc($is_active));
     }
     if (strlen($sdate) == 10 && strlen($edate) == 10) {
-      $this->db->between("DATE($this->tbl_as.cdate)", 'DATE("' . $sdate . '")', 'DATE("' . $edate . '")');
+      $this->db->between("DATE($this->tbl2_as.cdate)", 'DATE("' . $sdate . '")', 'DATE("' . $edate . '")');
     } elseif (strlen($sdate) != 10 && strlen($edate) == 10) {
-      $this->db->where_as("DATE($this->tbl_as.cdate)", 'DATE("' . $edate . '")', "AND", '<=');
+      $this->db->where_as("DATE($this->tbl2_as.cdate)", 'DATE("' . $edate . '")', "AND", '<=');
     } elseif (strlen($sdate) == 10 && strlen($edate) != 10) {
-      $this->db->where_as("DATE($this->tbl_as.cdate)", 'DATE("' . $sdate . '")', "AND", '>=');
+      $this->db->where_as("DATE($this->tbl2_as.cdate)", 'DATE("' . $sdate . '")', "AND", '>=');
     }
     if (strlen($keyword) > 0) {
-      $this->db->where_as("COALESCE($this->tbl2_as.fnama, '')", $keyword, "AND", "%like%", 1, 0);
-      $this->db->where_as("COALESCE($this->tbl3_as.fnama, '')", $keyword, "AND", "%like%", 0, 1);
+      // $this->db->where_as("COALESCE($this->tbl2_as.fnama, '')", $keyword, "AND", "%like%", 1, 0);
+      // $this->db->where_as("COALESCE($this->tbl3_as.fnama, '')", $keyword, "AND", "%like%", 0, 1);
     }
     return $this;
   }
 
   private function join_company()
   {
-    $this->db->join($this->tbl2, $this->tbl2_as, 'id', $this->tbl_as, 'b_user_id', 'left');
-    $this->db->join($this->tbl3, $this->tbl3_as, 'id', $this->tbl_as, 'b_user_id_penilai', 'left');
-    $this->db->join($this->tbl4, $this->tbl4_as, 'id', $this->tbl_as, 'a_ruangan_id', 'left');
-    $this->db->join($this->tbl5, $this->tbl5_as, 'id', $this->tbl_as, 'a_jpenilaian_id', 'left');
-    $this->db->join($this->tbl6, $this->tbl6_as, 'id', $this->tbl2_as, 'a_jabatan_id', 'left');
+    $this->db->join($this->tbl2, $this->tbl2_as, 'id', $this->tbl_as, 'c_asesmen_id', 'left');
+    $this->db->join($this->tbl3, $this->tbl3_as, 'id', $this->tbl_as, 'indikator', 'left');
+    $this->db->join($this->tbl5, $this->tbl5_as, 'id', $this->tbl2_as, 'a_jpenilaian_id', 'left');
+    $this->db->join($this->tbl6, $this->tbl6_as, 'id', $this->tbl2_as, 'a_ruangan_id', 'left');
 
     return $this;
   }
@@ -114,5 +113,30 @@ class D_Value_Model extends \Model\D_Value_Concern
   {
     $this->db->where('c_asesmen_id', $id);
     return $this->db->delete($this->tbl);
+  }
+
+  public function print_ppi($page = '', $pagesize = '', $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
+  {
+    $this->datatables[$this->point_of_view]->selections($this->db);
+    $this->db->from($this->tbl, $this->tbl_as);
+    $this->join_company();
+    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
+    $this->db->order_by("$this->tbl2_as.a_ruangan_id", 'ASC')->order_by("$this->tbl_as.id", 'ASC')->order_by("$this->tbl2_as.cdate", 'ASC');
+    return $this->db->get("object", 0);
+  }
+
+  public function calculate_ppi($page = '', $pagesize = '', $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
+  {
+    $this->db->select_as("$this->tbl6_as.nama", 'ruangan', 0);
+    $this->db->select_as("$this->tbl3_as.kategori", 'kategori', 0);
+    $this->db->select_as("COUNT(*)", 'jumlah', 0);
+    $this->db->select_as("COUNT(CASE WHEN $this->tbl_as.aksi = 'y' THEN 1 END)", 'y', 0);
+    $this->db->select_as("COUNT(CASE WHEN $this->tbl_as.aksi = 'n' THEN 1 END)", 'n', 0);
+    $this->db->from($this->tbl, $this->tbl_as);
+    $this->join_company();
+    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
+    $this->db->group_by("CONCAT($this->tbl6_as.nama,'-',$this->tbl3_as.kategori)");
+    $this->db->order_by("$this->tbl_as.id", 'ASC');
+    return $this->db->get("object", 0);
   }
 }

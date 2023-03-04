@@ -44,6 +44,7 @@ if(jQuery('#drTable').length>0){
 						})
 						$("#adetail").attr("href","<?=base_url_admin("pengaturan/jabatan/detail/")?>"+ieid);
 						//$("#aedit").attr("href","<?=base_url_admin("pengaturan/jabatan/edit/")?>"+ieid);
+						$("#amodule").attr("href","<?=base_url_admin("pengaturan/jabatan/module/")?>"+ieid);
 						$("#areseller").attr("href","<?=base_url_admin("partner/reseller/baru/")?>"+ieid);
 						$("#modal_option").modal("show");
 						

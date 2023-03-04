@@ -24,62 +24,62 @@
 	}
 
 	.switch {
-	display: inline-block;
-	height: 34px;
-	position: relative;
-	width: 60px;
+		display: inline-block;
+		height: 34px;
+		position: relative;
+		width: 60px;
 	}
 
 	.switch input {
-	display:none;
+		display: none;
 	}
 
 	.slider {
-	background-color: #ccc;
-	bottom: 0;
-	cursor: pointer;
-	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
-	transition: .4s;
+		background-color: #ccc;
+		bottom: 0;
+		cursor: pointer;
+		left: 0;
+		position: absolute;
+		right: 0;
+		top: 0;
+		transition: .4s;
 	}
 
 	.slider:before {
-	background-color: #fff;
-	bottom: 3.2px;
-	content: "";
-	height: 26px;
-	left: 4px;
-	position: absolute;
-	transition: .4s;
-	width: 26px;
+		background-color: #fff;
+		bottom: 3.2px;
+		content: "";
+		height: 26px;
+		left: 4px;
+		position: absolute;
+		transition: .4s;
+		width: 26px;
 	}
 
 	.switch h5 {
-	width: 200px;
-	position: absolute;
-	top: -5px;
-	left: 55px;
-	font-size: 15px;
-	text-align: justify;
-	margin: 0.75rem;
+		width: 200px;
+		position: absolute;
+		top: -5px;
+		left: 55px;
+		font-size: 15px;
+		text-align: justify;
+		margin: 0.75rem;
 	}
 
-	input:checked + .slider {
-	background-color: #66bb6a;
+	input:checked+.slider {
+		background-color: #66bb6a;
 	}
 
-	input:checked + .slider:before {
-	transform: translateX(26px);
+	input:checked+.slider:before {
+		transform: translateX(26px);
 	}
 
 	.slider.round {
-	border-radius: 34px;
+		border-radius: 34px;
 	}
 
 	.slider.round:before {
-	border-radius: 50%;
+		border-radius: 50%;
 	}
 </style>
 <form method="POST" id="ftambah">
@@ -94,7 +94,7 @@
 			<input type="hidden" name="a_jpenilaian_id" id="ia_jpenilaian_id" value="<?= $ajm->id ?>">
 			<input type="hidden" name="stime" id="istime" value="<?= $stime ?? '' ?>">
 			<!-- <input type="hidden" name="etime" id="ietime"> -->
-			<?php if($type_form != 2) { ?>
+			<?php if ($type_form != 2) { ?>
 				<div class="col-md-4">
 					<label for="iuser">Nama</label>
 					<input type="hidden" name="b_user_id" id="ib_user_id" value="<?= $cam->b_user_id ?? '' ?>">
@@ -139,7 +139,7 @@
 			<?php } ?>
 			<div class="col-md-12">
 				<label for="tgl_asesmen">Tanggal Asesmen</label>
-				<input type="text" class="form-control" readonly placeholder="Tanggal Asesmen" value="<?= isset($cam->cdate) ? $cam->cdate : ''?>" name="cdate" id="tgl_asesmen">
+				<input type="text" class="form-control" readonly placeholder="Tanggal Asesmen" value="<?= isset($cam->cdate) ? $cam->cdate : '' ?>" name="cdate" id="tgl_asesmen">
 			</div>
 		</div>
 	</div>
@@ -151,25 +151,28 @@
 					<p class="nomor float-end"><?= $i + 1 ?></p>
 				</div>
 				<div class="col-md-11 row">
+					<input type="hidden" id="ib_user_id_penilais_<?= $i ?>" name="b_user_id_penilais[]" value="<?= isset($sess->user->id) ? $sess->user->id : '' ?>">
 					<div class="col-md-6">
-						<label for="iindikator">Indikator</label>
-						<select type="text" class="form-control select2" placeholder="Indikator" id="ia_indikator_id_<?= $i ?>" name="a_indikator_id[]">
+						<label for="ia_indikator_id_select_">Indikator</label>
+						<input type="hidden" id="ia_indikator_id_<?= $i ?>" name="a_indikator_id[]" value="<?= is_array($value) && isset($value[$i]->indikator) ? $value[$i]->indikator : '' ?>">
+						<select type="text" class="form-control select2 indikator-select" placeholder="Indikator" id="ia_indikator_id_select_<?= $i ?>" data-count="<?= $i ?>" <?= is_array($value) &&  isset($value[$i]->indikator) && !empty($value[$i]->aksi) ? 'disabled' : '' ?>>
+							<option value="0">-- pilih indikator --</option>
 							<?php if (isset($aim) && count($aim)) : ?>
 								<?php foreach ($aim as $k => $v) : ?>
 									<?php if ($v->type == 'indikator') : ?>
-										<option value="<?= $v->id ?>" <?= isset($value[$i]->indikator) && is_array($value) &&  $v->id == $value[$i]->indikator ? 'selected' : '' ?>><?= $v->nama ?></option>
+										<option value="<?= $v->id ?>" <?= is_array($value) && isset($value[$i]->indikator) &&  $v->id == $value[$i]->indikator ? 'selected' : '' ?>><?= $v->nama ?></option>
 									<?php endif ?>
 								<?php endforeach ?>
 							<?php endif ?>
 						</select>
 					</div>
 					<div class="col-md-6">
-						<label for="iindikator">Aksi</label>
+						<label for="ia_aksi_id_">Aksi</label>
 						<?php if (isset($aim) && count($aim)) : ?>
 							<?php foreach ($aim as $k => $v) : ?>
 								<?php if ($v->type == 'aksi') : ?>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="a_aksi_id_<?= $i ?>" value="<?= $v->id ?>" id="ia_aksi_id_<?= $i ?>_<?= $v->id ?>" <?= isset($value[$i]->aksi) && is_array($value) &&  $v->id == $value[$i]->aksi ? 'checked' : '' ?>>
+										<input class="form-check-input" type="radio" name="a_aksi_id_<?= $i ?>" value="<?= $v->id ?>" id="ia_aksi_id_<?= $i ?>_<?= $v->id ?>" <?= is_array($value) &&  isset($value[$i]->aksi) && is_array($value) &&  $v->id == $value[$i]->aksi ? 'checked' : (is_array($value) && isset($value[$i]->indikator) && !empty($value[$i]->aksi) ? 'disabled' : '') ?>>
 										<label class="form-check-label" for="ia_aksi_id_<?= $i ?>_<?= $v->id ?>">
 											<?= $v->nama ?>
 										</label>
@@ -216,36 +219,38 @@
 					?>
 				<?php endif ?>
 			</div>
-		<?php } else if($type_form == 3){?>
+		<?php } else if ($type_form == 3) { ?>
 			<div class="col-md-12" id="panel-3">
-				<?php //dd($aim); ?>
+				<?php //dd($aim); 
+				?>
 				<?php foreach ($aim as $k => $v) : ?>
-					<?php if($v->type == "indikator") : ?>
+					<?php if ($v->type == "indikator") : ?>
 						<div class="card p-3 mb-5" data-container="<?= $v->id ?>" id="card-data-<?= $v->id ?>">
-								<div class="col-md-10 row">
-									<div class="col-md-6  text-center">
-										<h5><?= $v->nama ?></h5>
-										
-									</div>
-									<div class="col-md-6">
-										<label for="iindikator">Aksi</label>
-										<?php if (isset($aim) && count($aim)) : ?>
-											<?php foreach ($aim as $k1 => $v1) : ?>
-												<?php if ($v1->type == 'aksi') : ?>
-													<div class="row">
-														<div class="form-group">
-															<label class="switch" for="checkbox_<?= $v1->id ?>_<?= $v->id ?>">
-															<h5><?= $v1->nama ?></h5>
-																	<input type="checkbox" name="a_indikator_id[<?= $v->id ?>][<?= $v1->id ?>]" id="checkbox_<?= $v1->id ?>_<?= $v->id ?>" />
-																	<div class="slider round"></div>
-															</label>
-														</div>
-													</div>
-												<?php endif ?>
-											<?php endforeach ?>
-										<?php endif ?>
-									</div>
+							<div class="col-md-10 row">
+								<div class="col-md-6  text-center">
+									<h5><?= $v->nama ?></h5>
+									<input type="hidden" id="ib_user_id_penilais_<?= $i ?>" name="b_user_id_penilais[]" value="<?= isset($sess->user->id) ? $sess->user->id : '' ?>">
+
 								</div>
+								<div class="col-md-6">
+									<label for="iindikator">Aksi</label>
+									<?php if (isset($aim) && count($aim)) : ?>
+										<?php foreach ($aim as $k1 => $v1) : ?>
+											<?php if ($v1->type == 'aksi') : ?>
+												<div class="row">
+													<div class="form-group">
+														<label class="switch" for="checkbox_<?= $v1->id ?>_<?= $v->id ?>">
+															<h5><?= $v1->nama ?></h5>
+															<input type="checkbox" name="a_indikator_id[<?= $v->id ?>][<?= $v1->id ?>]" id="checkbox_<?= $v1->id ?>_<?= $v->id ?>" />
+															<div class="slider round"></div>
+														</label>
+													</div>
+												</div>
+											<?php endif ?>
+										<?php endforeach ?>
+									<?php endif ?>
+								</div>
+							</div>
 						</div>
 					<?php endif ?>
 				<?php endforeach ?>
@@ -254,7 +259,7 @@
 	</div>
 
 	<div class="fixed-bottom row">
-		<button type="submit" class="btn btn-success bg-accent float-end btn-submit"><i class="icon-submit"></i> <?= isset($id) ? 'Edit' : 'Simpan' ?></button>
+		<button type="submit" class="btn btn-success bg-accent float-end btn-submit" style="display:none;"><i class="icon-submit"></i> <?= isset($id) ? 'Edit' : 'Simpan' ?></button>
 	</div>
 
 </form>

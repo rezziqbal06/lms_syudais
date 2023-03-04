@@ -4,7 +4,7 @@ namespace Model;
 
 register_namespace(__NAMESPACE__);
 /**
- * Define all general method(s) and constant(s) for a_jpenilaian table,
+ * Define all general method(s) and constant(s) for b_user table,
  *   can be inherited a Concern class also can be reffered as class constants
  *
  * @version 1.0.0
@@ -12,34 +12,38 @@ register_namespace(__NAMESPACE__);
  * @package Model\B_User
  * @since 1.0.0
  */
-class A_JPenilaian_Concern extends \JI_Model
+class B_User_Module_Concern extends \JI_Model
 {
-    public $tbl = 'a_jpenilaian';
-    public $tbl_as = 'ajp';
-    public $tbl2 = 'b_user_module';
-    public $tbl2_as = 'bum';
-    // public $tbl3 = 'a_company';
-    // public $tbl3_as = 'ac';
+    public $tbl = 'b_user_module';
+    public $tbl_as = 'bum';
+    public $tbl2 = 'b_user';
+    public $tbl2_as = 'bu';
+    public $tbl3 = 'a_jabatan';
+    public $tbl3_as = 'aj';
+    public $tbl4 = 'a_jpenilaian';
+    public $tbl4_as = 'aj';
 
     const COLUMNS = [
-        'nama',
-        'slug',
-        'deskripsi',
-        'is_active',
-        'is_deleted',
+        'a_jabatan_id',
+        'b_user_id',
+        'a_jpenilaian_id',
+        'type',
         'cdate',
+        'is_active',
+        'is_deleted'
     ];
     const DEFAULTS = [
-        '',
-        '',
+        0,
+        0,
+        0,
+        'create',
         '',
         1,
-        0,
-        'NOW()'
+        0
     ];
     const REQUIREDS = [
-        'nama',
-        'slug'
+        'a_jpenilaian_id',
+        'type'
     ];
     const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
@@ -69,33 +73,12 @@ class A_JPenilaian_Concern extends \JI_Model
 
         $this->datatables['admin'] = new \Seme_Datatable([
             ["$this->tbl_as.id", 'id', 'ID'],
-            ["$this->tbl_as.nama", 'nama', 'Jenis Penilaian'],
-            ["$this->tbl_as.slug", 'slug', 'Slug'],
+            ["$this->tbl_as.a_jpenilaian_id", 'a_jpenilaian_id', 'a_jpenilaian_id'],
+            ["$this->tbl_as.b_user_id", 'b_user_id', 'b_user_id'],
+            ["$this->tbl_as.a_jabatan_id", 'a_jabatan_id', 'a_jabatan_id'],
+            ["$this->tbl_as.type", 'type', 'type'],
             ["$this->tbl_as.is_active", 'is_active', 'Status']
         ]);
-
-        // $this->datatables['front'] = new \Seme_Datatable([
-        //     ["$this->tbl_as.id", 'id', 'ID'],
-        //     ["$this->tbl_as.fnama", 'fnama', 'Nama'],
-        //     ["$this->tbl_as.telp", 'telp', 'Telp'],
-        //     ["$this->tbl_as.email", 'email', 'Email'],
-        //     ["$this->tbl_as.utype", 'utype', 'Utype'],
-        //     ["$this->tbl_as.is_active", 'is_active', 'Status']
-        // ]);
-
-        // $this->datatables['download'] = new \Seme_Datatable([
-        //     ["$this->tbl_as.fnama", 'fnama', 'Nama'],
-        //     ["$this->tbl_as.telp", 'telp', 'Telp'],
-        //     ["$this->tbl_as.email", 'email', 'Email'],
-        //     ["$this->tbl_as.utype", 'utype', 'Utype'],
-        //     ["$this->tbl2_as.provinsi", 'provinsi', 'Provinsi'],
-        //     ["$this->tbl2_as.kabkota", 'kabkota', 'Kota'],
-        //     ["$this->tbl2_as.kecamatan", 'kecamatan', 'Kecamatan'],
-        //     ["$this->tbl2_as.alamat", 'alamat', 'Alamat'],
-        //     ["$this->tbl2_as.alamat2", 'alamat2', 'Alamat 2'],
-        //     ["$this->tbl2_as.kodepos", 'kodepos', 'Kodepos'],
-        //     ["$this->tbl_as.is_active", 'is_active', 'Status']
-        // ]);
     }
 
     public function email($email)

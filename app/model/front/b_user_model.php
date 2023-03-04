@@ -27,10 +27,14 @@ class B_User_Model extends \Model\B_User_Concern
 	public function auth($username)
 	{
 		$this->db
-			->select("*")
-			->where_as("is_deleted", $this->db->esc(0), "AND")
-			->where_as("email", $this->db->esc($username), "OR", "=", 1, 0)
-			->where_as("username", $this->db->esc($username), "OR", "=", 0, 1);
+			->select_as("$this->tbl_as.*, $this->tbl_as.id", 'id', 0)
+			->select_as("$this->tbl3_as.nama", 'profesi', 0);
+		$this->db->from($this->tbl, $this->tbl_as);
+		$this->db->join($this->tbl3, $this->tbl3_as, "id", $this->tbl_as, "a_jabatan_id", "left");
+
+		$this->db->where_as("$this->tbl_as.is_deleted", $this->db->esc(0), "AND")
+			->where_as("$this->tbl_as.email", $this->db->esc($username), "OR", "=", 1, 0)
+			->where_as("$this->tbl_as.username", $this->db->esc($username), "OR", "=", 0, 1);
 		return $this->db->get_first('object', 0); //
 	}
 

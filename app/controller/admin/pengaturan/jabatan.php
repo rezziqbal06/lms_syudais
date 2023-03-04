@@ -22,7 +22,11 @@ class Jabatan extends \JI_Controller
 		$this->setTheme('admin');
 		$this->lib("seme_purifier");
 		$this->load("a_jabatan_concern");
+		$this->load("a_jpenilaian_concern");
+		$this->load("b_user_module_concern");
 		$this->load("admin/a_jabatan_model", "ajm");
+		$this->load("admin/a_jpenilaian_model", "ajpm");
+		$this->load("admin/b_user_module_model", "bumm");
 		$this->current_parent = 'pengaturan';
 		$this->current_page = 'jabatan';
 	}
@@ -122,6 +126,51 @@ class Jabatan extends \JI_Controller
 
 		$this->putThemeContent("pengaturan/jabatan/detail", $data);
 		$this->putJsContent("pengaturan/jabatan/detail_bottom", $data);
+		$this->loadLayout('col-2-left', $data);
+		$this->render();
+	}
+	public function module($id)
+	{
+		$data = $this->__init();
+		if (!$this->admin_login) {
+			redir(base_url_admin('login'));
+			die();
+		}
+		$id = (int) $id;
+		if ($id <= 0) {
+			redir(base_url_admin('pengaturan/jabatan/'));
+			die();
+		}
+		$ajm = $this->ajm->id($id);
+		if (!isset($ajm->id)) {
+			redir(base_url_admin('pengaturan/jabatan/'));
+			die();
+		}
+		$ajpm = $this->ajpm->getAll();
+		if (!isset($ajpm[0]->id)) {
+			redir(base_url_admin('pengaturan/jabatan/'));
+			die();
+		}
+		$bumm = $this->bumm->getByJabatanAndUser($id);
+
+		$new_bumm = [];
+		if (isset($bumm[0]->id)) {
+			foreach ($bumm as $bm) {
+				$new_bumm[$bm->a_jpenilaian_id . '-' . $bm->type] = $bm;
+			}
+		}
+		$this->setTitle('Manage Jabatan Module #' . $ajm->id . ' ' . $this->config_semevar('site_suffix', ''));
+
+		$data['ajm'] = $ajm;
+		$data['ajpm'] = $ajpm;
+		$data['bumm'] = $new_bumm;
+		unset($ajm);
+		unset($ajpm);
+		unset($bumm);
+		unset($new_bumm);
+
+		$this->putThemeContent("pengaturan/jabatan/module", $data);
+		$this->putJsContent("pengaturan/jabatan/module_bottom", $data);
 		$this->loadLayout('col-2-left', $data);
 		$this->render();
 	}

@@ -34,14 +34,37 @@
 								</select>
 							</div>
 							<hr>
-							<div class="col-md-12">
-								<label for="isdate">Dari Tanggal</label>
-								<input type="date" class="form-control date-picker" name="sdate" id="isdate">
+							<div id="panel_tgl">
+								<div class="col-md-12">
+									<label for="isdate">Dari Tanggal</label>
+									<input type="date" class="form-control date-picker" name="sdate" id="isdate">
+								</div>
+								<div class="col-md-12">
+									<label for="iedate">Sampai Tanggal</label>
+									<input type="date" class="form-control date-picker" name="edate" id="iedate">
+								</div>
 							</div>
-							<div class="col-md-12">
-								<label for="iedate">Sampai Tanggal</label>
-								<input type="date" class="form-control date-picker" name="edate" id="iedate">
+							<div id="panel_bulan">
+								<div class="col-md-12">
+									<label for="iedate">Sampai Tanggal</label>
+									<select name="bulan" id="ibulan" class="form-control select2">
+										<option value="">-- pilih bulan --</option>
+										<option value="<?= date('Y') ?>-01-01">Januari</option>
+										<option value="<?= date('Y') ?>-02-01">Februari</option>
+										<option value="<?= date('Y') ?>-03-01">Maret</option>
+										<option value="<?= date('Y') ?>-04-01">April</option>
+										<option value="<?= date('Y') ?>-05-01">Mei</option>
+										<option value="<?= date('Y') ?>-06-01">Juni</option>
+										<option value="<?= date('Y') ?>-07-01">Juli</option>
+										<option value="<?= date('Y') ?>-08-01">Agustus</option>
+										<option value="<?= date('Y') ?>-09-01">September</option>
+										<option value="<?= date('Y') ?>-12-01">Oktober</option>
+										<option value="<?= date('Y') ?>-11-01">November</option>
+										<option value="<?= date('Y') ?>-13-01">Desember</option>
+									</select>
+								</div>
 							</div>
+
 						</div>
 					</div>
 					<div class="row" style="margin-top: 1em; ">

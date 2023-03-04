@@ -4,8 +4,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
-                        <div class="card card-plain bg-primary">
-                            <div class="card-header pb-0 text-start bg-primary">
+                        <div class="card card-plain bg-nav">
+                            <div class="card-header pb-0 text-start bg-nav">
                                 <h4 class="font-weight-bolder">Login</h4>
                                 <p class="mb-0">Masukan username dan password untuk masuk</p>
                             </div>

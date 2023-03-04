@@ -16,8 +16,8 @@ class A_Jabatan_Concern extends \JI_Model
 {
     public $tbl = 'a_jabatan';
     public $tbl_as = 'aj';
-    // public $tbl2 = 'b_user_alamat';
-    // public $tbl2_as = 'bua';
+    public $tbl2 = 'b_user_module';
+    public $tbl2_as = 'bum';
     // public $tbl3 = 'a_company';
     // public $tbl3_as = 'ac';
 

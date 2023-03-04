@@ -85,7 +85,7 @@
 				<form action="" method="POST" id="fchange-password">
 					<div class="row">
 						<div class="form-group">
-							<input type="hidden" name="id" id="ieid" value="<?= $ue->id ?>">
+							<input type="hidden" name="id" id="ieid" value="<?= $ue->id ?? '' ?>">
 							<div class="col-md-12">
 								<label for="old-pass">Password Lama</label>
 								<input type="password" name="old_pass" class="form-control" id="old-pass">
@@ -131,23 +131,19 @@
 				<form action="" method="POST" id="fedit-profil">
 					<div class="row">
 						<div class="form-group">
-							<input type="hidden" name="id" id="ieid" value="<?= $ue->id ?>">
+							<input type="hidden" name="id" id="ieid" value="<?= $ue->id ?? '' ?>">
 							<div class="col-md-12">
 								<label for="iefnama" class="control-label">Nama Lengkap</label>
-								<input id="iefnama" type="text" name="fnama" value="<?= $ue->fnama ?>" class="form-control" required>
+								<input id="iefnama" type="text" name="fnama" value="<?= $ue->fnama ?? '' ?>" class="form-control" required>
 							</div>
 							<div class="col-md-12">
 								<label for="ietelp" class="control-label">No. Telpon</label>
-								<input type="text" id="ietelp" class="form-control" name="telp" value="<?= $ue->telp ?>" required>
+								<input type="text" id="ietelp" class="form-control" name="telp" value="<?= $ue->telp ?? '' ?>" required>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<label for="ieemail" class="control-label">Email</label>
-									<input type="text" id="ieemail" class="form-control" name="email" value="<?= $ue->email ?>" required>
-								</div>
-								<div class="col-md-6">
-									<label for="ietelp" class="control-label">No. Telpon</label>
-									<input type="text" id="ietelp" class="form-control" name="telp" value="<?= $ue->telp ?>" required>
+									<input type="text" id="ieemail" class="form-control" name="email" value="<?= $ue->email ?? '' ?>" required>
 								</div>
 							</div>
 						</div>

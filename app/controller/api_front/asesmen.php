@@ -149,6 +149,7 @@ class Asesmen extends JI_Controller
 
 		$this->cam->columns['durasi']->value = $timediff->h . '.' . $timediff->i;
 
+		$penilais = $this->input->request('b_user_id_penilais');
 		$value = [];
 		if ($ajm->slug == 'audit-hand-hygiene') {
 			$nilai = 0;
@@ -156,8 +157,9 @@ class Asesmen extends JI_Controller
 			$indikator = $this->input->request('a_indikator_id');
 			if (is_array($indikator) && count($indikator)) {
 				foreach ($indikator as $k => $v) {
+					$value[$k]['b_user_id'] = isset($penilais[$k]) ? $penilais[$k] : 0;
 					$value[$k]['indikator'] = $v;
-					$value[$k]['aksi'] = $this->input->request('a_aksi_id_' . $k) ?? null;
+					$value[$k]['aksi'] = $this->input->request('a_aksi_id_' . $k, null);
 					$aksi = $this->aim->id($value[$k]['aksi']);
 					if (isset($aksi->nama) && ($aksi->nama == 'HW' || $aksi->nama == 'HR')) {
 						$nilai++;
@@ -175,22 +177,22 @@ class Asesmen extends JI_Controller
 			$poin = 0;
 			foreach ($aksi as $k => $v) {
 				$value[] = [
+					"b_user_id" => isset($penilais[$k]) ? $penilais[$k] : 0,
 					"indikator" => "$k",
 					"aksi" => $v
 				];
-				if($v == "y"){
+				if ($v == "y") {
 					$poin++;
 				}
 			}
-			$nilai = ( $poin / count($aksi) ) * 100;
+			$nilai = ($poin / count($aksi)) * 100;
 			$nilai = ceil($nilai);
 			$this->cam->columns['nilai']->value = $nilai;
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
-			
 		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$value = [];
 			$indikator = $this->input->request('a_indikator_id');
-			$aksi = $this->aim->getByPenilaian('aksi',$ajm->id);
+			$aksi = $this->aim->getByPenilaian('aksi', $ajm->id);
 			$params = [];
 			foreach ($aksi as $key => $v) {
 				$params[] = $v->id;
@@ -201,18 +203,19 @@ class Asesmen extends JI_Controller
 				$nilai_per_item = 0;
 				foreach ($v as $k1 => $v1) {
 					$aksi[] = $k1;
-					if (in_array($k1,$params)) {
+					if (in_array($k1, $params)) {
 						$nilai_per_item++;
 					}
 				}
-				$persentase += ($nilai_per_item/count($params)) * 100;
+				$persentase += ($nilai_per_item / count($params)) * 100;
 				// dd($persentase);
 				$value[] = [
+					"b_user_id" => isset($penilais[$k]) ? $penilais[$k] : 0,
 					"indikator" => $k,
 					"aksi" => $aksi
 				];
 			}
-			$total_persentase = ($persentase/(count($indikator) * 100)) * 100;
+			$total_persentase = ($persentase / (count($indikator) * 100)) * 100;
 			$this->cam->columns['nilai']->value = ceil($total_persentase);
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
 		}
@@ -225,6 +228,7 @@ class Asesmen extends JI_Controller
 				if ($value) {
 					foreach ($value as $k => $v) {
 						$value[$k]['c_asesmen_id'] = $res;
+						$value[$k]['b_user_id'] = isset($d['sess']->user->id) ? $d['sess']->user->id : 0;
 					}
 				}
 				$resValue = $this->dvm->setMass($value);
@@ -373,11 +377,13 @@ class Asesmen extends JI_Controller
 			$nilai = 0;
 			$value = [];
 			$indikator = $this->input->request('a_indikator_id');
+			$penilais = $this->input->request('b_user_id_penilais');
 			if (is_array($indikator) && count($indikator)) {
 				foreach ($indikator as $k => $v) {
 					$value[$k]['c_asesmen_id'] = $id;
+					$value[$k]['b_user_id'] = isset($penilais[$k]) ? $penilais[$k] : 0;
 					$value[$k]['indikator'] = $v;
-					$value[$k]['aksi'] = $this->input->request('a_aksi_id_' . $k) ?? null;
+					$value[$k]['aksi'] = $this->input->request('a_aksi_id_' . $k, null);
 					$aksi = $this->aim->id($value[$k]['aksi']);
 					if (isset($aksi->nama) && ($aksi->nama == 'HW' || $aksi->nama == 'HR')) {
 						$nilai++;
@@ -389,9 +395,11 @@ class Asesmen extends JI_Controller
 		} else if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
 			$value = [];
 			$aksi = $this->input->request("aksi");
+			$penilais = $this->input->request('b_user_id_penilais');
 			foreach ($aksi as $k => $v) {
 				$value[] = [
 					"c_asesmen_id" => $id,
+					"b_user_id" => isset($penilais[$k]) ? $penilais[$k] : 0,
 					"indikator" => "$k",
 					"aksi" => $v
 				];
@@ -400,6 +408,7 @@ class Asesmen extends JI_Controller
 		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$value = [];
 			$indikator = $this->input->request('a_indikator_id');
+			$penilais = $this->input->request('b_user_id_penilais');
 			foreach ($indikator as $k => $v) {
 				$aksi = [];
 				foreach ($v as $k1 => $v1) {
@@ -407,6 +416,7 @@ class Asesmen extends JI_Controller
 				}
 				$value[] = [
 					"c_asesmen_id" => $id,
+					"b_user_id" => isset($penilais[$k]) ? $penilais[$k] : 0,
 					"indikator" => $k,
 					"aksi" => $aksi
 				];
@@ -418,9 +428,11 @@ class Asesmen extends JI_Controller
 			unset($du['id']);
 			$res = $this->cam->save($id);
 			if ($res) {
-				$resDeleteValue = $this->dvm->delByAsesmenId($id);
 
-				if ($ajm->slug != 'audit-kepatuhan-apd') $resValue = $this->dvm->setMass($value);
+				if ($ajm->slug != 'audit-kepatuhan-apd') {
+					$resDeleteValue = $this->dvm->delByAsesmenId($id);
+					$resValue = $this->dvm->setMass($value);
+				}
 				$this->status = 200;
 				$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			} else {
@@ -516,12 +528,24 @@ class Asesmen extends JI_Controller
 		$b_user_id_penilai = $this->input->request('b_user_id_penilai', '');
 		$is_active = $this->input->request('is_active', '');
 		$sdate = $this->input->request('sdate', '');
+		$bulan = $this->input->request('bulan', '');
 		$edate = $this->input->request('edate', '');
 		$page = $this->input->request('page', 0);
 		$pagesize = $this->input->request('pagesize', 10);
 		$sort_column = $this->input->request('sort_column', 'id');
 		$sort_direction = $this->input->request('sort_direction', 'desc');
 		$keyword = $this->input->request('keyword', '');
+
+		if ($d['sess']->user->profesi == 'IPCN' || $d['sess']->user->profesi == 'Komite Mutu') {
+			$b_user_id_penilai = '';
+		}
+
+		if (strlen($bulan)) {
+			$sdate = $bulan;
+			$dates = explode('-', $sdate);
+			$edate = date($dates[0] . '-' . $dates[1] . '-t');
+		}
+
 
 		$ajm = $this->ajm->id($a_jpenilaian_id);
 		if (!isset($ajm->id)) {
@@ -609,9 +633,9 @@ class Asesmen extends JI_Controller
 
 		$b_user_id = $this->input->request('asesor_id', '');
 		$b_user = $this->bum->getUserById($b_user_id);
-		$hand_hygiene = $this->cam->asesmen_series($b_user_id,2);
-		$apd = $this->cam->asesmen_series($b_user_id,3);
-		$monev = $this->cam->asesmen_series($b_user_id,4);
+		$hand_hygiene = $this->cam->asesmen_series($b_user_id, 2);
+		$apd = $this->cam->asesmen_series($b_user_id, 3);
+		$monev = $this->cam->asesmen_series($b_user_id, 4);
 		$data = [
 			"hh" => $hand_hygiene,
 			"apd" => $apd,
@@ -715,10 +739,11 @@ class Asesmen extends JI_Controller
 		
 		<body>';
 		$html .= '<style>
-					@page { margin: 3px; }
+					@page { margin: 25px; }
 					body { 
-						margin-left: 3px; 
-						margin-right: 3px; 
+						margin-left: 25px; 
+						margin-right: 25px; 
+						margin-top: 25px; 
 						font-family: "Helvetica", "Arial", sans-serif;
 					}
 					.text-center {
@@ -763,6 +788,10 @@ class Asesmen extends JI_Controller
 
 					body {
 						font-size: x-small;
+					}
+
+					.page-break {
+						page-break-after: always;
 					}
 
 					.form-check {
@@ -854,12 +883,23 @@ class Asesmen extends JI_Controller
 		$b_user_id_penilai = $this->input->request('b_user_id_penilai', '');
 		$is_active = $this->input->request('is_active', '');
 		$sdate = $this->input->request('sdate', '');
+		$bulan = $this->input->request('bulan', '');
 		$edate = $this->input->request('edate', '');
-		$page = $this->input->request('page', '');
-		$pagesize = $this->input->request('pagesize', '');
+		$page = $this->input->request('page', 0);
+		$pagesize = $this->input->request('pagesize', 10);
 		$sort_column = $this->input->request('sort_column', 'id');
 		$sort_direction = $this->input->request('sort_direction', 'desc');
 		$keyword = $this->input->request('keyword', '');
+
+		if ($d['sess']->user->profesi == 'IPCN' || $d['sess']->user->profesi == 'Komite Mutu') {
+			$b_user_id_penilai = '';
+		}
+
+		if (strlen($bulan)) {
+			$sdate = $bulan;
+			$dates = explode('-', $sdate);
+			$edate = date($dates[0] . '-' . $dates[1] . '-t');
+		}
 
 		$data['mindate'] = $sdate;
 		$data['maxdate'] = $edate;
@@ -883,7 +923,21 @@ class Asesmen extends JI_Controller
 		$data['aim'] = $aim;
 
 		if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
-			$ddata = $this->cam->print_ppi(
+			$ddata = $this->dvm->print_ppi(
+				$page,
+				$pagesize,
+				$sort_column,
+				$sort_direction,
+				$b_user_id,
+				$b_user_id_penilai,
+				$a_jpenilaian_id,
+				$a_ruangan_id,
+				$sdate,
+				$edate,
+				$keyword,
+				$is_active
+			);
+			$calculate = $this->dvm->calculate_ppi(
 				$page,
 				$pagesize,
 				$sort_column,
@@ -914,6 +968,13 @@ class Asesmen extends JI_Controller
 			);
 		}
 
+		// dd($calculate);
+		if (isset($calculate)) {
+			$dcal = [];
+			foreach ($calculate as $k => $v) {
+				$dcal[$v->ruangan . ' - ' . $v->kategori] = $v;
+			}
+		}
 
 		foreach ($ddata as &$gd) {
 			if (isset($gd->is_active)) {
@@ -921,8 +982,18 @@ class Asesmen extends JI_Controller
 			}
 
 			if (isset($gd->cdate)) {
+				$gd->tgl = (int) date('d', strtotime($gd->cdate));
+			}
+
+			if (isset($gd->cdate)) {
+				$gd->bulan_tahun = $this->__dateIndonesia($gd->cdate, 'bulan_tahun');
+			}
+
+
+			if (isset($gd->cdate)) {
 				$gd->cdate = $this->__dateIndonesia($gd->cdate);
 			}
+
 
 			if (isset($gd->value)) {
 				$gd->value = json_decode($gd->value);
@@ -935,11 +1006,17 @@ class Asesmen extends JI_Controller
 				if ((int) $durasis[0]) $gd->durasi .= $durasis[0] . ' jam ';
 				if ((int) $durasis[1]) $gd->durasi .= $durasis[1] . ' menit';
 			}
+
+			if (isset($dcal)) {
+				$gd->aksi_y = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->y;
+				$gd->aksi_n = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->n;
+				$gd->aksi_jumlah = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->jumlah;
+				$gd->aksi_persentase = $gd->aksi_y ? ceil($gd->aksi_y / $gd->aksi_jumlah * 100) : 0;
+			}
 		}
 		unset($aim);
 		unset($ajm);
 		$data['list'] = $ddata;
-
 		$this->__json_out($data);
 	}
 }

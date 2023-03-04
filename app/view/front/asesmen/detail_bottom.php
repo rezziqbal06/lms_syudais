@@ -2,7 +2,7 @@ $(".select2").select2();
 
 $("#btn_back").on('click', function(e){
     e.preventDefault();
-    var c = confirm('Apakah anda yakin? Penilaian akan hilang.');
+    var c = confirm('Apakah anda yakin?');
     if(c){
         history.back()
     }
@@ -11,6 +11,11 @@ $("#btn_back").on('click', function(e){
 //submit form
 $("#ftambah").on("submit",function(e){
 	e.preventDefault();
+	var c = confirm('Apakah anda yakin? Penilaian yang tersimpan tidak bisa diedit kembali.');
+	if(!c){
+		return;
+		return false;
+	}
 	NProgress.start();
 	$('.btn-submit').prop('disabled',true);
 	$('.icon-submit').addClass('fa-circle-o-notch fa-spin');
@@ -115,6 +120,21 @@ $("#pilih_user").on('click', function(e){
                     $('.progress-bar').css('width', dt.data.progress_penilaian+'%').attr('aria-valuenow', dt.data.progress_penilaian).text(dt.data.jumlah_penilaian); 
                     $('.progress').slideDown();
                 }
+				if(dt.data.histori_penilaian){
+					var penilaian = dt.data.histori_penilaian;
+					console.log(penilaian, 'penilaian');
+					if(penilaian && penilaian.length >= 10){
+						var pesan = `Penilaian untuk ${dt.data.fnama} sudah selesai dikerjakan/sudah 10kali kesempatan. Silakan untuk kembali`;
+						var a = alert(pesan);
+						if(a){
+							history.back();
+						}
+						$(".btn-submit").hide();				
+					}
+					$.each(penilaian, function(k,v){
+
+					})
+				}
             <?php else : ?>
                 $('.progress').slideUp();
             <?php endif; ?>
@@ -319,7 +339,28 @@ function initDataByRuanganId(r_id=0, val_edit = []){
 
 $('#tgl_asesmen').datepicker({format: 'yyyy-mm-dd'})
 
-if(<?= $type_form ?> == 2){
+
+<?php if($sess->user->profesi == 'Komite Mutu'){ ?>
+	$(".btn-submit").hide();
+<?php }else{ ?>
+	$(".btn-submit").show();
+<?php } ?>
+if(<?= $type_form ?> == 1){
+	var val_edit = <?= isset($value) ? json_encode($value) : json_encode([]) ?>;
+	$('.progress-bar').removeClass('bg-warning');
+	if(val_edit.length >= 10){
+		$(".btn-submit").hide();
+		$('.progress-bar').addClass('bg-warning');
+	}
+	var items = val_edit.length;
+	var progress = Math.round(items/10*100);
+	$('.progress').slideUp();
+	if(items){
+		$('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress).text(items); 
+		$('.progress').slideDown();
+	}
+	
+}else if(<?= $type_form ?> == 2){
 	$("#ia_ruangan_id").on('change', function(e){
 		e.preventDefault();
 		let ruangan_id = this.value;
@@ -353,3 +394,14 @@ if(<?= $type_form ?> == 2){
 		});
 	}
 }
+
+
+
+
+$(document).off('change', '.indikator-select');
+$(document).on('change', '.indikator-select', function(e){
+	e.preventDefault();
+	let count = $(this).attr("data-count");
+	let value = $(this).find('option:selected').val();
+	$("#ia_indikator_id_"+count).val(value);
+});

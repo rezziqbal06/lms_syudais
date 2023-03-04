@@ -16,6 +16,7 @@
 					<div class="col-xs-12 btn-group-vertical">
 						<!-- <a id="adetail" href="#" class="btn btn-info btn-left"><i class="fa fa-info-circle"></i> Detail</a> -->
 						<a id="aedit" href="#" class="btn btn-info btn-left"><i class="fa fa-pencil"></i> Edit</a>
+						<a id="amodule" href="#" class="btn btn-primary btn-left"><i class="fa fa-gear"></i> Module</a>
 						<!-- <a id="areseller" href="#" class="btn btn-warning btn-left"><i class="fa fa-user"></i> Jadikan Reseller</a> -->
 						<button id="bhapus" type="button" class="btn btn-danger btn-left btn-submit"><i class="fa fa-trash-o icon-submit"></i> Hapus</button>
 					</div>
@@ -52,7 +53,7 @@
 								<label for="inama" class="control-label">Nama Unit</label>
 								<input id="inama" type="text" name="nama" class="form-control" required>
 							</div>
-								
+
 							<div class="col-md-12">
 								<label for="ideskripsi" class="control-label">Deskripsi</label>
 								<textarea name="deskripsi" id="ideskripsi" class="form-control" cols="30" rows="10"></textarea>
@@ -93,7 +94,7 @@
 								<label for="ienama" class="control-label">Nama Unit</label>
 								<input id="ienama" type="text" name="nama" class="form-control" required>
 							</div>
-								
+
 							<div class="col-md-12">
 								<label for="iedeskripsi" class="control-label">Deskripsi</label>
 								<textarea name="deskripsi" id="iedeskripsi" class="form-control" cols="30" rows="10"></textarea>
