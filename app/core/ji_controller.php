@@ -692,7 +692,7 @@ class JI_Controller extends \SENE_Controller
     protected function _api_auth_required($data = null, $pov = 'admin', $utype = 'session')
     {
         $is_login = $this->{$pov . '_login'};
-        if ($pov == 'user') $is_login = $this->user_login ?? $this->reseller_login ?? 0;
+        // if ($pov == 'user') $is_login = $this->user_login ?? $this->reseller_login ?? 0;
         if ($utype == 'session' && !$is_login) {
             $this->status = 400;
             $this->message = API_ADMIN_ERROR_CODES[$this->status];
