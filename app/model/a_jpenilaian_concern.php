@@ -16,8 +16,8 @@ class A_JPenilaian_Concern extends \JI_Model
 {
     public $tbl = 'a_jpenilaian';
     public $tbl_as = 'ajp';
-    // public $tbl2 = 'b_user_alamat';
-    // public $tbl2_as = 'bua';
+    public $tbl2 = 'b_user_module';
+    public $tbl2_as = 'bum';
     // public $tbl3 = 'a_company';
     // public $tbl3_as = 'ac';
 

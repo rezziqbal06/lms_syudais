@@ -31,6 +31,11 @@
 					</a>
 				</div>
 			<?php endforeach ?>
+		<?php else : ?>
+			<div class="col-md-12 text-center">
+				<img src="<?= base_url("media/take_note.png") ?>" class="img-fluid" alt="">
+				<p>Untuk saat ini anda tidak berwenang untuk mengisi penilaian.</p>
+			</div>
 		<?php endif ?>
 	</div>
 </div>
