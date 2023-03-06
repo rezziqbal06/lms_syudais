@@ -297,4 +297,8 @@
         color: var(--background)
     }
 
+    td, th {
+        color:white;
+    }
+
 }
