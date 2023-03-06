@@ -690,7 +690,7 @@ class Cetak extends JI_Controller
 		// $aksi = [];
 		// if (isset($aim) && is_array($aim) && count($aim)) {
 		// 	foreach ($aim as $ka => $va) {
-		// 		if ($va['type'] == 'indikator') {
+		// 		if ($va->type == 'indikator') {
 		// 			continue;
 		// 		}
 		// 		$aksi[] = $va;
@@ -734,7 +734,7 @@ class Cetak extends JI_Controller
 		// 		$colIdx++;
 		// 		if (isset($aksi) && is_array($aksi) && count($aksi)) {
 		// 			foreach ($aksi as $ka => $va) {
-		// 				$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $va['nama']);
+		// 				$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $va->nama);
 		// 				$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
 		// 				$colIdx++;
 		// 			}
@@ -753,13 +753,13 @@ class Cetak extends JI_Controller
 		// 			$sumPersen = 0;
 		// 			foreach ($v->value as $kvalue => $vvalue) {
 		// 				$colIdx = 0;
-		// 				$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $aim[$vvalue['indikator']]['nama']);
+		// 				$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $aim[$vvalue->indikator']]['nama']);
 		// 				$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
 		// 				$colIdx++;
 		// 				$persentase = 0;
 		// 				$ya = 0;
 		// 				foreach ($aksi as $ka => $va) {
-		// 					if (in_array($va['id'], $vvalue['aksi'])) {
+		// 					if (in_array($va->id, $vvalue->aksi'])) {
 		// 						$ya++;
 		// 						$value = 'IYA';
 		// 					} else {
@@ -856,7 +856,7 @@ class Cetak extends JI_Controller
 		$aksi = [];
 		if (isset($aim) && is_array($aim) && count($aim)) {
 			foreach ($aim as $ka => $va) {
-				if ($va['type'] == 'indikator') {
+				if ($va->type == 'indikator') {
 					continue;
 				}
 				$aksi[] = $va;
@@ -890,6 +890,10 @@ class Cetak extends JI_Controller
 				$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
 				$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->ruangan);
 				$rowIdx++;
+				$sheet->setCellValue($colAlpha[0] . $rowIdx, 'Penilai');
+				$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
+				$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->nama_penilai . ' - ' . $v->jabatan_penilai);
+				$rowIdx++;
 				$sheet->setCellValue($colAlpha[0] . $rowIdx, 'Tanggal Audit');
 				$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
 				$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->cdate);
@@ -903,7 +907,7 @@ class Cetak extends JI_Controller
 				$colIdx++;
 				if (isset($aksi) && is_array($aksi) && count($aksi)) {
 					foreach ($aksi as $ka => $va) {
-						$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $va['nama']);
+						$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $va->nama);
 						$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
 						$colIdx++;
 					}
@@ -922,13 +926,13 @@ class Cetak extends JI_Controller
 					$sumPersen = 0;
 					foreach ($v->value as $kvalue => $vvalue) {
 						$colIdx = 0;
-						$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $aim[$vvalue['indikator']]['nama']);
+						$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $aim[$vvalue->indikator]->nama);
 						$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
 						$colIdx++;
 						$persentase = 0;
 						$ya = 0;
 						foreach ($aksi as $ka => $va) {
-							if (in_array($va['id'], $vvalue['aksi'])) {
+							if (in_array($va->id, $vvalue->aksi)) {
 								$ya++;
 								$value = 'IYA';
 							} else {
@@ -962,11 +966,11 @@ class Cetak extends JI_Controller
 
 
 				$rowIdx++;
-				$sheet->setCellValue($colAlpha[2] . $rowIdx, 'IPCN')->mergeCells('G' . $rowIdx . ':H' . $rowIdx);
+				$sheet->setCellValue('G' . $rowIdx, 'IPCN')->mergeCells('G' . $rowIdx . ':H' . $rowIdx);
 				$sheet->getStyle('G' . $rowIdx . ':H' . $rowIdx)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
 				$rowIdx++;
 				$rowIdx++;
-				$sheet->setCellValue($colAlpha[2] . $rowIdx, '(………………………………………)')->mergeCells('G' . $rowIdx . ':H' . $rowIdx);
+				$sheet->setCellValue('G' . $rowIdx, '(………………………………………)')->mergeCells('G' . $rowIdx . ':H' . $rowIdx);
 				$sheet->getStyle('G' . $rowIdx . ':H' . $rowIdx)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
 				$rowIdx++;
 				$rowIdx++;
