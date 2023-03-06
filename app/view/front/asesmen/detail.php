@@ -220,40 +220,47 @@
 				<?php endif ?>
 			</div>
 		<?php } else if ($type_form == 3) { ?>
-			<div class="col-md-12" id="panel-3">
-				<?php //dd($aim); 
-				?>
-				<?php foreach ($aim as $k => $v) : ?>
-					<?php if ($v->type == "indikator") : ?>
-						<div class="card p-3 mb-5" data-container="<?= $v->id ?>" id="card-data-<?= $v->id ?>">
-							<div class="col-md-10 row">
-								<div class="col-md-6  text-center">
-									<h5><?= $v->nama ?></h5>
-									<input type="hidden" id="ib_user_id_penilais" name="b_user_id_penilais[]" value="<?= isset($sess->user->id) ? $sess->user->id : '' ?>">
-
-								</div>
-								<div class="col-md-6">
-									<label for="iindikator">Aksi</label>
-									<?php if (isset($aim) && count($aim)) : ?>
-										<?php foreach ($aim as $k1 => $v1) : ?>
-											<?php if ($v1->type == 'aksi') : ?>
-												<div class="row">
-													<div class="form-group">
-														<label class="switch" for="checkbox_<?= $v1->id ?>_<?= $v->id ?>">
-															<h5><?= $v1->nama ?></h5>
-															<input type="checkbox" name="a_indikator_id[<?= $v->id ?>][<?= $v1->id ?>]" id="checkbox_<?= $v1->id ?>_<?= $v->id ?>" />
-															<div class="slider round"></div>
-														</label>
-													</div>
-												</div>
-											<?php endif ?>
-										<?php endforeach ?>
+			<?php for ($i = 0; $i < 1; $i++) : ?>
+				<div class="col-md-1 transition">
+					<p class="nomor float-end"><?= $i + 1 ?></p>
+				</div>
+				<div class="col-md-11 row transition">
+					<input type="hidden" id="ib_user_id_penilais_<?= $i ?>" name="b_user_id_penilais[]" value="<?= isset($sess->user->id) ? $sess->user->id : '' ?>">
+					<div class="col-md-6">
+						<label for="ia_indikator_id_select_">Indikator</label>
+						<input type="hidden" id="ia_indikator_id_<?= $i ?>" name="a_indikator_id[]" value="<?= isset($value) && is_array($value) && isset($value[$i]->indikator) ? $value[$i]->indikator : '' ?>">
+						<select type="text" class="form-control select2 indikator-select" placeholder="Indikator" id="ia_indikator_id_select_<?= $i ?>" data-count="<?= $i ?>" <?= isset($value) && is_array($value) &&  isset($value[$i]->indikator) && !empty($value[$i]->aksi) ? 'disabled' : '' ?>>
+							<option value="0">-- pilih indikator --</option>
+							<?php if (isset($aim) && count($aim)) : ?>
+								<?php foreach ($aim as $k => $v) : ?>
+									<?php if ($v->type == 'indikator') : ?>
+										<option value="<?= $v->id ?>" <?= isset($value) && is_array($value) && isset($value[$i]->indikator) &&  $v->id == $value[$i]->indikator ? 'selected' : '' ?>><?= $v->nama ?></option>
 									<?php endif ?>
-								</div>
-							</div>
-						</div>
-					<?php endif ?>
-				<?php endforeach ?>
+								<?php endforeach ?>
+							<?php endif ?>
+						</select>
+					</div>
+					<div class="col-md-6">
+						<label for="ia_aksi_id_">Aksi</label>
+						<?php if (isset($aim) && count($aim)) : ?>
+							<?php foreach ($aim as $k => $v) : ?>
+								<?php if ($v->type == 'aksi') : ?>
+									<div class="form-check">
+										<label class="switch" for="checkbox_<?= $i ?>_<?= $v->id ?>">
+											<h5><?= $v->nama ?></h5>
+											<input type="checkbox" name="a_indikator_aksi[<?= $i ?>][<?= $v->id ?>]" id="checkbox_<?= $i ?>_<?= $v->id ?>" />
+											<div class="slider round"></div>
+										</label>
+									</div>
+								<?php endif ?>
+							<?php endforeach ?>
+						<?php endif ?>
+					</div>
+				</div>
+				<hr>
+			<?php endfor ?>
+			<div class="col-md-12 ">
+				<button class="btn btn-success bg-primary float-end" onclick=""><i class="fas fa-plus"></i></button>
 			</div>
 		<?php } ?>
 	</div>

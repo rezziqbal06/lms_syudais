@@ -165,7 +165,6 @@ class Asesmen extends JI_Controller
 						$nilai++;
 					}
 				}
-
 				$this->cam->columns['nilai']->value = $nilai;
 			}
 
@@ -191,31 +190,29 @@ class Asesmen extends JI_Controller
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
 		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$value = [];
-			$indikator = $this->input->request('a_indikator_id');
+			$a_indikator_id = $this->input->request('a_indikator_id');
+			$a_indikator_aksi = $this->input->request('a_indikator_aksi');
 			$aksi = $this->aim->getByPenilaian('aksi', $ajm->id);
 			$params = [];
+			$persentase = 0;
 			foreach ($aksi as $key => $v) {
 				$params[] = $v->id;
 			}
-			$persentase = 0;
-			foreach ($indikator as $k => $v) {
+			foreach ($a_indikator_id as $k => $v) {
+				$value[$k]['b_user_id'] = isset($penilais[$k]) ? $penilais[$k] : 0;
+				$value[$k]['indikator'] = $v;
 				$aksi = [];
 				$nilai_per_item = 0;
-				foreach ($v as $k1 => $v1) {
+				foreach ($a_indikator_aksi[$k] as $k1 => $v1) {
 					$aksi[] = $k1;
 					if (in_array($k1, $params)) {
 						$nilai_per_item++;
 					}
 				}
 				$persentase += ($nilai_per_item / count($params)) * 100;
-				// dd($persentase);
-				$value[] = [
-					"b_user_id" => isset($penilais[$k]) ? $penilais[$k] : 0,
-					"indikator" => $k,
-					"aksi" => $aksi
-				];
+				$value[$k]['aksi'] = $aksi;
 			}
-			$total_persentase = ($persentase / (count($indikator) * 100)) * 100;
+			$total_persentase = ($persentase / (count($a_indikator_id) * 100)) * 100;
 			$this->cam->columns['nilai']->value = ceil($total_persentase);
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
 		}

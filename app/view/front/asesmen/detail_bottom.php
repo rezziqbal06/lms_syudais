@@ -395,7 +395,9 @@ if(<?= $type_form ?> == 1){
 	}
 }
 
+function tambahForm(now){
 
+}
 
 
 $(document).off('change', '.indikator-select');
