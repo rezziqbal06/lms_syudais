@@ -16,7 +16,7 @@
 					<div class="col-xs-12 btn-group-vertical">
 						<!-- <a id="adetail" href="#" class="btn btn-info btn-left"><i class="fa fa-info-circle"></i> Detail</a> -->
 						<a id="aedit" href="#" class="btn btn-info btn-left"><i class="fa fa-pencil"></i> Edit</a>
-						<a id="amodule" href="#" class="btn btn-primary btn-left"><i class="fa fa-gear"></i> Module</a>
+						<a id="amodule" href="#" class="btn btn-warning btn-left"><i class="fa fa-gear"></i> Module</a>
 						<!-- <a id="areseller" href="#" class="btn btn-warning btn-left"><i class="fa fa-user"></i> Jadikan Reseller</a> -->
 						<button id="bhapus" type="button" class="btn btn-danger btn-left btn-submit"><i class="fa fa-trash-o icon-submit"></i> Hapus</button>
 					</div>
