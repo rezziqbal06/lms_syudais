@@ -111,7 +111,16 @@ function download(file, filename) {
 		chart: {
 			height: 350,
 			type: 'area',
-			fontFamily: 'Lexend Deca, sans-serif'
+			fontFamily: 'Lexend Deca, sans-serif',
+			zoom : {
+				enabled : true,
+				type: 'x'
+			},
+			options: {
+				chart: {
+					overflow: 'scroll'
+				}
+			}
 		},
 		dataLabels: {
 			enabled: false
