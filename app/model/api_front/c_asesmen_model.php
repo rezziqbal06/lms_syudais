@@ -56,6 +56,7 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     $this->db->join($this->tbl4, $this->tbl4_as, 'id', $this->tbl_as, 'a_ruangan_id', 'left');
     $this->db->join($this->tbl5, $this->tbl5_as, 'id', $this->tbl_as, 'a_jpenilaian_id', 'left');
     $this->db->join($this->tbl6, $this->tbl6_as, 'id', $this->tbl2_as, 'a_jabatan_id', 'left');
+    $this->db->join($this->tbl7, $this->tbl7_as, 'id', $this->tbl3_as, 'a_jabatan_id', 'left');
 
     return $this;
   }
@@ -102,26 +103,26 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     $this->db->group_by("$this->tbl_as.b_user_id");
     return $this->db->get();
   }
- 
+
   public function asesmen_series($penilai_id, $jenis_penilaian)
   {
-    $this->db->select_as("DAY($this->tbl_as.cdate)","day",0);
-    $this->db->select_as("SUM($this->tbl_as.nilai)","nilai",0);
+    $this->db->select_as("DAY($this->tbl_as.cdate)", "day", 0);
+    $this->db->select_as("SUM($this->tbl_as.nilai)", "nilai", 0);
     $this->db->from($this->tbl, $this->tbl_as);
-    $this->db->where_as("$this->tbl_as.b_user_id_penilai",$penilai_id);
-    $this->db->where_as("$this->tbl_as.a_jpenilaian_id",$jenis_penilaian);
+    $this->db->where_as("$this->tbl_as.b_user_id_penilai", $penilai_id);
+    $this->db->where_as("$this->tbl_as.a_jpenilaian_id", $jenis_penilaian);
     $this->db->group_by("day");
     return $this->db->get();
   }
- 
+
   public function chart_series($jenis_penilaian)
   {
-    $this->db->select_as("MONTH($this->tbl_as.cdate)","month",0);
-    $this->db->select_as("SUM($this->tbl_as.nilai) / COUNT($this->tbl_as.nilai)","nilai",0);
-    $this->db->select_as("$this->tbl_as.a_ruangan_id","a_ruangan_id",0);
+    $this->db->select_as("MONTH($this->tbl_as.cdate)", "month", 0);
+    $this->db->select_as("SUM($this->tbl_as.nilai) / COUNT($this->tbl_as.nilai)", "nilai", 0);
+    $this->db->select_as("$this->tbl_as.a_ruangan_id", "a_ruangan_id", 0);
     $this->db->from($this->tbl, $this->tbl_as);
-    $this->db->where_as("$this->tbl_as.a_jpenilaian_id",$jenis_penilaian);
-    $this->db->where_as("MONTH($this->tbl_as.cdate)",date('m'));
+    $this->db->where_as("$this->tbl_as.a_jpenilaian_id", $jenis_penilaian);
+    $this->db->where_as("MONTH($this->tbl_as.cdate)", date('m'));
     $this->db->group_by("$this->tbl_as.a_ruangan_id, month");
     return $this->db->get();
   }
@@ -139,18 +140,18 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     return $this->db->get('', 0);
   }
 
-  public function print($page = '', $pagesize = '', $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
+  public function print($page = '', $pagesize = '', $sortCol = "id", $sortDir = "ASC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
   {
     $this->datatables[$this->point_of_view]->selections($this->db);
     $this->db->from($this->tbl, $this->tbl_as);
     $this->join_company();
     $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
-    $this->db->order_by($sortCol, $sortDir);
+    $this->db->order_by("$this->tbl_as.cdate", "ASC")->order_by("$this->tbl_as.b_user_id", "ASC");
     if (strlen($page) && strlen($pagesize)) $this->db->limit($page, $pagesize);
     return $this->db->get("object", 0);
   }
 
-  public function print_ppi($page = '', $pagesize = '', $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
+  public function print_ppi($page = '', $pagesize = '', $sortCol = "id", $sortDir = "ASC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
   {
     $this->datatables[$this->point_of_view]->selections($this->db);
     $this->db->from($this->tbl, $this->tbl_as);

@@ -22,6 +22,10 @@ class Seme_Dompdf
         // Render the HTML as PDF 
         $dompdf->render();
 
+        // header('Content-Type: application/pdf');
+        // header('Content-Disposition: attachment; filename="' . $r['filename'] . '."');
+
+        // return $dompdf->output();
         // Output the generated PDF to Browser 
         $dompdf->stream($r['filename'], ['Attachment' => false]);
     }

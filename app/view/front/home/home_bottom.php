@@ -550,8 +550,7 @@ function printApd(respon){
 
 $("#btn_print").on('click', function(e){
 	e.preventDefault();
-	gritter('<p>masih dalam pengembangan<p>', 'warning');
-	return; return false;
+	
 	var fd = $("#ffilter").serialize();
 	if(fd){
 		fd += '&a_jpenilaian_id='+$('#jenis_penilaian').find('option:selected').val();
@@ -559,13 +558,11 @@ $("#btn_print").on('click', function(e){
 	var name = $('#jenis_penilaian').find('option:selected').text();
 	var url = '';
 	if(name == 'Audit Hand Hygiene'){
-		url = '<?=base_url('cetak/hh/')?>'+fd;
+		url = '<?=base_url('cetak/hh/?')?>'+fd;
 	}else if(name == 'Audit Kepatuhan APD'){
-		url = '<?=base_url('cetak/apd')?>';
+		url = '<?=base_url('cetak/apd/?')?>'+fd;
 	}else{
-		url = '<?=base_url('cetak/monev')?>';
+		url = '<?=base_url('cetak/monev/?')?>'+fd;
 	}
 	window.open(url, 'blank');
-
-	
 })

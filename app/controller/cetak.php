@@ -12,20 +12,17 @@ class Cetak extends JI_Controller
 		$this->setTheme('front');
 		$this->current_parent = 'print';
 		$this->current_page = 'print';
-		// $this->load('a_company_concern');
 		$this->load('a_jpenilaian_concern');
 		$this->load('a_indikator_concern');
-		$this->load('a_ruangan_concern');
-		$this->load('a_jabatan_concern');
 		$this->load('b_user_concern');
 		$this->load('c_asesmen_concern');
+		$this->load('d_value_concern');
 
-		$this->load('front/a_jpenilaian_model', 'ajm');
-		$this->load('front/a_indikator_model', 'aim');
-		$this->load('front/a_ruangan_model', 'arm');
-		$this->load('front/a_jabatan_model', 'ajbm');
-		$this->load('front/b_user_model', 'bum');
-		$this->load('front/c_asesmen_model', 'cam');
+		$this->load("api_front/a_jpenilaian_model", 'ajm');
+		$this->load("api_front/a_indikator_model", 'aim');
+		$this->load("api_front/b_user_model", 'bum');
+		$this->load("api_front/c_asesmen_model", 'cam');
+		$this->load("api_front/d_value_model", 'dvm');
 
 		$this->lib('seme_dompdf', 'dompdf');
 		$this->lib('seme_spreadsheet', 'ss');
@@ -39,35 +36,411 @@ class Cetak extends JI_Controller
 		die();
 	}
 
+	public function _list_for_print()
+	{
+		$d = $this->__init();
+		$data = array();
+		$this->_api_auth_required($data, 'user');
+
+		$data['status'] = 200;
+		$data['message'] = API_ADMIN_ERROR_CODES[$data['status']];
+
+		/** advanced filter is_active */
+		$a_jpenilaian_id = $this->input->request('a_jpenilaian_id', '');
+		$a_ruangan_id = $this->input->request('a_ruangan_id', '');
+		$b_user_id = $this->input->request('b_user_id', '');
+		$b_user_id_penilai = $this->input->request('b_user_id_penilai', '');
+		$is_active = $this->input->request('is_active', '');
+		$sdate = $this->input->request('sdate', '');
+		$bulan = $this->input->request('bulan', '');
+		$edate = $this->input->request('edate', '');
+		$page = $this->input->request('page', 0);
+		$pagesize = $this->input->request('pagesize', 10);
+		$sort_column = $this->input->request('sort_column', 'id');
+		$sort_direction = $this->input->request('sort_direction', 'desc');
+		$keyword = $this->input->request('keyword', '');
+
+		if ($d['sess']->user->profesi == 'IPCN' || $d['sess']->user->profesi == 'Komite Mutu') {
+			$b_user_id_penilai = '';
+		}
+		if (strlen($bulan)) {
+			$sdate = $bulan;
+			$dates = explode('-', $sdate);
+			$edate = date($dates[0] . '-' . $dates[1] . '-t');
+		}
+
+		$data['mindate'] = $sdate;
+		$data['maxdate'] = $edate;
+
+		$ajm = $this->ajm->id($a_jpenilaian_id);
+		if (!isset($ajm->id)) {
+			$data['status'] = 400;
+			$data['message'] = "Data tidak ditemukan";
+			return $data;
+			die();
+		}
+		$data['ajm'] = $ajm;
+
+		$aim = $this->aim->getByPenilaianId($ajm->id);
+		if (!isset($aim[0]->id)) {
+			$data['status'] = 400;
+			$data['message'] = "Data tidak ditemukan";
+			return $data;
+			die();
+		}
+		$data['aim'] = $aim;
+
+		if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
+			$ddata = $this->dvm->print_ppi(
+				$page,
+				$pagesize,
+				$sort_column,
+				$sort_direction,
+				$b_user_id,
+				$b_user_id_penilai,
+				$a_jpenilaian_id,
+				$a_ruangan_id,
+				$sdate,
+				$edate,
+				$keyword,
+				$is_active
+			);
+			$calculate = $this->dvm->calculate_ppi(
+				$page,
+				$pagesize,
+				$sort_column,
+				$sort_direction,
+				$b_user_id,
+				$b_user_id_penilai,
+				$a_jpenilaian_id,
+				$a_ruangan_id,
+				$sdate,
+				$edate,
+				$keyword,
+				$is_active
+			);
+		} else {
+			$ddata = $this->cam->print(
+				$page,
+				$pagesize,
+				$sort_column,
+				$sort_direction,
+				$b_user_id,
+				$b_user_id_penilai,
+				$a_jpenilaian_id,
+				$a_ruangan_id,
+				$sdate,
+				$edate,
+				$keyword,
+				$is_active
+			);
+		}
+
+		// dd($calculate);
+		if (isset($calculate)) {
+			$dcal = [];
+			foreach ($calculate as $k => $v) {
+				$dcal[$v->ruangan . ' - ' . $v->kategori] = $v;
+			}
+		}
+
+		foreach ($ddata as &$gd) {
+			if (isset($gd->is_active)) {
+				$gd->is_active = $this->cam->label('is_active', $gd->is_active);
+			}
+
+			if (isset($gd->cdate)) {
+				$gd->tgl = (int) date('d', strtotime($gd->cdate));
+			}
+
+			if (isset($gd->cdate)) {
+				$gd->bulan_tahun = $this->__dateIndonesia($gd->cdate, 'bulan_tahun');
+			}
+
+
+			if (isset($gd->cdate)) {
+				$gd->cdate = $this->__dateIndonesia($gd->cdate);
+			}
+
+
+			if (isset($gd->value)) {
+				$gd->value = json_decode($gd->value);
+			}
+
+			if (isset($gd->durasi)) {
+				$durasis = explode('.', $gd->durasi);
+
+				$gd->durasi = '';
+				if ((int) $durasis[0]) $gd->durasi .= $durasis[0] . ' jam ';
+				if ((int) $durasis[1]) $gd->durasi .= $durasis[1] . ' menit';
+			}
+
+			if (isset($dcal)) {
+				$gd->aksi_y = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->y;
+				$gd->aksi_n = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->n;
+				$gd->aksi_jumlah = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->jumlah;
+				$gd->aksi_persentase = $gd->aksi_y ? ceil($gd->aksi_y / $gd->aksi_jumlah * 100) : 0;
+			}
+		}
+		unset($aim);
+		unset($ajm);
+		$data['list'] = $ddata;
+		return $data;
+	}
+
+	public function _content_pdf($res)
+	{
+		$s = '<h4 class="text-center mb-n1">FORMULIR AUDIT HAND HYGIENE RSU BINA SEHAT</h4><br>';
+		$s .= '<table style="width: 100%;">';
+		$s .= '<tbody>';
+		$n = 0;
+		foreach ($res['list'] as $k => $v) {
+			if ($k == 0) {
+				$s .= '<tr>';
+			}
+			if ($n == 3) {
+				$s .= '</tr><tr>';
+				$n = 0;
+			}
+			$s .= '<td>
+				<table class="my_table">
+					<tbody>
+						<tr>
+							<td>Profesi</td>
+							<td colspan="2">' . $v->profesi . '</td>
+						</tr>
+						<tr>
+							<td>Nama</td>
+							<td colspan="2">' . $v->nama . '</td>
+						</tr>
+						<tr>
+							<td>Unit</td>
+							<td colspan="2">' . $v->ruangan . '</td>
+						</tr>
+						<tr>
+							<td>Penilai</td>
+							<td colspan="2">' . $v->nama_penilai . ' - ' . $v->jabatan_penilai . '</td>
+						</tr>
+						<tr>
+							<td>Tanggal</td>
+							<td colspan="2">' . $v->cdate . '</td>
+						</tr>
+						<tr>
+							<td>Lama Audit</td>
+							<td colspan="2">' . $v->durasi . '</td>
+						</tr>
+					</tbody>
+					<tbody>
+						<tr style="background-color: #08686738;">
+							<td>Opp</td>
+							<td>Indikasi</td>
+							<td>Action</td>
+						</tr>';
+			foreach ($v->value as $kvalue => $vvalue) {
+				$isPageBreak = $kvalue == 4 ? '' : '';
+				$s .= '<tr class="' . $isPageBreak . '">
+						<td>' . ($kvalue + 1) . '</td>
+						<td>';
+				foreach ($res['aim'] as $kaim => $vaim) {
+					if ($vaim->type == 'indikator') {
+						$ischecked = $vvalue->indikator == $vaim->id ? 'checked' : '';
+						$s .= '<div class="form-check">
+												<input class="form-check-input" type="checkbox" ' . $ischecked . '>
+												<label class="form-check-label" >
+													' . $vaim->nama . '
+												</label>
+											</div>';
+						// <!-- $s .= '<label><input type="checkbox" ${ischecked}> ${vaim.nama}</label>' -->
+					}
+				}
+				$s .= '</td>';
+				$s .= '<td>';
+				foreach ($res['aim'] as $kaim2 => $vaim2) {
+					if ($vaim2->type == 'aksi') {
+						$ischecked = $vvalue->aksi == $vaim2->id ? 'checked' : '';
+						$s .= '<div class="form-check">
+												<input class="form-check-input" type="checkbox" ' . $ischecked . '>
+												<label class="form-check-label" >
+													' . $vaim2->nama . '
+												</label>
+											</div>';
+						// <!-- $s .= '<label><input type="checkbox" ${ischecked}> ${vaim.nama}</label>' -->
+					}
+				}
+				$s .= '</td>
+							</tr>';
+			}
+
+			$s .= '</tbody>
+				</table>
+			</td>';
+			if ($k == count($res['list']) - 1) {
+				$s .= '</tr>';
+			}
+			$n++;
+		}
+
+		$s .= '</tbody>';
+		$s .= '</table>';
+		return $s;
+	}
+
 	public function hh()
 	{
-		$html = $_SESSION['content'];
-		$_SESSION['content'] = null;
+		$res = $this->_list_for_print();
+		$data = [];
+		if ($res['status'] != 200) {
+			$this->status = $res['status'];
+			$this->message = $res['message'];
+			echo $data;
+			die();
+		}
+
+		$html = '<!DOCTYPE html>
+		<html lang="en">
+		
+		<head>
+			<meta charset="UTF-8">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>Document</title>
+		</head>
+		
+		<body>';
+		$html .= '<style>
+					@page { margin: 25px; }
+					body { 
+						margin-left: 25px; 
+						margin-right: 25px; 
+						margin-top: 25px; 
+						font-family: "Helvetica", "Arial", sans-serif;
+					}
+					.text-center {
+						text-align: center;
+					}
+
+					h4{
+						margin-bottom:0px;
+					}
+
+					.my_table {
+						margin-bottom: 0.5rem;
+						width: 100%;
+						border-collapse: collapse;
+					}
+
+					td{
+						vertical-align: top !important;
+					}
+
+					.my_table td {
+						border: 1px solid #121212;
+						padding-left: 0.5rem;
+						padding-bottom: 0.4rem;
+						vertical-align: top;
+					}
+
+					.my_table th {
+						border: 1px solid #121212;
+						padding: 0.1rem;
+					}
+
+					.check {
+						border: 1px solid #bebebe;
+						width: 1rem;
+						height: 1rem;
+						border-radius: 6px;
+					}
+
+					.checked {
+						border: 1px solid #bebebe;
+						width: 1rem;
+						height: 1rem;
+						border-radius: 6px;
+						background-color: #5e72e4;
+					}
+
+					body {
+						font-size: x-small;
+					}
+
+					.page-break {
+						page-break-after: always;
+					}
+
+					.form-check {
+						display: block;
+						padding-left: 2.3em;
+						margin-bottom: 0.125rem;
+					}
+
+					.form-check-label, .form-check-input[type="checkbox"] {
+						cursor: pointer;
+					}
+					.form-check-input[type="checkbox"] {
+						border-radius: 0.25em !important;
+					}
+					.form-check .form-check-input {
+						float: left;
+						margin-left: -1.73em;
+					}
+					.form-check-input {
+						width: 1.23em;
+						height: 1.23em;
+						border-radius: 3px;
+						vertical-align: top;
+						background-color: #fff;
+						background-repeat: no-repeat;
+						background-position: center;
+						background-size: contain;
+						
+						appearance: none;
+						color-adjust: exact;
+					}
+					.form-check-label {
+						font-size: x-small;
+					}
+					.form-check-label, .form-check-input[type="checkbox"] {
+						cursor: pointer;
+					}
+				</style>';
+
+		$html .= $this->_content_pdf($res);
+
+		$html .= '</body>
+		</html>';
+
+		$filename = 'audit-hand-hygiene.pdf';
 		$data = $this->dompdf->download([
-			'filename' => 'Hygiene.pdf',
+			'filename' => $filename,
 			'html' => $html,
 			'ukuran' => 'A3',
 			'rotasi' => 'Potrait'
 		]);
+		// $this->status = 200;
+		// $this->message = 'OK';
+		// $json_data = [];
+		// $json_data['pdf'] = $data;
+		// $json_data['filename'] = $filename;
+		// $this->__json_out($json_data);
 
-		if (isset($data['status']) && $data['status'] != 200) {
-			echo $data['message'];
-		}
+		// if (isset($data['status']) && $data['status'] != 200) {
+		// 	echo $data['message'];
+		// }
 	}
 
 	public function monev()
 	{
-		$content = $_SESSION['content'];
-		dd($content);
+		$content = $this->_list_for_print();
 		// $_SESSION['content'] = null;
-		$ajm = $content['data']['ajm'];
-		$aim = $content['data']['aim'];
-		$list = $content['data']['list'];
-		$maxdate = $content['data']['maxdate'];
-		$mindate = $content['data']['mindate'];
+		$ajm = $content['ajm'];
+		$aim = $content['aim'];
+		$list = $content['list'];
+		$maxdate = $content['maxdate'];
+		$mindate = $content['mindate'];
 		$newAim = [];
 		foreach ($aim as $k => $v) {
-			$newAim[$v['id']] = $v;
+			$newAim[$v->id] = $v;
 		}
 		$aim = $newAim;
 
@@ -110,10 +483,10 @@ class Cetak extends JI_Controller
 		}
 		foreach ($list as $k => $v) {
 			if ($k == 0) {
-				$tempRuangan = $v['ruangan'];
-				$tempTgl = $v['tgl'];
-				$tempKategori = $v['indikator_kategori'];
-				$tempSubKategori = $v['indikator_subkategori'];
+				$tempRuangan = $v->ruangan;
+				$tempTgl = $v->tgl;
+				$tempKategori = $v->indikator_kategori;
+				$tempSubKategori = $v->indikator_subkategori;
 
 				//Header
 				$countSheet[$sh] = $ssheet->getActiveSheet();
@@ -124,13 +497,13 @@ class Cetak extends JI_Controller
 				$objDrawing->setOffsetX(150);
 				$objDrawing->setCoordinates('B2');
 				$objDrawing->setWorksheet($countSheet[$sh]);
-				$countSheet[$sh]->setTitle($v['ruangan']);
+				$countSheet[$sh]->setTitle($v->ruangan);
 				$countSheet[$sh]->setCellValue($colAlpha[0] . 2, 'MONITORING KEGIATAN HARIAN PENCEGAHAN PENGENDALIAN INFEKSI DI RUMAH SAKIT UMUM BINA SEHAT')->mergeCells('A' . 2 . ':BL' . 2);
 				$countSheet[$sh]->getStyle('A' . 2 . ':BL' . 2)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
 				$countSheet[$sh]->setCellValue($colAlpha[0] . 4, 'Ruangan');
-				$countSheet[$sh]->setCellValue($colAlpha[1] . 4, ': ' . $v['ruangan']);
+				$countSheet[$sh]->setCellValue($colAlpha[1] . 4, ': ' . $v->ruangan);
 				$countSheet[$sh]->setCellValue($colAlpha[0] . 5, 'Bulan');
-				$countSheet[$sh]->setCellValue($colAlpha[1] . 5, ': ' . $v['bulan_tahun']);
+				$countSheet[$sh]->setCellValue($colAlpha[1] . 5, ': ' . $v->bulan_tahun);
 
 				$countSheet[$sh]->setCellValue($colAlpha[0] . 7, 'NO')->mergeCells('A' . 7 . ':A' . 9);
 				$countSheet[$sh]->getStyle('A' . 7 . ':A' . 9)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
@@ -156,9 +529,9 @@ class Cetak extends JI_Controller
 				}
 
 				//Indikator
-				$countSheet[$sh]->setCellValue($colAlpha[0] . $rowIdx, $v['indikator_kategori'])->mergeCells('A' . $rowIdx . ':BF' . $rowIdx);
+				$countSheet[$sh]->setCellValue($colAlpha[0] . $rowIdx, $v->indikator_kategori)->mergeCells('A' . $rowIdx . ':BF' . $rowIdx);
 				$countSheet[$sh]->setCellValue('BG' . $rowIdx, 'HASIL')->mergeCells('BG' . $rowIdx . ':BJ' . $rowIdx);
-				$countSheet[$sh]->setCellValue('BK' . $rowIdx, $v['aksi_persentase'])->mergeCells('BK' . $rowIdx . ':BL' . $rowIdx);
+				$countSheet[$sh]->setCellValue('BK' . $rowIdx, $v->aksi_persentase)->mergeCells('BK' . $rowIdx . ':BL' . $rowIdx);
 				$countSheet[$sh]->getStyle('A' . $rowIdx . ':BL' . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
 				$countSheet[$sh]->getStyle('A' . $rowIdx . ':BL' . $rowIdx)->getFill()->setFillType('solid')->getStartColor()->setARGB('66bb6a');
 				$rowIdx++;
@@ -174,7 +547,7 @@ class Cetak extends JI_Controller
 					}
 				}
 			} else {
-				if ($tempTgl != $v['tgl']) {
+				if ($tempTgl != $v->tgl) {
 					if ($isFirst) {
 						$lastRowTgl = $rowTgl;
 						$columnTgl = 2;
@@ -186,7 +559,7 @@ class Cetak extends JI_Controller
 						}
 					}
 				}
-				if ($tempRuangan != $v['ruangan']) {
+				if ($tempRuangan != $v->ruangan) {
 					$rowIdx++;
 					$countSheet[$sh]->setCellValue('AQ' . $rowIdx, 'IPCN')->mergeCells('AQ' . $rowIdx . ':BB' . $rowIdx);
 					$countSheet[$sh]->getStyle('AQ' . $rowIdx . ':BB' . $rowIdx)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
@@ -201,10 +574,10 @@ class Cetak extends JI_Controller
 					$rowIdx = 10;
 					$rowTgl = 10;
 					$isFirst = true;
-					$tempRuangan = $v['ruangan'];
-					$tempTgl = $v['tgl'];
-					$tempKategori = $v['indikator_kategori'];
-					$tempSubKategori = $v['indikator_subkategori'];
+					$tempRuangan = $v->ruangan;
+					$tempTgl = $v->tgl;
+					$tempKategori = $v->indikator_kategori;
+					$tempSubKategori = $v->indikator_subkategori;
 					$sh++;
 					$countSheet[$sh] = $ssheet->createSheet();
 					$objDrawing = $this->ss->newDrawing();
@@ -214,13 +587,13 @@ class Cetak extends JI_Controller
 					$objDrawing->setOffsetX(150);
 					$objDrawing->setCoordinates('B2');
 					$objDrawing->setWorksheet($countSheet[$sh]);
-					$countSheet[$sh]->setTitle($v['ruangan']);
+					$countSheet[$sh]->setTitle($v->ruangan);
 					$countSheet[$sh]->setCellValue($colAlpha[0] . 2, 'MONITORING KEGIATAN HARIAN PENCEGAHAN PENGENDALIAN INFEKSI DI RUMAH SAKIT UMUM BINA SEHAT')->mergeCells('A' . 2 . ':BL' . 2);
 					$countSheet[$sh]->getStyle('A' . 2 . ':BL' . 2)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
 					$countSheet[$sh]->setCellValue($colAlpha[0] . 4, 'Ruangan');
-					$countSheet[$sh]->setCellValue($colAlpha[1] . 4, ': ' . $v['ruangan']);
+					$countSheet[$sh]->setCellValue($colAlpha[1] . 4, ': ' . $v->ruangan);
 					$countSheet[$sh]->setCellValue($colAlpha[0] . 5, 'Bulan');
-					$countSheet[$sh]->setCellValue($colAlpha[1] . 5, ': ' . $v['bulan_tahun']);
+					$countSheet[$sh]->setCellValue($colAlpha[1] . 5, ': ' . $v->bulan_tahun);
 
 					$countSheet[$sh]->setCellValue($colAlpha[0] . 7, 'NO')->mergeCells('A' . 7 . ':A' . 9);
 					$countSheet[$sh]->getStyle('A' . 7 . ':A' . 9)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
@@ -246,9 +619,9 @@ class Cetak extends JI_Controller
 					}
 
 					//Indikator
-					$countSheet[$sh]->setCellValue($colAlpha[0] . $rowIdx, $v['indikator_kategori'])->mergeCells('A' . $rowIdx . ':BF' . $rowIdx);
+					$countSheet[$sh]->setCellValue($colAlpha[0] . $rowIdx, $v->indikator_kategori)->mergeCells('A' . $rowIdx . ':BF' . $rowIdx);
 					$countSheet[$sh]->setCellValue('BG' . $rowIdx, 'HASIL')->mergeCells('BG' . $rowIdx . ':BJ' . $rowIdx);
-					$countSheet[$sh]->setCellValue('BK' . $rowIdx, $v['aksi_persentase'])->mergeCells('BK' . $rowIdx . ':BL' . $rowIdx);
+					$countSheet[$sh]->setCellValue('BK' . $rowIdx, $v->aksi_persentase)->mergeCells('BK' . $rowIdx . ':BL' . $rowIdx);
 					$countSheet[$sh]->getStyle('A' . $rowIdx . ':BL' . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
 					$countSheet[$sh]->getStyle('A' . $rowIdx . ':BL' . $rowIdx)->getFill()->setFillType('solid')->getStartColor()->setARGB('66bb6a');
 					$rowIdx++;
@@ -264,19 +637,19 @@ class Cetak extends JI_Controller
 						}
 					}
 				}
-				if ($tempTgl != $v['tgl']) {
-					$tempTgl = $v['tgl'];
+				if ($tempTgl != $v->tgl) {
+					$tempTgl = $v->tgl;
 					$rowTgl = 10;
 					$isFirst = false;
 				}
-				if ($tempKategori != $v['indikator_kategori']) {
-					$tempKategori = $v['indikator_kategori'];
+				if ($tempKategori != $v->indikator_kategori) {
+					$tempKategori = $v->indikator_kategori;
 					if ($isFirst) {
 						$nomor = 1;
 						//Indikator
-						$countSheet[$sh]->setCellValue($colAlpha[0] . $rowIdx, $v['indikator_kategori'])->mergeCells('A' . $rowIdx . ':BF' . $rowIdx);
+						$countSheet[$sh]->setCellValue($colAlpha[0] . $rowIdx, $v->indikator_kategori)->mergeCells('A' . $rowIdx . ':BF' . $rowIdx);
 						$countSheet[$sh]->setCellValue('BG' . $rowIdx, 'HASIL')->mergeCells('BG' . $rowIdx . ':BJ' . $rowIdx);
-						$countSheet[$sh]->setCellValue('BK' . $rowIdx, $v['aksi_persentase'])->mergeCells('BK' . $rowIdx . ':BL' . $rowIdx);
+						$countSheet[$sh]->setCellValue('BK' . $rowIdx, $v->aksi_persentase)->mergeCells('BK' . $rowIdx . ':BL' . $rowIdx);
 						$countSheet[$sh]->getStyle('A' . $rowIdx . ':BL' . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
 						$countSheet[$sh]->getStyle('A' . $rowIdx . ':BL' . $rowIdx)->getFill()->setFillType('solid')->getStartColor()->setARGB('66bb6a');
 						$rowIdx++;
@@ -287,14 +660,14 @@ class Cetak extends JI_Controller
 
 			if ($isFirst) {
 				$countSheet[$sh]->getStyle('C' . $rowIdx . ':BL' . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-				$countSheet[$sh]->setCellValue($colAlpha[1] . $rowIdx, $v['indikator_nama']);
+				$countSheet[$sh]->setCellValue($colAlpha[1] . $rowIdx, $v->indikator_nama);
 				$countSheet[$sh]->getStyle($colAlpha[1] . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
 				$countSheet[$sh]->setCellValue($colAlpha[0] . $rowIdx, $nomor);
 				$countSheet[$sh]->getStyle($colAlpha[0] . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
 				$rowIdx++;
 				$nomor++;
 			}
-			$countSheet[$sh]->setCellValue($colTgl[$v['tgl']][$v['aksi']] . $rowTgl, '√');
+			$countSheet[$sh]->setCellValue($colTgl[$v->tgl][$v->aksi] . $rowTgl, '√');
 			$rowTgl++;
 
 			if ($k == count($list) - 1) {
@@ -332,25 +705,25 @@ class Cetak extends JI_Controller
 		// 	foreach ($list as $k => $v) {
 		// 		$colIdx = 0;
 
-		// 		$sheet->setCellValue($colAlpha[0] . $rowIdx, strtoupper($ajm['nama']))->mergeCells('A' . $rowIdx . ':H' . $rowIdx);
+		// 		$sheet->setCellValue($colAlpha[0] . $rowIdx, strtoupper($ajm->nama))->mergeCells('A' . $rowIdx . ':H' . $rowIdx);
 		// 		$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
 		// 		$rowIdx++;
 		// 		$rowIdx++;
 		// 		$sheet->setCellValue($colAlpha[0] . $rowIdx, 'Nama');
 		// 		$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
-		// 		$sheet->setCellValue($colAlpha[2] . $rowIdx, $v['nama']);
+		// 		$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->nama);
 		// 		$rowIdx++;
 		// 		$sheet->setCellValue($colAlpha[0] . $rowIdx, 'Profesi');
 		// 		$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
-		// 		$sheet->setCellValue($colAlpha[2] . $rowIdx, $v['profesi']);
+		// 		$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->profesi);
 		// 		$rowIdx++;
 		// 		$sheet->setCellValue($colAlpha[0] . $rowIdx, 'Unit');
 		// 		$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
-		// 		$sheet->setCellValue($colAlpha[2] . $rowIdx, $v['ruangan']);
+		// 		$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->ruangan);
 		// 		$rowIdx++;
 		// 		$sheet->setCellValue($colAlpha[0] . $rowIdx, 'Tanggal Audit');
 		// 		$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
-		// 		$sheet->setCellValue($colAlpha[2] . $rowIdx, $v['cdate']);
+		// 		$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->cdate);
 		// 		$rowIdx++;
 
 		// 		//Add table
@@ -376,9 +749,9 @@ class Cetak extends JI_Controller
 
 		// 		// Content
 		// 		$rowIdx++;
-		// 		if (isset($v['value']) && is_array($v['value']) && count($v['value'])) {
+		// 		if (isset($v->value) && is_array($v->value) && count($v->value)) {
 		// 			$sumPersen = 0;
-		// 			foreach ($v['value'] as $kvalue => $vvalue) {
+		// 			foreach ($v->value as $kvalue => $vvalue) {
 		// 				$colIdx = 0;
 		// 				$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $aim[$vvalue['indikator']]['nama']);
 		// 				$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
@@ -410,7 +783,7 @@ class Cetak extends JI_Controller
 		// 			}
 		// 		}
 
-		// 		$totalPersentase = $sumPersen ? ceil($sumPersen / (count($v['value']) * 100) * 100) : 0;
+		// 		$totalPersentase = $sumPersen ? ceil($sumPersen / (count($v->value) * 100) * 100) : 0;
 		// 		$sheet->setCellValue($colAlpha[0] . $rowIdx, 'TOTAL')->mergeCells('A' . $rowIdx . ':F' . $rowIdx);
 		// 		$sheet->setCellValue('G' . $rowIdx, $totalPersentase)->mergeCells('G' . $rowIdx . ':H' . $rowIdx);
 		// 		$sheet->getStyle('A' . $rowIdx . ':H' . $rowIdx)->getFill()->setFillType('solid')->getStartColor()->setARGB('d7a510');
@@ -433,7 +806,7 @@ class Cetak extends JI_Controller
 
 
 
-		if ($ajm['slug'] == 'audit-kepatuhan-apd') {
+		if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$media_dir = 'apd';
 		} else {
 			$media_dir = 'monev';
@@ -441,7 +814,7 @@ class Cetak extends JI_Controller
 
 		//save file
 		$save_dir = $this->__checkDir(date("Y/m"), "media/$media_dir/");
-		$save_file = $ajm['slug'];
+		$save_file = $ajm->slug;
 		if ($mindate != $maxdate) {
 			$save_file = $save_file . str_replace('-', '', $mindate) . '-' . str_replace('-', '', $maxdate);
 		} else {
@@ -460,17 +833,17 @@ class Cetak extends JI_Controller
 
 	public function apd()
 	{
-		$content = $_SESSION['content'];
+		$content = $this->_list_for_print();
 		// $_SESSION['content'] = null;
-		$ajm = $content['data']['ajm'];
-		$aim = $content['data']['aim'];
-		$list = $content['data']['list'];
-		$maxdate = $content['data']['maxdate'];
-		$mindate = $content['data']['mindate'];
+		$ajm = $content['ajm'];
+		$aim = $content['aim'];
+		$list = $content['list'];
+		$maxdate = $content['maxdate'];
+		$mindate = $content['mindate'];
 		// dd($list);
 		$newAim = [];
 		foreach ($aim as $k => $v) {
-			$newAim[$v['id']] = $v;
+			$newAim[$v->id] = $v;
 		}
 		$aim = $newAim;
 
@@ -478,7 +851,7 @@ class Cetak extends JI_Controller
 		$ssheet = $this->ss->newSpreadSheet();
 		$ssheet->setActiveSheetIndex(0);
 		$sheet = $ssheet->getActiveSheet();
-		$sheet->setTitle($ajm['nama']);
+		$sheet->setTitle($ajm->nama);
 
 		$aksi = [];
 		if (isset($aim) && is_array($aim) && count($aim)) {
@@ -501,25 +874,25 @@ class Cetak extends JI_Controller
 			foreach ($list as $k => $v) {
 				$colIdx = 0;
 
-				$sheet->setCellValue($colAlpha[0] . $rowIdx, strtoupper($ajm['nama']))->mergeCells('A' . $rowIdx . ':H' . $rowIdx);
+				$sheet->setCellValue($colAlpha[0] . $rowIdx, strtoupper($ajm->nama))->mergeCells('A' . $rowIdx . ':H' . $rowIdx);
 				$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
 				$rowIdx++;
 				$rowIdx++;
 				$sheet->setCellValue($colAlpha[0] . $rowIdx, 'Nama');
 				$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
-				$sheet->setCellValue($colAlpha[2] . $rowIdx, $v['nama']);
+				$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->nama);
 				$rowIdx++;
 				$sheet->setCellValue($colAlpha[0] . $rowIdx, 'Profesi');
 				$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
-				$sheet->setCellValue($colAlpha[2] . $rowIdx, $v['profesi']);
+				$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->profesi);
 				$rowIdx++;
 				$sheet->setCellValue($colAlpha[0] . $rowIdx, 'Unit');
 				$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
-				$sheet->setCellValue($colAlpha[2] . $rowIdx, $v['ruangan']);
+				$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->ruangan);
 				$rowIdx++;
 				$sheet->setCellValue($colAlpha[0] . $rowIdx, 'Tanggal Audit');
 				$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
-				$sheet->setCellValue($colAlpha[2] . $rowIdx, $v['cdate']);
+				$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->cdate);
 				$rowIdx++;
 
 				//Add table
@@ -545,9 +918,9 @@ class Cetak extends JI_Controller
 
 				// Content
 				$rowIdx++;
-				if (isset($v['value']) && is_array($v['value']) && count($v['value'])) {
+				if (isset($v->value) && is_array($v->value) && count($v->value)) {
 					$sumPersen = 0;
-					foreach ($v['value'] as $kvalue => $vvalue) {
+					foreach ($v->value as $kvalue => $vvalue) {
 						$colIdx = 0;
 						$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $aim[$vvalue['indikator']]['nama']);
 						$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
@@ -579,7 +952,7 @@ class Cetak extends JI_Controller
 					}
 				}
 
-				$totalPersentase = $sumPersen ? ceil($sumPersen / (count($v['value']) * 100) * 100) : 0;
+				$totalPersentase = $sumPersen ? ceil($sumPersen / (count($v->value) * 100) * 100) : 0;
 				$sheet->setCellValue($colAlpha[0] . $rowIdx, 'TOTAL')->mergeCells('A' . $rowIdx . ':F' . $rowIdx);
 				$sheet->setCellValue('G' . $rowIdx, $totalPersentase)->mergeCells('G' . $rowIdx . ':H' . $rowIdx);
 				$sheet->getStyle('A' . $rowIdx . ':H' . $rowIdx)->getFill()->setFillType('solid')->getStartColor()->setARGB('d7a510');
@@ -607,7 +980,7 @@ class Cetak extends JI_Controller
 			$sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
 		}
 
-		if ($ajm['slug'] == 'audit-kepatuhan-apd') {
+		if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$media_dir = 'apd';
 		} else {
 			$media_dir = 'monev';
@@ -615,7 +988,7 @@ class Cetak extends JI_Controller
 
 		//save file
 		$save_dir = $this->__checkDir(date("Y/m"), "media/$media_dir/");
-		$save_file = $ajm['slug'];
+		$save_file = $ajm->slug;
 		if ($mindate != $maxdate) {
 			$save_file = $save_file . str_replace('-', '', $mindate) . '-' . str_replace('-', '', $maxdate);
 		} else {

@@ -26,6 +26,8 @@ class C_Asesmen_Concern extends \JI_Model
     public $tbl5_as = 'aj';
     public $tbl6 = 'a_jabatan';
     public $tbl6_as = 'ajb';
+    public $tbl7 = 'a_jabatan'; // untuk penilai
+    public $tbl7_as = 'ajb2';
 
     const COLUMNS = [
         'a_jpenilaian_id',
@@ -96,6 +98,7 @@ class C_Asesmen_Concern extends \JI_Model
             ["$this->tbl_as.id", 'id', 'ID'],
             ["COALESCE($this->tbl2_as.fnama, '')", 'nama', 'nama'],
             ["COALESCE($this->tbl3_as.fnama, '')", 'nama_penilai', 'Penilai'],
+            ["COALESCE($this->tbl7_as.nama, '')", 'jabatan_penilai', 'Jabatan Penilai'],
             ["COALESCE($this->tbl4_as.nama, '')", 'ruangan', 'Ruangan'],
             ["COALESCE($this->tbl5_as.slug, '')", 'slug', 'Slug'],
             ["COALESCE($this->tbl6_as.nama, '')", 'profesi', 'Profesi'],
