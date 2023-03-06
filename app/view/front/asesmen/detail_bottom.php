@@ -104,6 +104,13 @@ $("#cari_user").select2({
 	}
 });
 
+let form_hygiene = '';
+$(document).on('ready',() => {
+	if(<?= $type_form ?> == 1){
+		form_hygiene = $(".parent").html();
+	}		
+})
+
 $("#pilih_user").on('click', function(e){
     e.preventDefault();
     var id = $('#cari_user').find('option:selected').val();
@@ -116,6 +123,7 @@ $("#pilih_user").on('click', function(e){
             $("#ia_jabatan_id").val(dt.data.a_jabatan_id).select2();
             $("#ia_ruangan_id").val(dt.data.a_unit_id).select2();
             $("#modal_cari_user").modal('hide');
+			$('.progress').slideUp();
             <?php if($ajm->slug == 'audit-hand-hygiene') : ?>
                 if(dt.data.jumlah_penilaian){
 					var message = '';
@@ -128,7 +136,7 @@ $("#pilih_user").on('click', function(e){
                     $('.progress-bar').css('width', dt.data.progress_penilaian+'%').attr('aria-valuenow', dt.data.progress_penilaian).text(message); 
                     $('.progress').slideDown();
                 }
-				if(dt.data.histori_penilaian){
+				if(dt.data.histori_penilaian && dt.data.histori_penilaian.length > 0){
 					var penilaian = dt.data.histori_penilaian;
 					console.log(penilaian, 'penilaian');
 					if(penilaian && penilaian.length >= 10){
@@ -140,6 +148,8 @@ $("#pilih_user").on('click', function(e){
 					$.each(penilaian, function(k,v){
 						$("#panel-item-asesmen-"+k).empty();
 					})
+				}else{
+					$(".parent").html(form_hygiene);
 				}
             <?php else : ?>
                 $('.progress').slideUp();

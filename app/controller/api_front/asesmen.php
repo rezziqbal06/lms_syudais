@@ -202,18 +202,20 @@ class Asesmen extends JI_Controller
 				$params[] = $v->id;
 			}
 			foreach ($a_indikator_id as $k => $v) {
-				$value[$k]['b_user_id'] = isset($penilais[$k]) ? $penilais[$k] : 0;
-				$value[$k]['indikator'] = $v;
-				$aksi = [];
-				$nilai_per_item = 0;
-				foreach ($a_indikator_aksi[$k] as $k1 => $v1) {
-					$aksi[] = $k1;
-					if (in_array($k1, $params)) {
-						$nilai_per_item++;
+				if(isset($a_indikator_aksi[$k]) && $a_indikator_aksi[$k] != ""){
+					$value[$k]['b_user_id'] = isset($penilais[$k]) ? $penilais[$k] : 0;
+					$value[$k]['indikator'] = $v;
+					$aksi = [];
+					$nilai_per_item = 0;
+					foreach ($a_indikator_aksi[$k] as $k1 => $v1) {
+						$aksi[] = $k1;
+						if (in_array($k1, $params)) {
+							$nilai_per_item++;
+						}
 					}
+					$persentase += ($nilai_per_item / count($params)) * 100;
+					$value[$k]['aksi'] = $aksi;
 				}
-				$persentase += ($nilai_per_item / count($params)) * 100;
-				$value[$k]['aksi'] = $aksi;
 			}
 			$total_persentase = ($persentase / (count($a_indikator_id) * 100)) * 100;
 			$this->cam->columns['nilai']->value = ceil($total_persentase);
