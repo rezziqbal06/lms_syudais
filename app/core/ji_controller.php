@@ -534,7 +534,6 @@ class JI_Controller extends \SENE_Controller
         if (strlen($filename) <= 0) {
             $filename = basename($pathFile);
         }
-        ob_end_clean();
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename=' . $filename);
