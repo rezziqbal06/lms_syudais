@@ -16,7 +16,9 @@
     background: linear-gradient(149deg, var(--secondary) 11%, var(--primary) 76%);
 }
 
-
+.btn {
+    margin-bottom:0 !important;
+}
 .btn-group-vertical .btn{
     margin-bottom:0 !important;
 }

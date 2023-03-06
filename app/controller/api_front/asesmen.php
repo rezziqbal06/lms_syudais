@@ -150,6 +150,7 @@ class Asesmen extends JI_Controller
 		$this->cam->columns['durasi']->value = $timediff->h . '.' . $timediff->i;
 
 		$penilais = $this->input->request('b_user_id_penilais');
+		$nomor = $this->input->request('nomor');
 		$value = [];
 		if ($ajm->slug == 'audit-hand-hygiene') {
 			$nilai = 0;
@@ -157,12 +158,14 @@ class Asesmen extends JI_Controller
 			$indikator = $this->input->request('a_indikator_id');
 			if (is_array($indikator) && count($indikator)) {
 				foreach ($indikator as $k => $v) {
-					$value[$k]['b_user_id'] = isset($penilais[$k]) ? $penilais[$k] : 0;
-					$value[$k]['indikator'] = $v;
-					$value[$k]['aksi'] = $this->input->request('a_aksi_id_' . $k, null);
-					$aksi = $this->aim->id($value[$k]['aksi']);
-					if (isset($aksi->nama) && ($aksi->nama == 'HW' || $aksi->nama == 'HR')) {
-						$nilai++;
+					if (!empty((int) $v) && !empty((int) $this->input->request('a_aksi_id_' . $nomor[$k], null))) {
+						$value[$k]['b_user_id'] = isset($penilais[$k]) ? $penilais[$k] : 0;
+						$value[$k]['indikator'] = $v;
+						$value[$k]['aksi'] = $this->input->request('a_aksi_id_' . $nomor[$k], null);
+						$aksi = $this->aim->id($value[$k]['aksi']);
+						if (isset($aksi->nama) && ($aksi->nama == 'HW' || $aksi->nama == 'HR')) {
+							$nilai++;
+						}
 					}
 				}
 				$this->cam->columns['nilai']->value = $nilai;
@@ -218,7 +221,6 @@ class Asesmen extends JI_Controller
 		}
 		$json_value = json_encode($value);
 		$this->cam->columns['value']->value = $json_value;
-
 		$res = $this->cam->save();
 		if ($res) {
 			if ($ajm->slug != 'audit-kepatuhan-apd') {
@@ -375,15 +377,18 @@ class Asesmen extends JI_Controller
 			$value = [];
 			$indikator = $this->input->request('a_indikator_id');
 			$penilais = $this->input->request('b_user_id_penilais');
+			$nomor = $this->input->request('nomor');
 			if (is_array($indikator) && count($indikator)) {
 				foreach ($indikator as $k => $v) {
-					$value[$k]['c_asesmen_id'] = $id;
-					$value[$k]['b_user_id'] = isset($penilais[$k]) ? $penilais[$k] : 0;
-					$value[$k]['indikator'] = $v;
-					$value[$k]['aksi'] = $this->input->request('a_aksi_id_' . $k, null);
-					$aksi = $this->aim->id($value[$k]['aksi']);
-					if (isset($aksi->nama) && ($aksi->nama == 'HW' || $aksi->nama == 'HR')) {
-						$nilai++;
+					if (!empty((int) $v) && !empty((int) $this->input->request('a_aksi_id_' . $nomor[$k], null))) {
+						$value[$k]['c_asesmen_id'] = $id;
+						$value[$k]['b_user_id'] = isset($penilais[$k]) ? $penilais[$k] : 0;
+						$value[$k]['indikator'] = $v;
+						$value[$k]['aksi'] = $this->input->request('a_aksi_id_' . $nomor[$k], null);
+						$aksi = $this->aim->id($value[$k]['aksi']);
+						if (isset($aksi->nama) && ($aksi->nama == 'HW' || $aksi->nama == 'HR')) {
+							$nilai++;
+						}
 					}
 				}
 

@@ -107,7 +107,8 @@ $("#cari_user").select2({
 $("#pilih_user").on('click', function(e){
     e.preventDefault();
     var id = $('#cari_user').find('option:selected').val();
-    $.get('<?=base_url('api_front/user/detail/')?>' + id + '/' + '?jenis_penilaian=<?=$ajm->slug?>').done(function(dt){
+	var cdate = $('#tgl_asesmen').val();
+    $.get('<?=base_url('api_front/user/detail/')?>' + id + '/' + '?jenis_penilaian=<?=$ajm->slug?>&cdate='+cdate).done(function(dt){
         if(dt.data){
             $("#ib_user_id").val(id);
             $("#iuser").val(dt.data.fnama);
@@ -117,7 +118,14 @@ $("#pilih_user").on('click', function(e){
             $("#modal_cari_user").modal('hide');
             <?php if($ajm->slug == 'audit-hand-hygiene') : ?>
                 if(dt.data.jumlah_penilaian){
-                    $('.progress-bar').css('width', dt.data.progress_penilaian+'%').attr('aria-valuenow', dt.data.progress_penilaian).text(dt.data.jumlah_penilaian); 
+					var message = '';
+					if(dt.data.jumlah_penilaian >= 10){
+						$('.progress-bar').addClass('bg-warning');
+						message = 'penilaian sudah maksimal di bulan ini (10 kali)';
+					}else{
+						message = dt.data.jumlah_penilaian+' kali penilaian di bulan ini';
+					}
+                    $('.progress-bar').css('width', dt.data.progress_penilaian+'%').attr('aria-valuenow', dt.data.progress_penilaian).text(message); 
                     $('.progress').slideDown();
                 }
 				if(dt.data.histori_penilaian){
@@ -126,13 +134,11 @@ $("#pilih_user").on('click', function(e){
 					if(penilaian && penilaian.length >= 10){
 						var pesan = `Penilaian untuk ${dt.data.fnama} sudah selesai dikerjakan/sudah 10kali kesempatan. Silakan untuk kembali`;
 						var a = alert(pesan);
-						if(a){
-							history.back();
-						}
+						history.back();
 						$(".btn-submit").hide();				
 					}
 					$.each(penilaian, function(k,v){
-
+						$("#panel-item-asesmen-"+k).empty();
 					})
 				}
             <?php else : ?>
@@ -347,18 +353,25 @@ $('#tgl_asesmen').datepicker({format: 'yyyy-mm-dd'})
 <?php } ?>
 if(<?= $type_form ?> == 1){
 	var val_edit = <?= isset($value) ? json_encode($value) : json_encode([]) ?>;
-	$('.progress-bar').removeClass('bg-warning');
-	if(val_edit.length >= 10){
-		<!-- $(".btn-submit").hide(); -->
-		$('.progress-bar').addClass('bg-warning');
+	if(val_edit.length > 0){
+		$('.progress-bar').removeClass('bg-warning');
+		var items = val_edit.length;
+		var progress = Math.round(items/10*100);
+		if(val_edit.length >= 10){
+			$(".btn-submit").hide();
+			$('.progress-bar').addClass('bg-warning');
+			items = 'penilaian sudah maksimal di bulan ini (10 kali)';
+		}else{
+			items = items+' kali penilaian di bulan ini';
+		}
+		$('.progress').slideUp();
+		if(items){
+			$('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress).text(items); 
+			$('.progress').slideDown();
+			console.log('slide down', items)
+		}
 	}
-	var items = val_edit.length;
-	var progress = Math.round(items/10*100);
-	$('.progress').slideUp();
-	if(items){
-		$('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress).text(items); 
-		$('.progress').slideDown();
-	}
+
 	
 }else if(<?= $type_form ?> == 2){
 	$("#ia_ruangan_id").on('change', function(e){

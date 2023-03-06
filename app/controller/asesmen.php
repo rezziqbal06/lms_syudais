@@ -20,6 +20,7 @@ class Asesmen extends JI_Controller
 		$this->load('b_user_concern');
 		$this->load('b_user_module_concern');
 		$this->load('c_asesmen_concern');
+		$this->load('d_value_concern');
 
 		$this->load('front/a_jpenilaian_model', 'ajm');
 		$this->load('front/a_indikator_model', 'aim');
@@ -28,6 +29,7 @@ class Asesmen extends JI_Controller
 		$this->load('front/b_user_model', 'bum');
 		$this->load('front/b_user_module_model', 'bumm');
 		$this->load('front/c_asesmen_model', 'cam');
+		$this->load('api_front/d_value_model', 'dvm');
 	}
 
 	public function index()
@@ -192,8 +194,12 @@ class Asesmen extends JI_Controller
 			die();
 		}
 		$cam->b_user_name = $user->fnama ?? '';
-
-		$value = json_decode($cam->value);
+		$bulan = date('m', strtotime($cam->cdate));
+		if ($ajm->slug == 'audit-hand-hygiene') {
+			$value = $this->dvm->getByFilter($user->id, $cam->b_user_id_penilai, $ajm->id, date('Y-' . (int)$bulan . '-1'), date('Y-' . (int)$bulan . '-t'));
+		} else {
+			$value = json_decode($cam->value);
+		}
 		// dd($value);
 		$type_form = 1;
 		if (in_array($ajm->slug, ['audit-hand-hygiene'])) {
