@@ -108,7 +108,9 @@ let form_hygiene = '';
 $(document).on('ready',() => {
 	if(<?= $type_form ?> == 1){
 		form_hygiene = $(".parent").html();
-	}		
+	}else if(<?= $type_form ?> == 3){
+		form_hygiene = $(".parent").html();
+	}
 })
 
 $("#pilih_user").on('click', function(e){
