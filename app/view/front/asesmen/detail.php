@@ -228,8 +228,10 @@
 				<?php endif ?>
 			</div>
 		<?php } else if ($type_form == 3) { ?>
+			<?php //dd($value[0]->aksi) ?>
+			<div class="parent">
 			<?php for ($i = 0; $i < 10; $i++) : ?>
-				<div class="row">
+				<div class="row" id="panel-item-asesmen-<?= $i ?>">
 					<div class="col-md-1 transition">
 						<p class="nomor float-end"><?= $i + 1 ?></p>
 					</div>
@@ -257,7 +259,7 @@
 										<div class="form-check">
 											<label class="switch" for="checkbox_<?= $i ?>_<?= $v->id ?>">
 												<h5><?= $v->nama ?></h5>
-												<input type="checkbox" name="a_indikator_aksi[<?= $i ?>][<?= $v->id ?>]" id="checkbox_<?= $i ?>_<?= $v->id ?>" />
+												<input type="checkbox" <?= isset($value) && is_array($value) &&  isset($value[$i]->aksi) && is_array($value) &&  in_array($v->id, $value[$i]->aksi) ? 'checked' : '' ?> <?= (isset($value) && is_array($value) && isset($value[$i]->indikator) && !empty($value[$i]->aksi) ? 'disabled' : '') ?> name="a_indikator_aksi[<?= $i ?>][<?= $v->id ?>]" id="checkbox_<?= $i ?>_<?= $v->id ?>" />
 												<div class="slider round"></div>
 											</label>
 										</div>
@@ -266,9 +268,10 @@
 							<?php endif ?>
 						</div>
 					</div>
+					<hr>
 				</div>
-				<hr>
 			<?php endfor ?>
+			</div>
 			<!-- <div class="col-md-12 ">
 				<button class="btn btn-success bg-primary float-end" onclick=""><i class="fas fa-plus"></i></button>
 			</div> -->
