@@ -11,9 +11,11 @@ class User extends JI_Controller
     $this->load("b_user_concern");
     $this->load("c_asesmen_concern");
     $this->load("a_jpenilaian_concern");
+    $this->load("d_value_concern");
     $this->load("api_front/a_jpenilaian_model", 'ajm');
     $this->load("api_front/b_user_model", 'bum');
     $this->load("api_front/c_asesmen_model", 'cam');
+    $this->load("api_front/d_value_model", 'dvm');
   }
   private function __genRegKode($user_id, $api_reg_token)
   {
@@ -459,18 +461,29 @@ class User extends JI_Controller
     }
 
     $slug = $this->input->request('jenis_penilaian');
+    $cdate = $this->input->request('cdate', 0);
     if (isset($slug)) {
       $ajm = $this->ajm->getBySlug($slug);
     }
 
+    $bulan = date('m');
+    if (!empty($cdate)) {
+      $bulan = date('m', strtotime($cdate));
+    }
+
     $data = $this->bum->id($id);
 
-    $user_id = $d['sess']->user->id;
-    $asesmen = $this->cam->getByFilter($id, $user_id, $ajm->id, date('Y-m-d'), date('Y-m-t'));
+    $penilai_id = $d['sess']->user->id;
+    if ($slug == 'audit-hand-hygiene') {
+      $asesmen = $this->dvm->getByFilter($id, $penilai_id, $ajm->id, date('Y-' . (int)$bulan . '-1'), date('Y-' . (int)$bulan . '-t'));
+    } else {
+      $asesmen = $this->cam->getByFilter($id, $penilai_id, $ajm->id, date('Y-m-d'), date('Y-m-t'));
+    }
     $jumlah_penilaian = count($asesmen);
     $progress_penilaian = $jumlah_penilaian > 0 ? $jumlah_penilaian / 10 * 100 : 0;
     $data->jumlah_penilaian = $jumlah_penilaian;
     $data->progress_penilaian = $progress_penilaian;
+    $data->histori_penilaian = $asesmen;
 
     $this->status = 200;
     $this->message = 'Berhasil';

@@ -26,6 +26,8 @@ class D_Value_Concern extends \JI_Model
     public $tbl5_as = 'aj';
     public $tbl6 = 'a_ruangan';
     public $tbl6_as = 'ar';
+    public $tbl7 = 'b_user';
+    public $tbl7_as = 'bu';
 
     const COLUMNS = [
         'c_asesmen_id',

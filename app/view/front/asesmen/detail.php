@@ -99,8 +99,10 @@
 					<label for="iuser">Nama</label>
 					<input type="hidden" name="b_user_id" id="ib_user_id" value="<?= $cam->b_user_id ?? '' ?>">
 					<div class="input-group">
-						<input type="text" class="form-control" placeholder="Nama" aria-label="Nama" id="iuser" name="user" value="<?= $cam->b_user_name ?? '' ?>">
-						<button class="btn btn-secondary" type="button" id="btn_cari_user">Cari</button>
+						<input type="text" class="form-control" placeholder="Nama" aria-label="Nama" id="iuser" name="user" value="<?= $cam->b_user_name ?? '' ?>" <?= isset($cam->b_user_id) ? 'readonly' : '' ?>>
+						<?php if (!isset($cam->b_user_id)) { ?>
+							<button class="btn btn-secondary" type="button" id="btn_cari_user">Cari</button>
+						<?php } ?>
 					</div>
 				</div>
 				<div class="col-md-4">
@@ -144,45 +146,49 @@
 		</div>
 	</div>
 
-	<div class="panel-body p-3 row mb-5">
+	<div class="panel-body p-3 mb-5">
 		<?php if ($type_form == 1) { ?>
 			<?php for ($i = 0; $i < 10; $i++) : ?>
-				<div class="col-md-1">
-					<p class="nomor float-end"><?= $i + 1 ?></p>
-				</div>
-				<div class="col-md-11 row">
-					<input type="hidden" id="ib_user_id_penilais_<?= $i ?>" name="b_user_id_penilais[]" value="<?= isset($sess->user->id) ? $sess->user->id : '' ?>">
-					<div class="col-md-6">
-						<label for="ia_indikator_id_select_">Indikator</label>
-						<input type="hidden" id="ia_indikator_id_<?= $i ?>" name="a_indikator_id[]" value="<?= isset($value) && is_array($value) && isset($value[$i]->indikator) ? $value[$i]->indikator : '' ?>">
-						<select type="text" class="form-control select2 indikator-select" placeholder="Indikator" id="ia_indikator_id_select_<?= $i ?>" data-count="<?= $i ?>" <?= isset($value) && is_array($value) &&  isset($value[$i]->indikator) && !empty($value[$i]->aksi) ? 'disabled' : '' ?>>
-							<option value="0">-- pilih indikator --</option>
+				<?php if (isset($value[$i]->c_asesmen_id) && isset($cam->id) && $value[$i]->c_asesmen_id != $cam->id) continue; ?>
+				<div class="row" id="panel-item-asesmen-<?= $i ?>">
+					<div class="col-md-1">
+						<p class="nomor float-end"><?= $i + 1 ?></p>
+						<input type="hidden" name="nomor[]" value="<?= $i ?>">
+					</div>
+					<div class="col-md-11 row">
+						<input type="hidden" id="ib_user_id_penilais_<?= $i ?>" name="b_user_id_penilais[]" value="<?= isset($sess->user->id) ? $sess->user->id : '' ?>">
+						<div class="col-md-6">
+							<label for="ia_indikator_id_select_">Indikator</label>
+							<input type="hidden" id="ia_indikator_id_<?= $i ?>" name="a_indikator_id[]" value="<?= isset($value) && is_array($value) && isset($value[$i]->indikator) ? $value[$i]->indikator : '' ?>">
+							<select type="text" class="form-control select2 indikator-select" placeholder="Indikator" id="ia_indikator_id_select_<?= $i ?>" data-count="<?= $i ?>" <?= isset($value) && is_array($value) &&  isset($value[$i]->indikator) && !empty($value[$i]->aksi) ? 'disabled' : '' ?>>
+								<option value="0">-- pilih indikator --</option>
+								<?php if (isset($aim) && count($aim)) : ?>
+									<?php foreach ($aim as $k => $v) : ?>
+										<?php if ($v->type == 'indikator') : ?>
+											<option value="<?= $v->id ?>" <?= isset($value) && is_array($value) && isset($value[$i]->indikator) &&  $v->id == $value[$i]->indikator ? 'selected' : '' ?>><?= $v->nama ?></option>
+										<?php endif ?>
+									<?php endforeach ?>
+								<?php endif ?>
+							</select>
+						</div>
+						<div class="col-md-6">
+							<label for="ia_aksi_id_">Aksi</label>
 							<?php if (isset($aim) && count($aim)) : ?>
 								<?php foreach ($aim as $k => $v) : ?>
-									<?php if ($v->type == 'indikator') : ?>
-										<option value="<?= $v->id ?>" <?= isset($value) && is_array($value) && isset($value[$i]->indikator) &&  $v->id == $value[$i]->indikator ? 'selected' : '' ?>><?= $v->nama ?></option>
+									<?php if ($v->type == 'aksi') : ?>
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="a_aksi_id_<?= $i ?>" value="<?= $v->id ?>" id="ia_aksi_id_<?= $i ?>_<?= $v->id ?>" <?= isset($value) && is_array($value) &&  isset($value[$i]->aksi) && is_array($value) &&  $v->id == $value[$i]->aksi ? 'checked' : (isset($value) && is_array($value) && isset($value[$i]->indikator) && !empty($value[$i]->aksi) ? 'disabled' : '') ?>>
+											<label class="form-check-label" for="ia_aksi_id_<?= $i ?>_<?= $v->id ?>">
+												<?= $v->nama ?>
+											</label>
+										</div>
 									<?php endif ?>
 								<?php endforeach ?>
 							<?php endif ?>
-						</select>
+						</div>
 					</div>
-					<div class="col-md-6">
-						<label for="ia_aksi_id_">Aksi</label>
-						<?php if (isset($aim) && count($aim)) : ?>
-							<?php foreach ($aim as $k => $v) : ?>
-								<?php if ($v->type == 'aksi') : ?>
-									<div class="form-check">
-										<input class="form-check-input" type="radio" name="a_aksi_id_<?= $i ?>" value="<?= $v->id ?>" id="ia_aksi_id_<?= $i ?>_<?= $v->id ?>" <?= isset($value) && is_array($value) &&  isset($value[$i]->aksi) && is_array($value) &&  $v->id == $value[$i]->aksi ? 'checked' : (isset($value) && is_array($value) && isset($value[$i]->indikator) && !empty($value[$i]->aksi) ? 'disabled' : '') ?>>
-										<label class="form-check-label" for="ia_aksi_id_<?= $i ?>_<?= $v->id ?>">
-											<?= $v->nama ?>
-										</label>
-									</div>
-								<?php endif ?>
-							<?php endforeach ?>
-						<?php endif ?>
-					</div>
+					<hr>
 				</div>
-				<hr>
 			<?php endfor ?>
 		<?php } else if ($type_form == 2) { ?>
 			<div class="col-md-12 transition">

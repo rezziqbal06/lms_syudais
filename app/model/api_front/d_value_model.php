@@ -55,6 +55,7 @@ class D_Value_Model extends \Model\D_Value_Concern
     $this->db->join($this->tbl3, $this->tbl3_as, 'id', $this->tbl_as, 'indikator', 'left');
     $this->db->join($this->tbl5, $this->tbl5_as, 'id', $this->tbl2_as, 'a_jpenilaian_id', 'left');
     $this->db->join($this->tbl6, $this->tbl6_as, 'id', $this->tbl2_as, 'a_ruangan_id', 'left');
+    $this->db->join($this->tbl7, $this->tbl7_as, 'id', $this->tbl2_as, 'b_user_id_penilai', 'left');
 
     return $this;
   }
@@ -97,9 +98,18 @@ class D_Value_Model extends \Model\D_Value_Concern
 
   public function getByFilter($user_id, $penilai_id, $ajm_id, $sdate, $edate)
   {
-    $this->db->where('b_user_id', $user_id)->where('b_user_id_penilai', $penilai_id);
-    $this->db->where('a_jpenilaian_id', $ajm_id);
-    $this->db->between("DATE($this->tbl_as.cdate)", "DATE('$sdate')", "DATE('$edate')");
+    $this->db->select_as("$this->tbl_as.id", 'id', 0);
+    $this->db->select_as("$this->tbl_as.indikator", 'indikator', 0);
+    $this->db->select_as("$this->tbl_as.aksi", 'aksi', 0);
+    $this->db->select_as("$this->tbl_as.c_asesmen_id", 'c_asesmen_id', 0);
+    $this->db->select_as("COALESCE($this->tbl7_as.fnama,'')", 'penilai', 0);
+    $this->db->select_as("COALESCE($this->tbl2_as.b_user_id_penilai,'')", 'b_user_id_penilai', 0);
+    $this->db->select_as("COALESCE($this->tbl2_as.cdate,'')", 'cdate', 0);
+    $this->db->from($this->tbl, $this->tbl_as);
+    $this->join_company();
+    $this->db->where_as("$this->tbl2_as.b_user_id", $this->db->esc($user_id));
+    $this->db->where_as("$this->tbl2_as.a_jpenilaian_id", $this->db->esc($ajm_id));
+    $this->db->between("DATE($this->tbl2_as.cdate)", "DATE('$sdate')", "DATE('$edate')");
     return $this->db->get('', 0);
   }
 
