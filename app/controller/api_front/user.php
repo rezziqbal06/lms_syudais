@@ -477,8 +477,15 @@ class User extends JI_Controller
     if ($slug == 'audit-hand-hygiene') {
       $asesmen = $this->dvm->getByFilter($id, $penilai_id, $ajm->id, date('Y-' . (int)$bulan . '-1'), date('Y-' . (int)$bulan . '-t'));
     } else {
-      $asesmen = $this->cam->getByFilter($id, $penilai_id, $ajm->id, date('Y-m-d'), date('Y-m-t'));
+      $asesmen = $this->cam->getByFilter($id, $penilai_id, $ajm->id, date('Y-'.(int)$bulan.'-d'), date('Y-'.(int)$bulan.'-t'));
+      // dd(json_decode($asesmen[0]->value));
+      if(count($asesmen) > 0){
+        $asesmen = json_decode($asesmen[0]->value);
+      }else{
+        $asesmen = [];
+      }
     }
+    // dd($asesmen);
     $jumlah_penilaian = count($asesmen);
     $progress_penilaian = $jumlah_penilaian > 0 ? $jumlah_penilaian / 10 * 100 : 0;
     $data->jumlah_penilaian = $jumlah_penilaian;

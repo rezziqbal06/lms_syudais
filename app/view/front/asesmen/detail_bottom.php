@@ -108,7 +108,9 @@ let form_hygiene = '';
 $(document).on('ready',() => {
 	if(<?= $type_form ?> == 1){
 		form_hygiene = $(".parent").html();
-	}		
+	}else if(<?= $type_form ?> == 3){
+		form_hygiene = $(".parent").html();
+	}
 })
 
 $("#pilih_user").on('click', function(e){
@@ -125,6 +127,7 @@ $("#pilih_user").on('click', function(e){
             $("#modal_cari_user").modal('hide');
 			$('.progress').slideUp();
             <?php if($ajm->slug == 'audit-hand-hygiene') : ?>
+				console.log('ini hand higene');
                 if(dt.data.jumlah_penilaian){
 					var message = '';
 					if(dt.data.jumlah_penilaian >= 10){
@@ -151,9 +154,37 @@ $("#pilih_user").on('click', function(e){
 				}else{
 					$(".parent").html(form_hygiene);
 				}
-            <?php else : ?>
-                $('.progress').slideUp();
             <?php endif; ?>
+
+			<?php if($ajm->slug == 'audit-kepatuhan-apd') :?>
+				console.log('dt', dt);
+				if(dt.data.jumlah_penilaian){
+					var message = '';
+					if(dt.data.jumlah_penilaian >= 10){
+						$('.progress-bar').addClass('bg-warning');
+						message = 'penilaian sudah maksimal di bulan ini (10 kali)';
+					}else{
+						message = dt.data.jumlah_penilaian+' kali penilaian di bulan ini';
+					}
+                    $('.progress-bar').css('width', dt.data.progress_penilaian+'%').attr('aria-valuenow', dt.data.progress_penilaian).text(message); 
+                    $('.progress').slideDown();
+                }
+				if(dt.data.histori_penilaian && dt.data.histori_penilaian.length > 0){
+					var penilaian = dt.data.histori_penilaian;
+					console.log(penilaian, 'penilaian');
+					if(penilaian && penilaian.length >= 10){
+						var pesan = `Penilaian untuk ${dt.data.fnama} sudah selesai dikerjakan/sudah 10kali kesempatan. Silakan untuk kembali`;
+						var a = alert(pesan);
+						history.back();
+						$(".btn-submit").hide();				
+					}
+					$.each(penilaian, function(k,v){
+						$("#panel-item-asesmen-"+k).empty();
+					})
+				}else{
+					$(".parent").html(form_hygiene);
+				}
+			<?php endif; ?>
         } 
     })
 })
@@ -407,7 +438,7 @@ if(<?= $type_form ?> == 1){
 } else if(<?= $type_form ?> == 3){
 	console.log(<?= $type_form ?>);
 	var val_edit = <?= isset($value) ? json_encode($value) : json_encode([]) ?>;
-	if(val_edit.length > 1){
+	if(val_edit.length > 0){
 		console.log(val_edit);
 		$.each(val_edit, function(k,v){
 			$.each(v.aksi,function(k1,v1){
@@ -415,6 +446,23 @@ if(<?= $type_form ?> == 1){
 				$("#checkbox_"+v1+"_"+v.indikator).prop('checked', true);
 			})
 		});
+		
+		$('.progress-bar').removeClass('bg-warning');
+		var items = val_edit.length;
+		var progress = Math.round(items/10*100);
+		if(val_edit.length >= 10){
+			$(".btn-submit").hide();
+			$('.progress-bar').addClass('bg-warning');
+			items = 'penilaian sudah maksimal di bulan ini (10 kali)';
+		}else{
+			items = items+' kali penilaian di bulan ini';
+		}
+		$('.progress').slideUp();
+		if(items){
+			$('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress).text(items); 
+			$('.progress').slideDown();
+			console.log('slide down', items)
+		}
 	}
 }
 
