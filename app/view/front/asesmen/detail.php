@@ -226,7 +226,7 @@
 				<?php endif ?>
 			</div>
 		<?php } else if ($type_form == 3) { ?>
-			<?php for ($i = 0; $i < 1; $i++) : ?>
+			<?php for ($i = 0; $i < 10; $i++) : ?>
 				<div class="col-md-1 transition">
 					<p class="nomor float-end"><?= $i + 1 ?></p>
 				</div>
@@ -265,9 +265,9 @@
 				</div>
 				<hr>
 			<?php endfor ?>
-			<div class="col-md-12 ">
+			<!-- <div class="col-md-12 ">
 				<button class="btn btn-success bg-primary float-end" onclick=""><i class="fas fa-plus"></i></button>
-			</div>
+			</div> -->
 		<?php } ?>
 	</div>
 
