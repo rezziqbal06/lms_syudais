@@ -550,19 +550,56 @@ function printApd(respon){
 
 $("#btn_print").on('click', function(e){
 	e.preventDefault();
-	
-	var fd = $("#ffilter").serialize();
+	var fd = $("#ffilter").serialize();var fd = new FormData($("#ffilter")[0]);
 	if(fd){
-		fd += '&a_jpenilaian_id='+$('#jenis_penilaian').find('option:selected').val();
+		fd.append('a_jpenilaian_id', $('#jenis_penilaian').find('option:selected').val());
 	}
+	
 	var name = $('#jenis_penilaian').find('option:selected').text();
 	var url = '';
 	if(name == 'Audit Hand Hygiene'){
+		var fd = $("#ffilter").serialize();
+		if(fd){
+			fd += '&a_jpenilaian_id='+$('#jenis_penilaian').find('option:selected').val();
+		}
 		url = '<?=base_url('cetak/hh/?')?>'+fd;
+		window.open(url, 'blank');
 	}else if(name == 'Audit Kepatuhan APD'){
-		url = '<?=base_url('cetak/apd/?')?>'+fd;
+		url = '<?=base_url('cetak/apd/?')?>'
 	}else{
-		url = '<?=base_url('cetak/monev/?')?>'+fd;
+		url = '<?=base_url('cetak/monev/?')?>'
 	}
-	window.open(url, 'blank');
+
+	if(name != 'Audit Hand Hygiene'){
+		$.ajax({
+			url: url,
+			data: fd,
+			processData: false,
+			contentType: false,
+			type: 'POST',
+			success: function(respon){
+				if(respon.status==200){
+					var link = document.createElement('a');
+					link.href = respon.data.url;
+					link.click();
+				}else{
+					gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
+				}
+				$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
+				$('.btn-submit').prop('disabled',false);
+				NProgress.done();
+			},
+			error:function(){
+				setTimeout(function(){
+					gritter('<h4>Error</h4><p>Tidak dapat menambah data, silahkan coba beberapa saat lagi</p>','warning');
+				}, 666);
+
+				$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
+				$('.btn-submit').prop('disabled',false);
+				NProgress.done();
+				return false;
+			}
+		});
+	}
+	
 })

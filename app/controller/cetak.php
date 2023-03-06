@@ -432,6 +432,13 @@ class Cetak extends JI_Controller
 	public function monev()
 	{
 		$content = $this->_list_for_print();
+		$json_data = [];
+		if ($content['status'] != 200) {
+			$this->status = $content['status'];
+			$this->message = $content['message'];
+			$this->__json_out($json_data);
+			die();
+		}
 		// $_SESSION['content'] = null;
 		$ajm = $content['ajm'];
 		$aim = $content['aim'];
@@ -826,14 +833,25 @@ class Cetak extends JI_Controller
 		if (file_exists($save_dir . '/' . $save_file . '.xlsx')) unlink($save_dir . '/' . $save_file . '.xlsx');
 		$swriter->save($save_dir . '/' . $save_file . '.xlsx');
 
-		$download_path = str_replace(SEMEROOT, '/', $save_dir . '/' . $save_file . '.xlsx');
+		$download_path = str_replace(SEMEROOT, '', $save_dir . '/' . $save_file . '.xlsx');
 		// echo '<a href="' . base_url($download_path) . '">' . base_url($download_path) . '</a>';
-		$this->__forceDownload($save_dir . '/' . $save_file . '.xlsx');
+		$json_data = [];
+		$json_data['url'] = base_url($download_path);
+		$this->status = 200;
+		$this->message = 'OK';
+		$this->__json_out($json_data);
 	}
 
 	public function apd()
 	{
+		$json_data = [];
 		$content = $this->_list_for_print();
+		if ($content['status'] != 200) {
+			$this->status = $content['status'];
+			$this->message = $content['message'];
+			$this->__json_out($json_data);
+			die();
+		}
 		// $_SESSION['content'] = null;
 		$ajm = $content['ajm'];
 		$aim = $content['aim'];
@@ -919,7 +937,6 @@ class Cetak extends JI_Controller
 				$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, 'Keterangan');
 				$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
 				$sheet->getStyle('A' . $rowIdx . ':H' . $rowIdx)->getFill()->setFillType('solid')->getStartColor()->setARGB('66bb6a');
-
 				// Content
 				$rowIdx++;
 				if (isset($v->value) && is_array($v->value) && count($v->value)) {
@@ -1004,8 +1021,13 @@ class Cetak extends JI_Controller
 		if (file_exists($save_dir . '/' . $save_file . '.xlsx')) unlink($save_dir . '/' . $save_file . '.xlsx');
 		$swriter->save($save_dir . '/' . $save_file . '.xlsx');
 
-		$download_path = str_replace(SEMEROOT, '/', $save_dir . '/' . $save_file . '.xlsx');
+		$download_path = str_replace(SEMEROOT, '', $save_dir . '/' . $save_file . '.xlsx');
 		// echo '<a href="' . base_url($download_path) . '">' . base_url($download_path) . '</a>';
-		$this->__forceDownload($save_dir . '/' . $save_file . '.xlsx');
+		$json_data = [];
+		$json_data['url'] = base_url($download_path);
+		$this->status = 200;
+		$this->message = 'OK';
+		$this->__json_out($json_data);
+		// $this->__forceDownload(base_url($download_path));
 	}
 }
