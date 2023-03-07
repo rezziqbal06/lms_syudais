@@ -39,6 +39,7 @@ class Lupa extends JI_Controller
     $this->seme_email->template('user_password_lupa');
     $this->seme_email->replacer($replacer);
     $this->seme_email->send();
+    $this->seme_log->write($this->seme_email->getLog());
   }
 
   public function index()
