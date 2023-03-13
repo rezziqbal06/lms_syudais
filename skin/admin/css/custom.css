@@ -9,8 +9,6 @@
     --dark-background:#404258;
 }
 
-
-
 .gradient-primary{
     background: var(--secondary);
     background: linear-gradient(149deg, var(--secondary) 11%, var(--primary) 76%);
@@ -122,6 +120,11 @@
 .progress{
     height: 25px;
     border-radius: 0.25rem;
+}
+
+.qaanii-apex-chart {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch !important;
 }
 
 @media (prefers-color-scheme:light){
