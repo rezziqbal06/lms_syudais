@@ -10,12 +10,14 @@ class Asesmen extends JI_Controller
 		$this->load('a_jpenilaian_concern');
 		$this->load('a_indikator_concern');
 		$this->load('b_user_concern');
+		$this->load('b_user_module_concern');
 		$this->load('c_asesmen_concern');
 		$this->load('d_value_concern');
 
 		$this->load("api_front/a_jpenilaian_model", 'ajm');
 		$this->load("api_front/a_indikator_model", 'aim');
 		$this->load("api_front/b_user_model", 'bum');
+		$this->load("api_front/b_user_module_model", 'bumm');
 		$this->load("api_front/c_asesmen_model", 'cam');
 		$this->load("api_front/d_value_model", 'dvm');
 	}
@@ -202,7 +204,7 @@ class Asesmen extends JI_Controller
 				$params[] = $v->id;
 			}
 			foreach ($a_indikator_id as $k => $v) {
-				if(isset($a_indikator_aksi[$k]) && $a_indikator_aksi[$k] != ""){
+				if (isset($a_indikator_aksi[$k]) && $a_indikator_aksi[$k] != "") {
 					$value[$k]['b_user_id'] = isset($penilais[$k]) ? $penilais[$k] : 0;
 					$value[$k]['indikator'] = $v;
 					$aksi = [];
@@ -591,58 +593,76 @@ class Asesmen extends JI_Controller
 		}
 		$data['aim'] = $aim;
 
+		$data['permission'] = new \stdClass;
+		$data['permission']->read = $this->bumm->getPermission($ajm->id, "read", $d['sess']->user->a_jabatan_id, $d['sess']->user->id);
+		$data['permission']->chart = $this->bumm->getPermission($ajm->id, "chart", $d['sess']->user->a_jabatan_id, $d['sess']->user->id);
+		$data['permission']->export = $this->bumm->getPermission($ajm->id, "export", $d['sess']->user->a_jabatan_id, $d['sess']->user->id);
 
-		$dcount = $this->cam->count($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active);
-		$ddata = $this->cam->data(
-			$page,
-			$pagesize,
-			$sort_column,
-			$sort_direction,
-			$b_user_id,
-			$b_user_id_penilai,
-			$a_jpenilaian_id,
-			$a_ruangan_id,
-			$sdate,
-			$edate,
-			$keyword,
-			$is_active
-		);
+		$hand_hygiene = [];
+		$datasets = [];
+		$ddata = [];
+		$dcount = 0;
+
+		if ($data['permission']->read) {
+			$dcount = $this->cam->count($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active);
+			$ddata = $this->cam->data(
+				$page,
+				$pagesize,
+				$sort_column,
+				$sort_direction,
+				$b_user_id,
+				$b_user_id_penilai,
+				$a_jpenilaian_id,
+				$a_ruangan_id,
+				$sdate,
+				$edate,
+				$keyword,
+				$is_active
+			);
+
+			$datasets = $this->cam->datasets($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active);
+			foreach ($datasets as $k => $v) {
+				$percent = ($v->nilai / $v->jumlah) * 100;
+				$v->percent = $percent;
+				unset($v->nilai);
+				unset($v->jumlah);
+			}
+		}
+
 
 		$jenis_penilaian = $this->ajm->getBySlug($ajm->slug);
-		$hand_hygiene = $this->cam->chart_series($jenis_penilaian->id);
-
+		if ($data['permission']->chart) {
+			$hand_hygiene = $this->cam->chart_series($jenis_penilaian->id);
+		}
 		unset($aim);
 		unset($ajm);
 
-		foreach ($ddata as &$gd) {
-			if (isset($gd->is_active)) {
-				$gd->is_active = $this->cam->label('is_active', $gd->is_active);
-			}
+		if (count($ddata)) {
 
-			if (isset($gd->cdate)) {
-				$gd->cdate = $this->__dateIndonesia($gd->cdate);
-			}
+			foreach ($ddata as &$gd) {
+				if (isset($gd->is_active)) {
+					$gd->is_active = $this->cam->label('is_active', $gd->is_active);
+				}
 
-			if (isset($gd->value)) {
-				$gd->value = json_decode($gd->value);
-			}
+				if (isset($gd->cdate)) {
+					$gd->cdate = $this->__dateIndonesia($gd->cdate);
+				}
 
-			if (isset($gd->durasi)) {
-				$durasis = explode('.', $gd->durasi);
+				if (isset($gd->value)) {
+					$gd->value = json_decode($gd->value);
+				}
 
-				$gd->durasi = '';
-				if ((int) $durasis[0]) $gd->durasi .= $durasis[0] . ' jam ';
-				if ((int) $durasis[1]) $gd->durasi .= $durasis[1] . ' menit';
+				if (isset($gd->durasi)) {
+					$durasis = explode('.', $gd->durasi);
+
+					$gd->durasi = '';
+					if ((int) $durasis[0]) $gd->durasi .= $durasis[0] . ' jam ';
+					if ((int) $durasis[1]) $gd->durasi .= $durasis[1] . ' menit';
+				}
 			}
 		}
 
-		$datasets = $this->cam->datasets($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active);
-		foreach ($datasets as $k => $v) {
-			$percent = ($v->nilai / $v->jumlah) * 100;
-			$v->percent = $percent;
-			unset($v->nilai);
-			unset($v->jumlah);
-		}
+
 
 
 		$data['datasets'] = $datasets;

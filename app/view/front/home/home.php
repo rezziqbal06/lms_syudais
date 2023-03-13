@@ -41,11 +41,11 @@
 				<?php endforeach ?>
 			<?php endif ?>
 		</select>
-		<button class="btn btn-secondary bg-accent"><i class="fa fa-search"></i></button>
+		<a href="#" class="btn btn-secondary bg-accent" id="btn_filter"><i class="fa fa-sliders"></i></a>
+		<!-- <button class="btn btn-secondary bg-accent"><i class="fa fa-search"></i></button> -->
 	</div>
 	<div class="panel-filter row" style="display: none;">
 		<div class="col-md-1">
-			<a href="#" id="btn_filter"><i class="fa fa-sliders"></i></a>
 		</div>
 	</div>
 	<div class="panel-statistik mb-5">

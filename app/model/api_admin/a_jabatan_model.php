@@ -33,7 +33,7 @@ class A_Jabatan_Model extends \Model\A_Jabatan_Concern
     // }
     if (strlen($keyword) > 0) {
       $this->db->where_as("$this->tbl_as.nama", $keyword, "OR", "%like%", 1, 0);
-      $this->db->where_as("$this->tbl_as.deskripsi", $keyword, "AND", "%like%", 0, 0);
+      $this->db->where_as("$this->tbl_as.deskripsi", $keyword, "AND", "%like%", 0, 1);
     }
     return $this;
   }
