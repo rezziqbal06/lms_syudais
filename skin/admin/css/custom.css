@@ -124,6 +124,7 @@
     border-radius: 0.25rem;
 }
 
+
 @media (prefers-color-scheme:light){
     .bg-primary{
         background-color: var(--primary) !important;
@@ -189,6 +190,11 @@
         color: white !important;
     }
 
+    .bg-background option{
+        background-color: var(--dark-background) !important;
+        color: #808080;
+    }
+
     .gradient-primary{
         background: var(--dark-secondary);
         background: linear-gradient(149deg, var(--dark-secondary) 11%, var(--dark-primary) 76%);
@@ -247,7 +253,7 @@
         margin-bottom: 0.5rem;
         font-weight: 400;
         line-height: 1.2;
-        color: #ededed;
+        color: #BEBEBE;
     }
 
     .fa{
