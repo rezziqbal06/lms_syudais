@@ -26,6 +26,8 @@ class JI_Controller extends \SENE_Controller
     public $sales_login = false;
     public $reseller_login = false;
     public $is_log = true;
+    public $email_send = 1;
+    public $wa_send = 0;
 
     public function __construct()
     {
@@ -795,6 +797,55 @@ class JI_Controller extends \SENE_Controller
         }
 
         return $this->current_reseller->nama;
+    }
+
+    /**
+     * Global variable replacements for email templates
+     */
+    protected function _emailReplacer()
+    {
+        $replacer = array();
+        $replacer['site_logo'] = $this->cdn_url($this->config->semevar->site_logo);
+        $replacer['cs_email'] = $this->config->semevar->email_reply;
+        $replacer['app_name'] = $this->config->semevar->app_name;
+        $replacer['company_name'] = $this->config->semevar->app_name;
+        $replacer['site_name'] = $this->config->semevar->app_name;
+        $replacer['email_dari'] = $this->config->semevar->email_from;
+        $replacer['email_reply'] = $this->config->semevar->email_reply;
+        ob_start();
+        require_once(SEMEROOT . 'kero/lib/seme_email/_header.php');
+        $replacer['content_header'] = ob_get_contents();
+        ob_end_clean();
+        ob_start();
+        require_once(SEMEROOT . 'kero/lib/seme_email/_footer.php');
+        $replacer['content_footer'] = ob_get_contents();
+        ob_end_clean();
+        return $replacer;
+    }
+
+    /**
+     * Text Masking
+     */
+    public function _textMasking($txt)
+    {
+        $o = 4;
+        $l = strlen($txt);
+        if (($l - $o) > 1) {
+            return substr_replace($txt, str_repeat('X', $l - $o), 0, $l - $o);
+        } else {
+            return substr_replace($txt, str_repeat('X', $l), 0, $l);
+        }
+    }
+
+    /**
+     * Procedure that check requires email confirmation is true
+     */
+    public function requiredVerifiedEmail($bum)
+    {
+        if ($this->config->semevar->email_strict && empty($bum->is_confirmed)) {
+            redir(base_url('kandidat/verifikasi/email'), 0);
+            return;
+        }
     }
 
     /**

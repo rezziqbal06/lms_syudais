@@ -115,6 +115,10 @@ class Asesmen extends JI_Controller
 		$data['type_form'] = $type_form;
 		$data['slug'] = $ajm->slug;
 
+		$data['permission'] = new \stdClass;
+		$data['permission']->create = $this->bumm->getPermission($ajm->id, "create", $data['sess']->user->a_jabatan_id, $data['sess']->user->id);
+		$data['permission']->edit = $this->bumm->getPermission($ajm->id, "edit", $data['sess']->user->a_jabatan_id, $data['sess']->user->id);
+
 		// unset($type_form);
 		unset($ajm);
 		unset($aim);
@@ -209,6 +213,10 @@ class Asesmen extends JI_Controller
 		} else if (in_array($ajm->slug, ['audit-kepatuhan-apd'])) {
 			$type_form = 3;
 		}
+
+		$data['permission'] = new \stdClass;
+		$data['permission']->create = $this->bumm->getPermission($ajm->id, "create", $data['sess']->user->a_jabatan_id, $data['sess']->user->id);
+		$data['permission']->edit = $this->bumm->getPermission($ajm->id, "edit", $data['sess']->user->a_jabatan_id, $data['sess']->user->id);
 
 		$data['type_form'] = $type_form;
 		$data['slug'] = $ajm->slug;

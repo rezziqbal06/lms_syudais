@@ -110,4 +110,11 @@ class B_User_Model extends \Model\B_User_Concern
 		$this->db->where('is_deleted', $this->db->esc(0));
 		return $this->db->get('', 0);
 	}
+
+	public function getByApiWeb($api_web_token)
+	{
+		$this->db->where('api_web_token', $api_web_token);
+		$this->db->from($this->tbl, $this->tbl_as);
+		return $this->db->get_first('object', 0);
+	}
 }

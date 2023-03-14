@@ -22,7 +22,7 @@ if (isset($sess->admin->foto)) $admin_foto = $sess->admin->foto;
 if (empty($admin_foto)) $admin_foto = 'media/pengguna/default.png';
 $admin_foto = $this->cdn_url($admin_foto);
 ?>
-<aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
+<aside class="sidenav bg-nav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
 	<div class="sidenav-header">
 		<i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
 		<a class="navbar-brand m-0" href="<?= base_url_admin() ?>">
@@ -74,7 +74,7 @@ $admin_foto = $this->cdn_url($admin_foto);
 			<li class="nav-item">
 				<a class="nav-link " href="<?= base_url_admin() ?>pengaturan/unit">
 					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-						<i class="ni ni-app text-info text-sm opacity-10"></i>
+						<i class="ni ni-building text-info text-sm opacity-10"></i>
 					</div>
 					<span class="nav-link-text ms-1">Unit</span>
 				</a>

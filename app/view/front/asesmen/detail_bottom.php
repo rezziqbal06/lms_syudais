@@ -1,4 +1,3 @@
-$(".select2").select2();
 
 $("#btn_back").on('click', function(e){
     e.preventDefault();
@@ -78,40 +77,46 @@ $("#btn_cari_user").on('click', function(e){
     $("#modal_cari_user").modal('show');
 });
 
-$("#cari_user").select2({
-	ajax: {
-		method: 'post',
-		url: '<?=base_url("api_front/user/cari/")?>',
-		dataType: 'json',
-	delay: 250,
-		data: function (params) {
-	var query = {
-		keyword: params.term,
-	}
-	return query;
-	},
-	processResults: function (dt) {
-	return {
-		results:  $.map(dt, function (itm) {
-		return {
-			text: itm.text,
-			id: itm.id
+function cariUser(){
+	$("#cari_user").select2({
+		ajax: {
+			method: 'post',
+			url: '<?=base_url("api_front/user/cari/")?>',
+			dataType: 'json',
+		delay: 250,
+			data: function (params) {
+		var query = {
+			keyword: params.term,
 		}
-		})
-	};
-	},
-	cache: true
-	}
-});
+		return query;
+		},
+		processResults: function (dt) {
+		return {
+			results:  $.map(dt, function (itm) {
+			return {
+				text: itm.text,
+				id: itm.id
+			}
+			})
+		};
+		},
+		cache: true
+		}
+	});
+}
 
-let form_hygiene = '';
+var form_hygiene = '';
 $(document).on('ready',() => {
 	if(<?= $type_form ?> == 1){
 		form_hygiene = $(".parent").html();
 	}else if(<?= $type_form ?> == 3){
 		form_hygiene = $(".parent").html();
 	}
+	$(".select2").select2();
+	cariUser();
+	
 })
+
 
 $("#pilih_user").on('click', function(e){
     e.preventDefault();
@@ -185,6 +190,8 @@ $("#pilih_user").on('click', function(e){
 					$(".parent").html(form_hygiene);
 				}
 			<?php endif; ?>
+			$('.select2').select2();
+			cariUser();
         } 
     })
 })
@@ -387,10 +394,10 @@ function initDataByRuanganId(r_id=0, val_edit = []){
 $('#tgl_asesmen').datepicker({format: 'yyyy-mm-dd'})
 
 
-<?php if($sess->user->profesi == 'Komite Mutu'){ ?>
-	$(".btn-submit").hide();
-<?php }else{ ?>
+<?php if(($permission->create && !isset($value)) || ($permission->edit && isset($value))){ ?>
 	$(".btn-submit").show();
+<?php }else{ ?>
+	$(".btn-submit").hide();
 <?php } ?>
 if(<?= $type_form ?> == 1){
 	var val_edit = <?= isset($value) ? json_encode($value) : json_encode([]) ?>;
@@ -403,7 +410,7 @@ if(<?= $type_form ?> == 1){
 			$('.progress-bar').addClass('bg-warning');
 			items = 'penilaian sudah maksimal di bulan ini (10 kali)';
 		}else{
-			items = items+' kali penilaian di bulan ini';
+			items = items+'';
 		}
 		$('.progress').slideUp();
 		if(items){

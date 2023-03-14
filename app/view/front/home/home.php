@@ -41,11 +41,11 @@
 				<?php endforeach ?>
 			<?php endif ?>
 		</select>
-		<button class="btn btn-secondary bg-accent"><i class="fa fa-search"></i></button>
+		<a href="#" class="btn btn-secondary bg-accent" id="btn_filter"><i class="fa fa-sliders"></i></a>
+		<!-- <button class="btn btn-secondary bg-accent"><i class="fa fa-search"></i></button> -->
 	</div>
 	<div class="panel-filter row" style="display: none;">
 		<div class="col-md-1">
-			<a href="#" id="btn_filter"><i class="fa fa-sliders"></i></a>
 		</div>
 	</div>
 	<div class="panel-statistik mb-5">
@@ -67,21 +67,21 @@
 			<div class="card col-md-12 p-3" id="card-hygiene-chart">
 				<h5 class="mx-5 mt-4"><i class="fas fa-chart-area"></i> Grafik Nilai Audit Hand Hygiene</h5>
 				<div class="p-4" style="width: 100%">
-					<div id="hygieneChart">
+					<div id="hygieneChart" class="qaanii-apex-chart">
 					</div>
 				</div>
 			</div>
 			<div class="card col-md-12 p-3" id="card-apd-chart">
 				<h5 class="mx-5 mt-4"><i class="fas fa-chart-area"></i> Grafik Nilai Audit Kepatuhan APD</h5>
 				<div class="p-4" style="width: 100%">
-					<div id="apdChart">
+					<div id="apdChart" class="qaanii-apex-chart">
 					</div>
 				</div>
 			</div>
 			<div class="card col-md-12 p-3" id="card-monev-chart">
 				<h5 class="mx-5 mt-4"><i class="fas fa-chart-area"></i> Grafik Nilai Monitoring Kegiatan Harian Pencegahan Pengendalian Infeksi (PPI)</h5>
 				<div class="p-4" style="width: 100%">
-					<div id="monevChart">
+					<div id="monevChart" class="qaanii-apex-chart">
 					</div>
 				</div>
 			</div>

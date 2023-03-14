@@ -99,7 +99,6 @@ function download(file, filename) {
 		},
 	};
 
-  	let chartAO = new ApexCharts(chartCtx, optionsAO);
 
 	let optionsHygiene = {
 		series: [
@@ -144,6 +143,7 @@ function download(file, filename) {
 		},
 	};
 
+  	let chartAO = new ApexCharts(chartCtx, optionsAO);
 	let chartHygiene = new ApexCharts(hygieneCtx, optionsHygiene);
 	let chartApd = new ApexCharts(apdCtx, optionsHygiene);
 	let chartMonev = new ApexCharts(monevCtx, optionsHygiene);
@@ -322,26 +322,12 @@ function initData(fd=[]){
 		success: function(respon){
 			hideLoading();
 			if(respon.status==200){
+				var slug = respon.data.ajm.slug;
+				var permission = respon.data.permission;
 				if(respon.data.list && respon.data.list.length > 0){
 					var s = '';
-					var slug = respon.data.list[0].slug;
-					if(slug == 'audit-hand-hygiene'){
-						$("#card-apd-chart").hide();
-						$("#card-monev-chart").hide();
-						$("#card-hygiene-chart").show();
-						grafik_hygiene(respon.data.data);
-					} else if(slug == 'audit-kepatuhan-apd'){
-						$("#card-monev-chart").hide();
-						$("#card-hygiene-chart").hide();
-						$("#card-apd-chart").show();
-						console.log("apd wowy");
-						grafik_apd(respon.data.data);
-					} else if (slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'){
-						$("#card-hygiene-chart").hide();
-						$("#card-apd-chart").hide();
-						$("#card-monev-chart").show();
-						grafik_monev(respon.data.data);
-					}
+					
+					
 					$.each(respon.data.list, function(k,v){
 						var is_show = 'd-none'
 						if(v.nilai) is_show = '';
@@ -372,12 +358,51 @@ function initData(fd=[]){
 					});
 					$(".panel-list").html('');
 					$(".panel-list").html(s);
-					$(".panel-statistik").show();
+					
 					$(".panel-filter").show();
 					$(".panel-list").show();
 					$(".panel-list").addClass("row");
+					$(".panel-empty").hide();
+
+					
 				}else{
 					$(".panel-empty").show();
+				}
+				if(permission.chart){
+					if(slug == 'audit-hand-hygiene'){
+						$("#card-apd-chart").hide();
+						$("#card-monev-chart").hide();
+						$("#card-hygiene-chart").show();
+						grafik_hygiene(respon.data.data);
+					} else if(slug == 'audit-kepatuhan-apd'){
+						$("#card-monev-chart").hide();
+						$("#card-hygiene-chart").hide();
+						$("#card-apd-chart").show();
+						console.log("apd wowy");
+						grafik_apd(respon.data.data);
+					} else if (slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'){
+						$("#card-hygiene-chart").hide();
+						$("#card-apd-chart").hide();
+						$("#card-monev-chart").show();
+						grafik_monev(respon.data.data);
+					}
+					$(".panel-statistik").show();
+					$(".panel-filter").show();
+					$(".panel-empty").hide();
+
+				}else{
+					$(".panel-empty").show();
+				}
+				if(permission.export){
+					$("#btn_print").show();
+				}else{
+					$("#btn_print").hide();
+				}
+
+				if(!permission.read && !permission.chart){
+					$(".panel-empty").show();
+				}else{
+					$(".panel-empty").hide();
 				}
 			}else{
 				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');

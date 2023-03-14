@@ -9,8 +9,6 @@
     --dark-background:#404258;
 }
 
-
-
 .gradient-primary{
     background: var(--secondary);
     background: linear-gradient(149deg, var(--secondary) 11%, var(--primary) 76%);
@@ -124,6 +122,10 @@
     border-radius: 0.25rem;
 }
 
+.qaanii-apex-chart {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch !important;
+}
 
 @media (prefers-color-scheme:light){
     .bg-primary{
@@ -301,6 +303,14 @@
     a:hover{
         text-decoration: none;
         color: var(--background)
+    }
+
+    td, th, a, btn {
+        color:white;
+    }
+
+    .card {
+        margin-top: 1em;
     }
 
 }
