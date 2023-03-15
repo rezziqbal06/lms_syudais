@@ -44,6 +44,7 @@ if(jQuery('#drTable').length>0){
 						$("#aedit").attr("href","<?=base_url_admin("akun/user/edit/")?>"+ieid);
 						$("#amodule").attr("href","<?=base_url_admin("akun/user/module/")?>"+ieid);
 						$("#areseller").attr("href","<?=base_url_admin("partner/reseller/baru/")?>"+ieid);
+						$("#ieid-user").val(ieid);
 						$("#modal_option").modal("show");
 					});
 
@@ -140,3 +141,69 @@ $("#atambah").on("click",function(e){
 		window.location = '<?=base_url_admin("akun/user/baru/")?>'
 	});
 	
+$("#aresetpass").on("click",function(e){
+	e.preventDefault();
+	$("#modal_option").modal("hide");
+	$("#modal_edit_password").modal("show");
+});
+
+// change password
+$("#fchange-password").on("submit",function(e){
+	e.preventDefault();
+	NProgress.start();
+	$('.btn-submit').prop('disabled',true);
+	$('.icon-submit').addClass('fa-circle-o-notch fa-spin');
+
+	var fd = new FormData($(this)[0]);
+	var url = '<?=base_url("api_front/akun/user/changePass/")?>';
+	fd.append('is_reset', true);
+
+  let newPass = $("#new-pass").val();
+  let confirmNewPass = $("#confirm-new-pass").val();
+
+  if(newPass != confirmNewPass){
+    gritter('<h4>Gagal</h4><p>Password tidak cocok</p>','danger');
+  }else{
+    $.ajax({
+      type: $(this).attr('method'),
+      url: url,
+      data: fd,
+      processData: false,
+      contentType: false,
+      success: function(respon){
+        if(respon.status==200){
+          gritter('<h4>Sukses</h4><p>Password berhasil direset</p>','success');
+          setTimeout(function(){
+			$("#modal_edit_password").modal("hide");
+			NProgress.done();
+
+          },500);
+        }else{
+          gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
+  
+          $('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
+          $('.btn-submit').prop('disabled',false);
+          NProgress.done();
+        }
+      },
+      error:function(){
+        setTimeout(function(){
+          gritter('<h4>Error</h4><p>Tidak dapat mengubah data sekarang, silahkan coba lagi nanti</p>','warning');
+        }, 666);
+  
+        $('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
+        $('.btn-submit').prop('disabled',false);
+        NProgress.done();
+        return false;
+      }
+    });
+
+  }
+
+});
+
+$("#breset").on('click', function(e){
+	e.preventDefault();
+	$("#new-pass").val(123456);
+	$("#confirm-new-pass").val(123456);
+});

@@ -479,14 +479,14 @@ class User extends \JI_Controller
 		// 	die();
 		// }
 
-		$id = (int) $id;	
+		$id = (int) $id;
 		$id = isset($du['id']) ? $du['id'] : 0;
 		if ($id <= 0) {
 			$this->status = 444;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			$this->__json_out($data);
 			die();
-		}else{
+		} else {
 			unset($du['id']);
 			$res = $this->bum->update($id, $du);
 			if ($res) {
@@ -500,7 +500,7 @@ class User extends \JI_Controller
 
 		$this->__json_out($data);
 	}
-	
+
 	public function changePass($id = "")
 	{
 		$d = $this->__init();
@@ -516,14 +516,21 @@ class User extends \JI_Controller
 		// 	die();
 		// }
 
+		$is_reset = false;
+		if (isset($du['is_reset'])) {
+			$is_reset = $du['is_reset'];
+			unset($du['is_reset']);
+		}
+
+		// dd($du['is_reset']);
 		$id = (int) $id;
-		$du = $_POST;
+		// $du = $_POST;
 		$id =  isset($du['id']) ? $du['id'] : 0;
 		unset($du['id']);
 		if ($id > 0) {
 			$dtuser = $this->bum->getUserById($id);
 			// dd(["old" => $dtuser->password, "conf" => md5($du['old_pass'])]);
-			if($dtuser->password == md5($du['old_pass'])){
+			if ($is_reset) {
 				if (strlen($du['new_pass'])) {
 					$du['password'] = md5($du['new_pass']);
 					unset($du['old_pass']);
@@ -536,9 +543,24 @@ class User extends \JI_Controller
 					$this->status = 901;
 					$this->message = 'Password terlalu pendek';
 				}
-			}else{
-				$this->status = 402;
-				$this->message = 'Password salah';
+			} else {
+				if ($dtuser->password == md5($du['old_pass'])) {
+					if (strlen($du['new_pass'])) {
+						$du['password'] = md5($du['new_pass']);
+						unset($du['old_pass']);
+						unset($du['new_pass']);
+						unset($du['confirm_new_pass']);
+						$res = $this->bum->update($id, $du);
+						$this->status = 200;
+						$this->message = 'Perubahan berhasil diterapkan';
+					} else {
+						$this->status = 901;
+						$this->message = 'Password terlalu pendek';
+					}
+				} else {
+					$this->status = 402;
+					$this->message = 'Password salah';
+				}
 			}
 		} else {
 			$this->status = 447;
@@ -546,5 +568,4 @@ class User extends \JI_Controller
 		}
 		$this->__json_out($data);
 	}
-	
 }
