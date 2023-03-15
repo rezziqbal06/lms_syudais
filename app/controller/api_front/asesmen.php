@@ -120,6 +120,15 @@ class Asesmen extends JI_Controller
 			die();
 		}
 
+		$cdate = $this->input->request('cdate');
+		$cam_this_date = $this->cam->getByDateAndUser($ajm->id, $cdate, $d['sess']->user->id);
+		if (isset($cam_this_date->id)) {
+			$this->status = 903;
+			$this->message = 'Penilaian pada tanggal ini sudah di buat oleh anda. Silakan lakukan pengubahan di penilaian sebelumnya.';
+			$this->__json_out($data);
+			die();
+		}
+
 		$b_user_id = !empty((int) $this->input->request('b_user_id')) ? $this->input->request('b_user_id') : '';
 		if (!isset($b_user_id) || !strlen($b_user_id)) {
 			$bum = $this->bum->getByName($this->input->request('user'));

@@ -15,6 +15,14 @@ $("#ftambah").on("submit",function(e){
 		return;
 		return false;
 	}
+	if(!$("#tgl_asesmen").val()){
+		gritter('<p>Tanggal belum terisi</p>','warning');
+		return false;
+	}
+	if(!$("#iuser").val()){
+		gritter('<p>Nama belum terisi</p>','warning');
+		return false;
+	}
 	NProgress.start();
 	$('.btn-submit').prop('disabled',true);
 	$('.icon-submit').addClass('fa-circle-o-notch fa-spin');
@@ -52,7 +60,7 @@ $("#ftambah").on("submit",function(e){
 						window.location = '<?=base_url('home')?>';
 					},500);
 				}else{
-					gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
+					gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','warning');
 					$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
 					$('.btn-submit').prop('disabled',false);
 					NProgress.done();
@@ -60,7 +68,7 @@ $("#ftambah").on("submit",function(e){
 			},
 			error:function(){
 				setTimeout(function(){
-					gritter('<h4>Error</h4><p>Tidak dapat menambah data, silahkan coba beberapa saat lagi</p>','warning');
+					gritter('<h4>Error</h4><p>Tidak dapat menambah data, silahkan coba beberapa saat lagi</p>','danger');
 				}, 666);
 	
 				$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
