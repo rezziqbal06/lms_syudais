@@ -168,10 +168,12 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     return $this->db->delete($this->tbl);
   }
 
-  public function getByDateAndUser($ajm_id, $sdate, $penilai_id)
+  public function getByDateAndUser($ajm_id, $sdate, $penilai_id, $b_user_id = '', $a_ruangan_id = '')
   {
     $this->db->where('b_user_id_penilai', $penilai_id);
     $this->db->where('a_jpenilaian_id', $ajm_id);
+    if (strlen($b_user_id)) $this->db->where('b_user_id', $b_user_id);
+    if (strlen($a_ruangan_id)) $this->db->where('a_ruangan_id', $a_ruangan_id);
     $this->db->where_as("DATE($this->tbl_as.cdate)", "DATE('$sdate')");
     return $this->db->get_first('', 0);
   }

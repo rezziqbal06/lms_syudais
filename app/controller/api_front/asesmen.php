@@ -120,14 +120,7 @@ class Asesmen extends JI_Controller
 			die();
 		}
 
-		$cdate = $this->input->request('cdate');
-		$cam_this_date = $this->cam->getByDateAndUser($ajm->id, $cdate, $d['sess']->user->id);
-		if (isset($cam_this_date->id)) {
-			$this->status = 903;
-			$this->message = 'Penilaian pada tanggal ini sudah di buat oleh anda. Silakan lakukan pengubahan di penilaian sebelumnya.';
-			$this->__json_out($data);
-			die();
-		}
+
 
 		$b_user_id = !empty((int) $this->input->request('b_user_id')) ? $this->input->request('b_user_id') : '';
 		if (!isset($b_user_id) || !strlen($b_user_id)) {
@@ -142,10 +135,33 @@ class Asesmen extends JI_Controller
 				$bu['cdate'] = 'now()';
 				$resUser = $this->bum->set($bu);
 				if ($resUser) {
+					$b_user_id = $resUser;
 					$this->cam->columns['b_user_id']->value = $resUser;
 				}
 			}
 		}
+
+		if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
+			$cdate = $this->input->request('cdate');
+			$a_ruangan_id = $this->input->request('a_ruangan_id');
+			$cam_this_date = $this->cam->getByDateAndUser($ajm->id, $cdate, $d['sess']->user->id, '', $a_ruangan_id);
+			if (isset($cam_this_date->id)) {
+				$this->status = 903;
+				$this->message = 'Penilaian pada tanggal ini sudah di buat oleh anda. Silakan lakukan pengubahan di penilaian sebelumnya.';
+				$this->__json_out($data);
+				die();
+			}
+		} else {
+			$cdate = $this->input->request('cdate');
+			$cam_this_date = $this->cam->getByDateAndUser($ajm->id, $cdate, $d['sess']->user->id, $b_user_id);
+			if (isset($cam_this_date->id)) {
+				$this->status = 903;
+				$this->message = 'Penilaian pada tanggal ini sudah di buat oleh anda. Silakan lakukan pengubahan di penilaian sebelumnya.';
+				$this->__json_out($data);
+				die();
+			}
+		}
+
 
 		date_default_timezone_set('Asia/Jakarta');
 		$stime = $this->input->request('stime');
