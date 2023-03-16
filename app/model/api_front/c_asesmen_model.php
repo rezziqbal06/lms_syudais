@@ -75,7 +75,7 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     $this->db->from($this->tbl, $this->tbl_as);
     $this->join_company();
     $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
-    $this->db->order_by($sortCol, $sortDir)->limit($page, $pagesize);
+    $this->db->order_by($sortCol, $sortDir)->page($page, $pagesize);
     return $this->db->get("object", 0);
   }
 

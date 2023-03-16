@@ -583,8 +583,8 @@ class Asesmen extends JI_Controller
 		$sdate = $this->input->request('sdate', '');
 		$bulan = $this->input->request('bulan', '');
 		$edate = $this->input->request('edate', '');
-		$page = $this->input->request('page', 0);
-		$pagesize = $this->input->request('pagesize', 10);
+		$page = $this->input->request('page', 1);
+		$pagesize = $this->input->request('pagesize', 9);
 		$sort_column = $this->input->request('sort_column', 'id');
 		$sort_direction = $this->input->request('sort_direction', 'desc');
 		$keyword = $this->input->request('keyword', '');
@@ -687,12 +687,37 @@ class Asesmen extends JI_Controller
 			}
 		}
 
+		$total_pages = ceil($dcount / $pagesize);
 
+		// Pagination markup using Bootstrap 5
+		$pg = '<nav><ul class="pagination gap-2">';
+		if ($page > 1) {
+			$pg .= '<li class="page-item"><a class="page-link" href="#" onclick="goToPage(' . ($page - 1) . ')"><span class="fa fa-chevron-left"></span></a></li>';
+		} else {
+			$pg .= '<li class="page-item disabled"><a class="page-link" href="#"><span class="fa fa-chevron-left"></span></a></li>';
+		}
+		for ($i = 1; $i <= $total_pages; $i++) {
+			if ($i == $page) {
+				$pg .= '<li class="page-item active"><a class="page-link" href="#">' . $i . '</a></li>';
+			} else {
+				$pg .= '<li class="page-item"><a class="page-link" href="#" onclick="goToPage(' . $i . ')">' . $i . '</a></li>';
+			}
+		}
+		if ($page < $total_pages) {
+			$pg .= '<li class="page-item"><a class="page-link" href="#" onclick="goToPage(' . ($page + 1) . ')"><span class="fa fa-chevron-right"></span></a></li>';
+		} else {
+			$pg .= '<li class="page-item disabled"><a class="page-link" href="#"><span class="fa fa-chevron-right"></span></a></li>';
+		}
+		$pg .= '</ul></nav>';
 
 
 		$data['datasets'] = $datasets;
 		$data['list'] = $ddata;
 		$data['count'] = $dcount;
+		$data['pagesize'] = $pagesize;
+		$data['page'] = $page;
+		$data['pagination'] = $pg;
+
 		$data['data'] = $hand_hygiene;
 
 		$this->__json_out($data);

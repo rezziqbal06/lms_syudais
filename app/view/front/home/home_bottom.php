@@ -6,12 +6,16 @@ function showLoading(){
 	$(".panel-list").hide();
 	$(".panel-statistik").hide();
 	$(".panel-filter").hide();
+	$(".panel-pagination").empty();
+	$(".panel-pagination").hide();
 }
 function hideLoading(){
 	$(".panel-loading").hide();
 	$(".panel-empty").hide();
 	$(".panel-list").hide();
 	$(".panel-filter").hide();
+	$(".panel-pagination").empty();
+	$(".panel-pagination").hide();
 }
 function download(file, filename) {
     if (window.navigator.msSaveOrOpenBlob) {// IE10+
@@ -356,6 +360,10 @@ function initData(fd=[]){
 							</div>
 						</div>`;
 					});
+					if(respon.data.pagination){
+						$(".panel-pagination").html(respon.data.pagination);
+						$(".panel-pagination").show();
+					} 
 					$(".panel-list").html('');
 					$(".panel-list").html(s);
 					
@@ -628,3 +636,14 @@ $("#btn_print").on('click', function(e){
 	}
 	
 })
+
+function goToPage(page){
+	if(page){
+		var fd = new FormData($("#ffilter")[0]);
+		fd.append('page',page);
+		if(myChart){
+			myChart.destroy();
+		}
+		initData(fd);
+	}
+}

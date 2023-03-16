@@ -90,6 +90,8 @@
 
 	<div class="panel-list p-2" style="display: none; ">
 	</div>
+	<div class="panel-pagination p-2 d-flex justify-content-center" style="display: none; ">
+	</div>
 	<div class="panel-loading mt-3">
 		<p class="placeholder-glow">
 			<span class="placeholder col-12"></span>
