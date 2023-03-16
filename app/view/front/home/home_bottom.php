@@ -59,7 +59,6 @@ function download(file, filename) {
 		hygiene_series.push(0);
 		ruangan_cats.push(k.nama)
 	});
-	console.log(ruangan_cats);
 	for (let i = 6; i >= 0; i--) {
 		let date = new Date(today);
 		date.setDate(date.getDate() - i);
@@ -145,6 +144,15 @@ function download(file, filename) {
 				format: undefined,
 			},
 		},
+		responsive: [{
+			breakpoint: 768, // define breakpoint for mobile devices
+			options: {
+				chart: {
+					width: 700,
+					height: 300 // set a fixed height for mobile devices
+				}
+			}
+		}]
 	};
 
   	let chartAO = new ApexCharts(chartCtx, optionsAO);
@@ -168,7 +176,6 @@ function grafik_asesmen(){
 	$.get('<?= base_url("api_front/asesmen/chart_asesmen") ?>', {
 		'asesor_id' : $('#asesor').val()
 	}).done((res) => {
-		console.log(res);
 		let today = new Date();
 		let categories = [];
 
@@ -230,7 +237,6 @@ function grafik_asesmen(){
       }, 100)
 
 	}).fail((xhr) => {
-		console.log(xhr)
 	});
 }
 
@@ -386,7 +392,6 @@ function initData(fd=[]){
 						$("#card-monev-chart").hide();
 						$("#card-hygiene-chart").hide();
 						$("#card-apd-chart").show();
-						console.log("apd wowy");
 						grafik_apd(respon.data.data);
 					} else if (slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'){
 						$("#card-hygiene-chart").hide();
