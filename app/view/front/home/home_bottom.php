@@ -17,6 +17,12 @@ function hideLoading(){
 	$(".panel-pagination").empty();
 	$(".panel-pagination").hide();
 }
+function scrollToTop(){
+	window.scrollTo({
+		top:250,
+		behavior: 'smooth'
+	});
+}
 function download(file, filename) {
     if (window.navigator.msSaveOrOpenBlob) {// IE10+
         window.navigator.msSaveOrOpenBlob(file, filename);
@@ -161,6 +167,7 @@ function download(file, filename) {
 	let chartMonev = new ApexCharts(monevCtx, optionsHygiene);
 
 	$(document).on('ready',() => {
+		validateFilter();
 		chartAO.render();		
 		chartHygiene.render();
 		chartApd.render();
@@ -380,6 +387,7 @@ function initData(fd=[]){
 
 					
 				}else{
+					console.log('kosong');
 					$(".panel-empty").show();
 				}
 				if(permission.chart){
@@ -401,7 +409,6 @@ function initData(fd=[]){
 					}
 					$(".panel-statistik").show();
 					$(".panel-filter").show();
-					$(".panel-empty").hide();
 
 				}else{
 					$(".panel-empty").show();
@@ -415,7 +422,6 @@ function initData(fd=[]){
 				if(!permission.read && !permission.chart){
 					$(".panel-empty").show();
 				}else{
-					$(".panel-empty").hide();
 				}
 			}else{
 				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
@@ -448,27 +454,45 @@ $('#ffilter').on('submit', function(e){
 	$("#modal_filter").modal('hide');
 });
 
+$('#ffilter_modal').on('submit', function(e){
+	e.preventDefault();
+	$('#ffilter').trigger('submit');
+});
+
+
 $("#asesor").on('change', function(e){
 	grafik_asesmen();
 });
 
-$('#btn_filter').on('click', function(e){
-	e.preventDefault();
+function validateFilter(){
 	var jp = $("#jenis_penilaian").find('option:selected').val();
 	if(jp == 4){
-		$("#panel_b_user_id").hide();
-		$("#panel_tgl").hide();
-		$("#panel_bulan").show();
+		$(".panel_b_user_id").hide();
+		$(".panel_tgl").hide();
+		$(".panel_bulan").show();
 	}else{
-		$("#panel_b_user_id").show();
-		$("#panel_tgl").show();
-		$("#panel_bulan").hide();
+		$(".panel_b_user_id").show();profesi == 'IPCN'
+		$(".panel_tgl").show();
+		$(".panel_bulan").hide();
 	}
+
+	var profesi = '<?=$sess->user->profesi ?? ''?>';
+	if(profesi == 'IPCN' || profesi == 'IPCD' || profesi == 'Komite Mutu'){
+		$(".panel_b_user_id_penilai").show();
+	}else{
+		$(".panel_b_user_id_penilai").hide();
+	}
+}
+
+$('#btn_filter').on('click', function(e){
+	e.preventDefault();
+	validateFilter();
 	$("#modal_filter").modal('show');
 });
 
 $("#jenis_penilaian").on('change', function(e){
 	e.preventDefault();
+	validateFilter();	
 	var fd = new FormData($("#ffilter")[0]);
 	if(myChart){
 		myChart.destroy();
@@ -642,6 +666,11 @@ $("#btn_print").on('click', function(e){
 	
 })
 
+$("#btn_print_modal").on('click', function(e){
+	e.preventDefault();
+	$("#btn_print").trigger('click');
+})
+
 function goToPage(page){
 	if(page){
 		var fd = new FormData($("#ffilter")[0]);
@@ -652,3 +681,23 @@ function goToPage(page){
 		initData(fd);
 	}
 }
+
+$(document).off('change',"[id^='im_']");
+$(document).on('change',"[id^='im_']", function(e){
+	e.preventDefault();
+	var tag = e.target.tagName;
+	var value = $(this).val();
+	if(!value){
+		value = $(this).find('option:selected').val()
+	}
+	var id = $(this).attr('id');
+	id = id.replace('im_','i');
+	console.log(id, value, tag);
+	if(tag == 'SELECT'){
+		$("#"+id).val(value).select2();
+
+	}else{
+		$("#"+id).val(value);
+
+	}
+})

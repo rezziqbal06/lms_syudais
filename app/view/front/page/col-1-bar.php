@@ -31,7 +31,7 @@
 				<?php $this->getThemeElement("page/html/global_message", $__forward); ?>
 				<!-- Global Message -->
 
-				<div class="p-md-5">
+				<div class="pt-md-5">
 					<?php $this->getThemeContent(); ?>
 				</div>
 				<!-- Main Container End -->
