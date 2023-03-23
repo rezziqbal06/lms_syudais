@@ -363,6 +363,9 @@ function initData(fd=[]){
 										<span class="float-end" style="font-size: smaller;">${v.durasi}</span>
 									</div>
 								</div>
+								<div class="d-flex justify-content-end">
+									<a href="#" onclick="confirm('apakah anda yakin?') ? window.location.replace('<?=base_url('api_front/asesmen/hardDelete')?>/${v.id}') : '' " class="btn btn-danger"><i class="fas fa-trash"></i></a>
+								</div>
 							</div>
 						</div>`;
 					});

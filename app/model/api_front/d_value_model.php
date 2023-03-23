@@ -113,6 +113,12 @@ class D_Value_Model extends \Model\D_Value_Concern
     return $this->db->get('', 0);
   }
 
+  public function getByAsesmenId($id)
+  {
+    $this->db->where("c_asesmen_id", $id);
+    return $this->db->get_first();
+  }
+
   public function delById($id)
   {
     $this->db->where('id', $id);

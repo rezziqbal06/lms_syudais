@@ -403,9 +403,13 @@ $('#tgl_asesmen').datepicker({format: 'yyyy-mm-dd'})
 
 
 <?php if(($permission->create && !isset($value)) || ($permission->edit && isset($value))){ ?>
+	console.log("buttonnya ada")
 	$(".btn-submit").show();
-<?php }else{ ?>
-	$(".btn-submit").hide();
+	<?php }else{ ?>
+		$(".btn-submit").show();
+		$(".btn-submit").prop("disabled",true);
+	console.log("buttonnya hilang brow")
+		$(".btn-submit").text("Anda tidak punya wewenang untuk edit asesmen ini");
 <?php } ?>
 if(<?= $type_form ?> == 1){
 	var val_edit = <?= isset($value) ? json_encode($value) : json_encode([]) ?>;
