@@ -609,7 +609,7 @@ class Asesmen extends JI_Controller
 		$a_jpenilaian_id = $this->input->request('a_jpenilaian_id', '');
 		$a_ruangan_id = $this->input->request('a_ruangan_id', '');
 		$b_user_id = $this->input->request('b_user_id', '');
-		$b_user_id_penilai = $this->input->request('b_user_id_penilai', '');
+		$b_user_id_penilai = $this->input->request('b_user_id_penilai', $d['sess']->user->id);
 		$is_active = $this->input->request('is_active', '');
 		$sdate = $this->input->request('sdate', '');
 		$bulan = $this->input->request('bulan', '');
@@ -620,9 +620,9 @@ class Asesmen extends JI_Controller
 		$sort_direction = $this->input->request('sort_direction', 'desc');
 		$keyword = $this->input->request('keyword', '');
 
-		if ($d['sess']->user->profesi == 'IPCN' || $d['sess']->user->profesi == 'Komite Mutu') {
-			$b_user_id_penilai = '';
-		}
+		// if ($d['sess']->user->profesi == 'IPCN' || $d['sess']->user->profesi == 'Komite Mutu') {
+		// 	$b_user_id_penilai = '';
+		// }
 
 		if (strlen($bulan)) {
 			$sdate = $bulan;
