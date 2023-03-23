@@ -631,9 +631,9 @@ $("#btn_print").on('click', function(e){
 		url = '<?=base_url('cetak/hh/?')?>'+fd;
 		window.open(url, 'blank');
 	}else if(name == 'Audit Kepatuhan APD'){
-		url = '<?=base_url('cetak/apd/?')?>'
+		url = '<?=base_url('cetak/apd/')?>'
 	}else{
-		url = '<?=base_url('cetak/monev/?')?>'
+		url = '<?=base_url('cetak/monev/')?>'
 	}
 
 	if(name != 'Audit Hand Hygiene'){
