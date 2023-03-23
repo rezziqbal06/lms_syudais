@@ -340,6 +340,7 @@ function initData(fd=[]){
 			hideLoading();
 			if(respon.status==200){
 				var slug = respon.data.ajm.slug;
+				var type_form = respon.data.ajm.type_form;
 				var permission = respon.data.permission;
 				if(respon.data.list && respon.data.list.length > 0){
 					var s = '';
@@ -352,15 +353,15 @@ function initData(fd=[]){
 							<div class="card-body">
 								<div class="row">
 									<div class="col-6">
-										<span class="" style="font-size: smaller;">${v.slug != 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi' ? v.ruangan : ''}</span>
+										<span class="" style="font-size: smaller;">${v.type_form != 2 ? v.ruangan : ''}</span>
 									</div>
 									<div class="col-6">
 										<span class="pill pill-warning ${is_show} float-end">${v.nilai} poin</span>
 									</div>
 								</div>
-								<p class=""><b>${v.slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi' ? v.ruangan : v.nama}</b></p>
+								<p class=""><b>${v.type_form == 2 ? v.ruangan : v.nama}</b></p>
 								<figcaption class="blockquote-footer">
-									${v.slug != 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi' ? v.profesi : ''}
+									${v.type_form != 2 ? v.profesi : ''}
 								</figcaption>
 								<div class="row">
 									<div class="col-8">
@@ -391,17 +392,17 @@ function initData(fd=[]){
 					$(".panel-empty").show();
 				}
 				if(permission.chart){
-					if(slug == 'audit-hand-hygiene'){
+					if(type_form == 1){
 						$("#card-apd-chart").hide();
 						$("#card-monev-chart").hide();
 						$("#card-hygiene-chart").show();
 						grafik_hygiene(respon.data.data);
-					} else if(slug == 'audit-kepatuhan-apd'){
+					} else if(type_form == 3){
 						$("#card-monev-chart").hide();
 						$("#card-hygiene-chart").hide();
 						$("#card-apd-chart").show();
 						grafik_apd(respon.data.data);
-					} else if (slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi'){
+					} else if (type_form == 2){
 						$("#card-hygiene-chart").hide();
 						$("#card-apd-chart").hide();
 						$("#card-monev-chart").show();

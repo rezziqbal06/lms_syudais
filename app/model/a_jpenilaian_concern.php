@@ -25,6 +25,7 @@ class A_JPenilaian_Concern extends \JI_Model
         'nama',
         'slug',
         'deskripsi',
+        'type_form',
         'is_active',
         'is_deleted',
         'cdate',
@@ -33,6 +34,7 @@ class A_JPenilaian_Concern extends \JI_Model
         '',
         '',
         '',
+        1,
         1,
         0,
         'NOW()'
