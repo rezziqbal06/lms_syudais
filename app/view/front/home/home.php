@@ -90,7 +90,7 @@
 		</div>
 	</div>
 
-	<main id="filter" class="sticky-top p-3 bg-background mb-3" style="box-shadow: 0 11px 12px 0px rgba(196,196,196,0.4); top: 100px;">
+	<main id="filter" class="sticky-top p-3 bg-background mb-3" style="box-shadow: 0 11px 12px 0px rgba(196,196,196,0.4); top: 50px;">
 		<div class="d-none d-md-block">
 			<form id="ffilter" class="row">
 				<div id="" class="col-md-3 panel_b_user_id_penilai" style="display:none">
