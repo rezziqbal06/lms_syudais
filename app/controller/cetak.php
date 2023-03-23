@@ -504,7 +504,8 @@ class Cetak extends JI_Controller
 				$objDrawing->setOffsetX(150);
 				$objDrawing->setCoordinates('B2');
 				$objDrawing->setWorksheet($countSheet[$sh]);
-				$countSheet[$sh]->setTitle(str_replace('/', '-', $v->ruangan));
+				$ruangan = str_replace('/', '-', $v->ruangan);
+				$countSheet[$sh]->setTitle($ruangan);
 				$countSheet[$sh]->setCellValue($colAlpha[0] . 2, 'MONITORING KEGIATAN HARIAN PENCEGAHAN PENGENDALIAN INFEKSI DI RUMAH SAKIT UMUM BINA SEHAT')->mergeCells('A' . 2 . ':BL' . 2);
 				$countSheet[$sh]->getStyle('A' . 2 . ':BL' . 2)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
 				$countSheet[$sh]->setCellValue($colAlpha[0] . 4, 'Ruangan');
@@ -594,7 +595,8 @@ class Cetak extends JI_Controller
 					$objDrawing->setOffsetX(150);
 					$objDrawing->setCoordinates('B2');
 					$objDrawing->setWorksheet($countSheet[$sh]);
-					$countSheet[$sh]->setTitle(str_replace('/', '-', $v->ruangan));
+					$ruangan = str_replace('/', '-', $v->ruangan);
+					$countSheet[$sh]->setTitle($ruangan);
 					$countSheet[$sh]->setCellValue($colAlpha[0] . 2, 'MONITORING KEGIATAN HARIAN PENCEGAHAN PENGENDALIAN INFEKSI DI RUMAH SAKIT UMUM BINA SEHAT')->mergeCells('A' . 2 . ':BL' . 2);
 					$countSheet[$sh]->getStyle('A' . 2 . ':BL' . 2)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
 					$countSheet[$sh]->setCellValue($colAlpha[0] . 4, 'Ruangan');
