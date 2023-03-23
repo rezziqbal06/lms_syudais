@@ -502,6 +502,37 @@ class Asesmen extends JI_Controller
 		$this->__json_out($data);
 	}
 
+	public function hardDelete($id)
+	{
+		$d = $this->__init();
+		$data = array();
+		if (!$this->user_login) {
+			$this->status = 400;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			header("HTTP/1.0 400 Harus login");
+			$this->__json_out($data);
+			die();
+		}
+
+		$id = (int) $id;
+		if ($id <= 0) {
+			$this->status = 520;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+			die();
+		}
+		$d_value = $this->dvm->getByAsesmenId($id);
+		if (isset($d_value->id)) {
+			$this->dvm->delByAsesmenId($id);
+		}
+		$this->cam->delById($id);
+		if(isset($_SERVER['HTTP_REFERER'])) {
+			header('Location: ' . $_SERVER['HTTP_REFERER']);
+		 } else {
+			// handle case where there is no previous page
+		 }
+	}
+
 	/**
 	 * Delete data by supplied ID
 	 *
