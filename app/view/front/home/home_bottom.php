@@ -428,14 +428,14 @@ function initData(fd=[]){
 				}else{
 				}
 			}else{
-				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
+				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','warning');
 				NProgress.done();
 			}
 		},
 		error:function(){
 			hideLoading();
 			setTimeout(function(){
-				gritter('<h4>Error</h4><p>Tidak dapat menambah data, silahkan coba beberapa saat lagi</p>','warning');
+				gritter('<h4>Error</h4><p>Tidak dapat menambah data, silahkan coba beberapa saat lagi</p>','danger');
 			}, 666);
 
 			$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
@@ -637,6 +637,7 @@ $("#btn_print").on('click', function(e){
 	}
 
 	if(name != 'Audit Hand Hygiene'){
+		NProgress.start();
 		$.ajax({
 			url: url,
 			data: fd,
@@ -644,20 +645,22 @@ $("#btn_print").on('click', function(e){
 			contentType: false,
 			type: 'POST',
 			success: function(respon){
+				NProgress.done();
 				if(respon.status==200){
 					var link = document.createElement('a');
 					link.href = respon.data.url;
 					link.click();
 				}else{
-					gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
+					gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','warning');
 				}
 				$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
 				$('.btn-submit').prop('disabled',false);
 				NProgress.done();
 			},
 			error:function(){
+				NProgress.done();
 				setTimeout(function(){
-					gritter('<h4>Error</h4><p>Tidak dapat menambah data, silahkan coba beberapa saat lagi</p>','warning');
+					gritter('<h4>Error</h4><p>Tidak dapat menambah data, silahkan coba beberapa saat lagi</p>','danger');
 				}, 666);
 
 				$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
