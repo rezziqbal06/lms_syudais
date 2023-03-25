@@ -738,6 +738,7 @@ class Cetak extends JI_Controller
 			$swriter = $this->ss->newWriter($ssheet);
 			if (file_exists($save_dir . '/' . $save_file . '.xlsx')) unlink($save_dir . '/' . $save_file . '.xlsx');
 			$swriter->save($save_dir . '/' . $save_file . '.xlsx');
+			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Filename: " . $save_dir . '/' . $save_file . '.xlsx');
 
 			$download_path = str_replace(SEMEROOT, '', $save_dir . '/' . $save_file . '.xlsx');
 			// echo '<a href="' . base_url($download_path) . '">' . base_url($download_path) . '</a>';
@@ -745,11 +746,10 @@ class Cetak extends JI_Controller
 			$json_data['url'] = base_url($download_path);
 			$this->status = 200;
 			$this->message = 'OK';
+			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- JSON dat: " . $json_data);
 			$this->__json_out($json_data);
 		} catch (Exception $e) {
-			if ($this->is_log) {
-				$this->seme_log->write("Cetak::Monev -- Menyimpan Excel Error" . $e->getMessage());
-			}
+			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Menyimpan Excel Error: " . $e->getMessage());
 		}
 	}
 
