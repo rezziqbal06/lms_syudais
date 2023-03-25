@@ -433,7 +433,12 @@ class Cetak extends JI_Controller
 
 	public function monev()
 	{
-		$content = $this->_list_for_print();
+		try {
+			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Get Data");
+			$content = $this->_list_for_print();
+		} catch (Exception $e) {
+			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Get Data Error : " . $e->getMessage());
+		}
 		$json_data = [];
 		if ($content['status'] != 200) {
 			$this->status = $content['status'];
@@ -448,9 +453,16 @@ class Cetak extends JI_Controller
 		$maxdate = $content['maxdate'];
 		$mindate = $content['mindate'];
 		$newAim = [];
-		foreach ($aim as $k => $v) {
-			$newAim[$v->id] = $v;
+		try {
+			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Manipulate Data ");
+			$content = $this->_list_for_print();
+			foreach ($aim as $k => $v) {
+				$newAim[$v->id] = $v;
+			}
+		} catch (Exception $e) {
+			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Manipulate Data Error : " . $e->getMessage());
 		}
+
 		$aim = $newAim;
 
 		$sh = 0;
@@ -492,6 +504,7 @@ class Cetak extends JI_Controller
 		}
 		foreach ($list as $k => $v) {
 			try {
+				if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Init Data $k");
 				if ($k == 0) {
 
 					$tempRuangan = $v->ruangan;
@@ -698,7 +711,7 @@ class Cetak extends JI_Controller
 				}
 			} catch (Exception $e) {
 				if ($this->is_log) {
-					$this->seme_log->wrhite("Cetak::Monev -- " . $e->getMessage());
+					$this->seme_log->wrhite("Cetak::Monev -- Init Data $k Error" . $e->getMessage());
 				}
 			}
 		}
