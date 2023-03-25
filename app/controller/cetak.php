@@ -724,38 +724,39 @@ class Cetak extends JI_Controller
 		}
 
 		//save file
-		try {
-			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Menyimpan Excel ");
-			$save_dir = $this->__checkDir(date("Y/m"), "media/$media_dir/");
-			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Save DIR: " . $save_dir);
-			$save_file = $ajm->slug;
-			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Save File: " . $save_file);
-			if ($mindate != $maxdate) {
-				$save_file = $save_file . str_replace('-', '', $mindate) . '-' . str_replace('-', '', $maxdate);
-			} else {
-				$save_file = $save_file . str_replace('-', '', $mindate);
-			}
-			$save_file = str_replace(' ', '', str_replace('/', '', $save_file));
-			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Save File Edited: " . $save_file);
-
-			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Init Writer");
-			$swriter = $this->ss->newWriter($ssheet);
-			if (file_exists($save_dir . '/' . $save_file . '.xlsx')) unlink($save_dir . '/' . $save_file . '.xlsx');
-			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Save Writer");
-			$swriter->save($save_dir . '/' . $save_file . '.xlsx');
-			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Filename: " . $save_dir . '/' . $save_file . '.xlsx');
-
-			$download_path = str_replace(SEMEROOT, '', $save_dir . '/' . $save_file . '.xlsx');
-			// echo '<a href="' . base_url($download_path) . '">' . base_url($download_path) . '</a>';
-			$json_data = [];
-			$json_data['url'] = base_url($download_path);
-			$this->status = 200;
-			$this->message = 'OK';
-			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- JSON dat: " . $json_data);
-			$this->__json_out($json_data);
-		} catch (Exception $e) {
-			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Menyimpan Excel Error: " . $e->getMessage());
+		if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Menyimpan Excel ");
+		$save_dir = $this->__checkDir(date("Y/m"), "media/$media_dir/");
+		if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Save DIR: " . $save_dir);
+		$save_file = $ajm->slug;
+		if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Save File: " . $save_file);
+		if ($mindate != $maxdate) {
+			$save_file = $save_file . str_replace('-', '', $mindate) . '-' . str_replace('-', '', $maxdate);
+		} else {
+			$save_file = $save_file . str_replace('-', '', $mindate);
 		}
+		$save_file = str_replace(' ', '', str_replace('/', '', $save_file));
+		if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Save File Edited: " . $save_file);
+
+		if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Init Writer");
+		$swriter = $this->ss->newWriter($ssheet);
+		if (file_exists($save_dir . '/' . $save_file . '.xlsx')) {
+			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Unlink Existed File: " . $save_dir . '/' . $save_file . '.xlsx');
+			unlink($save_dir . '/' . $save_file . '.xlsx');
+		}
+		try {
+			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Saving File: " . $save_dir . '/' . $save_file . '.xlsx');
+			$swriter->save($save_dir . '/' . $save_file . '.xlsx');
+		} catch (Exception $e) {
+			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Saving File Error: " . $e->getMessage());
+		}
+		$download_path = str_replace(SEMEROOT, '', $save_dir . '/' . $save_file . '.xlsx');
+		// echo '<a href="' . base_url($download_path) . '">' . base_url($download_path) . '</a>';
+		$json_data = [];
+		$json_data['url'] = base_url($download_path);
+		$this->status = 200;
+		$this->message = 'OK';
+		if ($this->is_log) $this->seme_log->write("Cetak::Monev -- JSON data: " . $json_data);
+		$this->__json_out($json_data);
 	}
 
 	public function apd()
