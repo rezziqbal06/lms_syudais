@@ -433,6 +433,7 @@ class Cetak extends JI_Controller
 
 	public function monev()
 	{
+		error_reporting(E_ALL);
 		try {
 			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Get Data");
 			$content = $this->_list_for_print();
@@ -755,7 +756,7 @@ class Cetak extends JI_Controller
 		$json_data['url'] = base_url($download_path);
 		$this->status = 200;
 		$this->message = 'OK';
-		if ($this->is_log) $this->seme_log->write("Cetak::Monev -- JSON data: " . $json_data);
+		if ($this->is_log) $this->seme_log->write("Cetak::Monev -- JSON data: " . json_encode($json_data));
 		$this->__json_out($json_data);
 	}
 
