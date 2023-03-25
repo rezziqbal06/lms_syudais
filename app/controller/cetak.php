@@ -5,7 +5,7 @@
 class Cetak extends JI_Controller
 {
 	var $media_pengguna = 'media/';
-	var $is_log = 1;
+	var $is_log = 0;
 
 	public function __construct()
 	{
