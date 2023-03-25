@@ -505,7 +505,7 @@ class Cetak extends JI_Controller
 		if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Jumlah Data " . count($list));
 		foreach ($list as $k => $v) {
 			try {
-				if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Init Data $k");
+				// if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Init Data $k");
 				if ($k == 0) {
 
 					$tempRuangan = $v->ruangan;
@@ -717,128 +717,6 @@ class Cetak extends JI_Controller
 			}
 		}
 
-
-
-
-		// $aksi = [];
-		// if (isset($aim) && is_array($aim) && count($aim)) {
-		// 	foreach ($aim as $ka => $va) {
-		// 		if ($va->type == 'indikator') {
-		// 			continue;
-		// 		}
-		// 		$aksi[] = $va;
-		// 	}
-		// }
-
-
-
-
-		// if (isset($list) &&  is_array($list) && count($list)) {
-
-		// 	foreach ($list as $k => $v) {
-		// 		$colIdx = 0;
-
-		// 		$sheet->setCellValue($colAlpha[0] . $rowIdx, strtoupper($ajm->nama))->mergeCells('A' . $rowIdx . ':H' . $rowIdx);
-		// 		$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-		// 		$rowIdx++;
-		// 		$rowIdx++;
-		// 		$sheet->setCellValue($colAlpha[0] . $rowIdx, 'Nama');
-		// 		$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
-		// 		$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->nama);
-		// 		$rowIdx++;
-		// 		$sheet->setCellValue($colAlpha[0] . $rowIdx, 'Profesi');
-		// 		$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
-		// 		$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->profesi);
-		// 		$rowIdx++;
-		// 		$sheet->setCellValue($colAlpha[0] . $rowIdx, 'Unit');
-		// 		$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
-		// 		$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->ruangan);
-		// 		$rowIdx++;
-		// 		$sheet->setCellValue($colAlpha[0] . $rowIdx, 'Tanggal Audit');
-		// 		$sheet->setCellValue($colAlpha[1] . $rowIdx, ':');
-		// 		$sheet->setCellValue($colAlpha[2] . $rowIdx, $v->cdate);
-		// 		$rowIdx++;
-
-		// 		//Add table
-		// 		// Header
-		// 		$rowIdx++;
-		// 		$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, 'Jenis Tindakan');
-		// 		$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-		// 		$colIdx++;
-		// 		if (isset($aksi) && is_array($aksi) && count($aksi)) {
-		// 			foreach ($aksi as $ka => $va) {
-		// 				$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $va->nama);
-		// 				$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-		// 				$colIdx++;
-		// 			}
-		// 		}
-
-		// 		$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, 'Persentase');
-		// 		$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-		// 		$colIdx++;
-		// 		$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, 'Keterangan');
-		// 		$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-		// 		$sheet->getStyle('A' . $rowIdx . ':H' . $rowIdx)->getFill()->setFillType('solid')->getStartColor()->setARGB('66bb6a');
-
-		// 		// Content
-		// 		$rowIdx++;
-		// 		if (isset($v->value) && is_array($v->value) && count($v->value)) {
-		// 			$sumPersen = 0;
-		// 			foreach ($v->value as $kvalue => $vvalue) {
-		// 				$colIdx = 0;
-		// 				$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $aim[$vvalue->indikator']]['nama']);
-		// 				$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
-		// 				$colIdx++;
-		// 				$persentase = 0;
-		// 				$ya = 0;
-		// 				foreach ($aksi as $ka => $va) {
-		// 					if (in_array($va->id, $vvalue->aksi'])) {
-		// 						$ya++;
-		// 						$value = 'IYA';
-		// 					} else {
-		// 						$value = 'TIDAK';
-		// 					}
-		// 					$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $value);
-		// 					$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-		// 					$colIdx++;
-		// 				}
-		// 				if ($ya) {
-		// 					$persentase = $ya / count($aksi) * 100;
-		// 					$sumPersen += $persentase;
-		// 				}
-		// 				$sheet->setCellValue($colAlpha[$colIdx] . $rowIdx, $persentase);
-		// 				$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-		// 				$colIdx++;
-		// 				$sheet->getStyle($colAlpha[$colIdx] . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-		// 				$colIdx++;
-
-		// 				$rowIdx++;
-		// 			}
-		// 		}
-
-		// 		$totalPersentase = $sumPersen ? ceil($sumPersen / (count($v->value) * 100) * 100) : 0;
-		// 		$sheet->setCellValue($colAlpha[0] . $rowIdx, 'TOTAL')->mergeCells('A' . $rowIdx . ':F' . $rowIdx);
-		// 		$sheet->setCellValue('G' . $rowIdx, $totalPersentase)->mergeCells('G' . $rowIdx . ':H' . $rowIdx);
-		// 		$sheet->getStyle('A' . $rowIdx . ':H' . $rowIdx)->getFill()->setFillType('solid')->getStartColor()->setARGB('d7a510');
-		// 		$sheet->getStyle('A' . $rowIdx . ':F' . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-		// 		$sheet->getStyle('G' . $rowIdx . ':H' . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-		// 		$rowIdx++;
-
-
-		// 		$rowIdx++;
-		// 		$sheet->setCellValue($colAlpha[2] . $rowIdx, 'IPCN')->mergeCells('C' . $rowIdx . ':D' . $rowIdx);
-		// 		$rowIdx++;
-		// 		$rowIdx++;
-		// 		$sheet->setCellValue($colAlpha[2] . $rowIdx, '(………………………………………)')->mergeCells('C' . $rowIdx . ':D' . $rowIdx);
-		// 		$rowIdx++;
-		// 		$rowIdx++;
-
-		// 		// $sheet->getStyle($colAlpha[0] . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-		// 	}
-		// }
-
-
-
 		if ($ajm->slug == 'audit-kepatuhan-apd') {
 			$media_dir = 'apd';
 		} else {
@@ -846,26 +724,33 @@ class Cetak extends JI_Controller
 		}
 
 		//save file
-		$save_dir = $this->__checkDir(date("Y/m"), "media/$media_dir/");
-		$save_file = $ajm->slug;
-		if ($mindate != $maxdate) {
-			$save_file = $save_file . str_replace('-', '', $mindate) . '-' . str_replace('-', '', $maxdate);
-		} else {
-			$save_file = $save_file . str_replace('-', '', $mindate);
+		try {
+			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Menyimpan Excel " . count($list));
+			$save_dir = $this->__checkDir(date("Y/m"), "media/$media_dir/");
+			$save_file = $ajm->slug;
+			if ($mindate != $maxdate) {
+				$save_file = $save_file . str_replace('-', '', $mindate) . '-' . str_replace('-', '', $maxdate);
+			} else {
+				$save_file = $save_file . str_replace('-', '', $mindate);
+			}
+			$save_file = str_replace(' ', '', str_replace('/', '', $save_file));
+
+			$swriter = $this->ss->newWriter($ssheet);
+			if (file_exists($save_dir . '/' . $save_file . '.xlsx')) unlink($save_dir . '/' . $save_file . '.xlsx');
+			$swriter->save($save_dir . '/' . $save_file . '.xlsx');
+
+			$download_path = str_replace(SEMEROOT, '', $save_dir . '/' . $save_file . '.xlsx');
+			// echo '<a href="' . base_url($download_path) . '">' . base_url($download_path) . '</a>';
+			$json_data = [];
+			$json_data['url'] = base_url($download_path);
+			$this->status = 200;
+			$this->message = 'OK';
+			$this->__json_out($json_data);
+		} catch (Exception $e) {
+			if ($this->is_log) {
+				$this->seme_log->write("Cetak::Monev -- Menyimpan Excel Error" . $e->getMessage());
+			}
 		}
-		$save_file = str_replace(' ', '', str_replace('/', '', $save_file));
-
-		$swriter = $this->ss->newWriter($ssheet);
-		if (file_exists($save_dir . '/' . $save_file . '.xlsx')) unlink($save_dir . '/' . $save_file . '.xlsx');
-		$swriter->save($save_dir . '/' . $save_file . '.xlsx');
-
-		$download_path = str_replace(SEMEROOT, '', $save_dir . '/' . $save_file . '.xlsx');
-		// echo '<a href="' . base_url($download_path) . '">' . base_url($download_path) . '</a>';
-		$json_data = [];
-		$json_data['url'] = base_url($download_path);
-		$this->status = 200;
-		$this->message = 'OK';
-		$this->__json_out($json_data);
 	}
 
 	public function apd()
