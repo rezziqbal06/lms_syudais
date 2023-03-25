@@ -1,6 +1,7 @@
 .log/*
 *.log
 seme.log
+error_log
 .DS_Store
 *DS_Store*
 .scannerwork/*
