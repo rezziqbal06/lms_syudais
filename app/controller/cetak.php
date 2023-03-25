@@ -502,6 +502,7 @@ class Cetak extends JI_Controller
 			}
 			$columnTgl++;
 		}
+		if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Jumlah Data count($list)");
 		foreach ($list as $k => $v) {
 			try {
 				if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Init Data $k");
@@ -711,7 +712,7 @@ class Cetak extends JI_Controller
 				}
 			} catch (Exception $e) {
 				if ($this->is_log) {
-					$this->seme_log->wrhite("Cetak::Monev -- Init Data $k Error" . $e->getMessage());
+					$this->seme_log->write("Cetak::Monev -- Init Data $k Error" . $e->getMessage());
 				}
 			}
 		}
