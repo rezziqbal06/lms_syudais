@@ -5,6 +5,7 @@
 class Cetak extends JI_Controller
 {
 	var $media_pengguna = 'media/';
+	var $is_log = 1;
 
 	public function __construct()
 	{
@@ -26,6 +27,7 @@ class Cetak extends JI_Controller
 
 		$this->lib('seme_dompdf', 'dompdf');
 		$this->lib('seme_spreadsheet', 'ss');
+		$this->lib("seme_log");
 	}
 
 	public function index()
@@ -489,105 +491,16 @@ class Cetak extends JI_Controller
 			$columnTgl++;
 		}
 		foreach ($list as $k => $v) {
-			if ($k == 0) {
-				$tempRuangan = $v->ruangan;
-				$tempTgl = $v->tgl;
-				$tempKategori = $v->indikator_kategori;
-				$tempSubKategori = $v->indikator_subkategori;
+			try {
+				if ($k == 0) {
 
-				//Header
-				$countSheet[$sh] = $ssheet->getActiveSheet();
-				$objDrawing = $this->ss->newDrawing();
-				$objDrawing->setPath('media/logo.png');
-				$objDrawing->setWidth(50);
-				$objDrawing->setHeight(50);
-				$objDrawing->setOffsetX(150);
-				$objDrawing->setCoordinates('B2');
-				$objDrawing->setWorksheet($countSheet[$sh]);
-				$ruangan = str_replace('/', '-', $v->ruangan);
-				$countSheet[$sh]->setTitle($ruangan);
-				$countSheet[$sh]->setCellValue($colAlpha[0] . 2, 'MONITORING KEGIATAN HARIAN PENCEGAHAN PENGENDALIAN INFEKSI DI RUMAH SAKIT UMUM BINA SEHAT')->mergeCells('A' . 2 . ':BL' . 2);
-				$countSheet[$sh]->getStyle('A' . 2 . ':BL' . 2)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-				$countSheet[$sh]->setCellValue($colAlpha[0] . 4, 'Ruangan');
-				$countSheet[$sh]->setCellValue($colAlpha[1] . 4, ': ' . $v->ruangan);
-				$countSheet[$sh]->setCellValue($colAlpha[0] . 5, 'Bulan');
-				$countSheet[$sh]->setCellValue($colAlpha[1] . 5, ': ' . $v->bulan_tahun);
-
-				$countSheet[$sh]->setCellValue($colAlpha[0] . 7, 'NO')->mergeCells('A' . 7 . ':A' . 9);
-				$countSheet[$sh]->getStyle('A' . 7 . ':A' . 9)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-				$countSheet[$sh]->setCellValue($colAlpha[1] . 7, 'INDIKATOR')->mergeCells('B' . 7 . ':B' . 9);
-				$countSheet[$sh]->getStyle('B' . 7 . ':B' . 9)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-				$countSheet[$sh]->setCellValue($colAlpha[2] . 7, 'TANGGAL')->mergeCells('C' . 7 . ':BL' . 7);
-				$countSheet[$sh]->getStyle('C' . 7 . ':BL' . 7)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-
-				$columnTgl = 2;
-				$tgl = 1;
-				for ($i = 0; $i < 62; $i++) {
-					if ($columnTgl % 2 == 0) {
-						$countSheet[$sh]->setCellValue($colAlpha[$columnTgl] . 8, $tgl)->mergeCells($colAlpha[$columnTgl] . 8 . ':' . $colAlpha[($columnTgl + 1)] . 8);
-						$countSheet[$sh]->getStyle($colAlpha[$columnTgl] . 8 . ':' . $colAlpha[($columnTgl + 1)] . 8)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-						$countSheet[$sh]->setCellValue($colAlpha[$columnTgl] . 9, 'Y');
-						$countSheet[$sh]->getStyle($colAlpha[$columnTgl] . 9, 'Y')->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-						$tgl++;
-					} else {
-						$countSheet[$sh]->setCellValue($colAlpha[$columnTgl] . 9, 'T');
-						$countSheet[$sh]->getStyle($colAlpha[$columnTgl] . 9, 'T')->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-					}
-					$columnTgl++;
-				}
-
-				//Indikator
-				$countSheet[$sh]->setCellValue($colAlpha[0] . $rowIdx, $v->indikator_kategori)->mergeCells('A' . $rowIdx . ':BF' . $rowIdx);
-				$countSheet[$sh]->setCellValue('BG' . $rowIdx, 'HASIL')->mergeCells('BG' . $rowIdx . ':BJ' . $rowIdx);
-				$countSheet[$sh]->setCellValue('BK' . $rowIdx, $v->aksi_persentase)->mergeCells('BK' . $rowIdx . ':BL' . $rowIdx);
-				$countSheet[$sh]->getStyle('A' . $rowIdx . ':BL' . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
-				$countSheet[$sh]->getStyle('A' . $rowIdx . ':BL' . $rowIdx)->getFill()->setFillType('solid')->getStartColor()->setARGB('66bb6a');
-				$rowIdx++;
-				$rowTgl++;
-
-				// auto fit columns
-				foreach ($countSheet[$sh]->getColumnIterator() as $column) {
-					if ($column->getColumnIndex() != 'B') {
-						$countSheet[$sh]->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
-					} else {
-						$countSheet[$sh]->getColumnDimension($column->getColumnIndex())->setWidth(35);
-						$countSheet[$sh]->getStyle('B')->getAlignment()->setWrapText(true);
-					}
-				}
-			} else {
-				if ($tempTgl != $v->tgl) {
-					if ($isFirst) {
-						$lastRowTgl = $rowTgl;
-						$columnTgl = 2;
-						for ($i = 0; $i <= 62; $i++) {
-							if ($i != 62) {
-								$countSheet[$sh]->getStyle($colAlpha[$columnTgl] . 10 . ':' . $colAlpha[$columnTgl] . ($lastRowTgl - 1))->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-							}
-							$columnTgl++;
-						}
-					}
-				}
-				if ($tempRuangan != $v->ruangan) {
-					$rowIdx++;
-					$countSheet[$sh]->setCellValue('AQ' . $rowIdx, 'IPCN')->mergeCells('AQ' . $rowIdx . ':BB' . $rowIdx);
-					$countSheet[$sh]->getStyle('AQ' . $rowIdx . ':BB' . $rowIdx)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-					$rowIdx++;
-					$rowIdx++;
-					$rowIdx++;
-					$rowIdx++;
-					$countSheet[$sh]->setCellValue('AQ' . $rowIdx, '(………………………………………)')->mergeCells('AQ' . $rowIdx . ':BB' . $rowIdx);
-					$countSheet[$sh]->getStyle('AQ' . $rowIdx . ':BB' . $rowIdx)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-
-					$nomor = 1;
-					$rowIdx = 10;
-					$rowTgl = 10;
-					$isFirst = true;
 					$tempRuangan = $v->ruangan;
 					$tempTgl = $v->tgl;
 					$tempKategori = $v->indikator_kategori;
 					$tempSubKategori = $v->indikator_subkategori;
-					$sh++;
-					$countSheet[$sh] = $ssheet->createSheet();
+
+					//Header
+					$countSheet[$sh] = $ssheet->getActiveSheet();
 					$objDrawing = $this->ss->newDrawing();
 					$objDrawing->setPath('media/logo.png');
 					$objDrawing->setWidth(50);
@@ -645,16 +558,80 @@ class Cetak extends JI_Controller
 							$countSheet[$sh]->getStyle('B')->getAlignment()->setWrapText(true);
 						}
 					}
-				}
-				if ($tempTgl != $v->tgl) {
-					$tempTgl = $v->tgl;
-					$rowTgl = 10;
-					$isFirst = false;
-				}
-				if ($tempKategori != $v->indikator_kategori) {
-					$tempKategori = $v->indikator_kategori;
-					if ($isFirst) {
+				} else {
+
+					if ($tempTgl != $v->tgl) {
+						if ($isFirst) {
+							$lastRowTgl = $rowTgl;
+							$columnTgl = 2;
+							for ($i = 0; $i <= 62; $i++) {
+								if ($i != 62) {
+									$countSheet[$sh]->getStyle($colAlpha[$columnTgl] . 10 . ':' . $colAlpha[$columnTgl] . ($lastRowTgl - 1))->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
+								}
+								$columnTgl++;
+							}
+						}
+					}
+					if ($tempRuangan != $v->ruangan) {
+						$rowIdx++;
+						$countSheet[$sh]->setCellValue('AQ' . $rowIdx, 'IPCN')->mergeCells('AQ' . $rowIdx . ':BB' . $rowIdx);
+						$countSheet[$sh]->getStyle('AQ' . $rowIdx . ':BB' . $rowIdx)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
+						$rowIdx++;
+						$rowIdx++;
+						$rowIdx++;
+						$rowIdx++;
+						$countSheet[$sh]->setCellValue('AQ' . $rowIdx, '(………………………………………)')->mergeCells('AQ' . $rowIdx . ':BB' . $rowIdx);
+						$countSheet[$sh]->getStyle('AQ' . $rowIdx . ':BB' . $rowIdx)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
+
 						$nomor = 1;
+						$rowIdx = 10;
+						$rowTgl = 10;
+						$isFirst = true;
+						$tempRuangan = $v->ruangan;
+						$tempTgl = $v->tgl;
+						$tempKategori = $v->indikator_kategori;
+						$tempSubKategori = $v->indikator_subkategori;
+						$sh++;
+						$countSheet[$sh] = $ssheet->createSheet();
+						$objDrawing = $this->ss->newDrawing();
+						$objDrawing->setPath('media/logo.png');
+						$objDrawing->setWidth(50);
+						$objDrawing->setHeight(50);
+						$objDrawing->setOffsetX(150);
+						$objDrawing->setCoordinates('B2');
+						$objDrawing->setWorksheet($countSheet[$sh]);
+						$ruangan = str_replace('/', '-', $v->ruangan);
+						$countSheet[$sh]->setTitle($ruangan);
+						$countSheet[$sh]->setCellValue($colAlpha[0] . 2, 'MONITORING KEGIATAN HARIAN PENCEGAHAN PENGENDALIAN INFEKSI DI RUMAH SAKIT UMUM BINA SEHAT')->mergeCells('A' . 2 . ':BL' . 2);
+						$countSheet[$sh]->getStyle('A' . 2 . ':BL' . 2)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
+						$countSheet[$sh]->setCellValue($colAlpha[0] . 4, 'Ruangan');
+						$countSheet[$sh]->setCellValue($colAlpha[1] . 4, ': ' . $v->ruangan);
+						$countSheet[$sh]->setCellValue($colAlpha[0] . 5, 'Bulan');
+						$countSheet[$sh]->setCellValue($colAlpha[1] . 5, ': ' . $v->bulan_tahun);
+
+						$countSheet[$sh]->setCellValue($colAlpha[0] . 7, 'NO')->mergeCells('A' . 7 . ':A' . 9);
+						$countSheet[$sh]->getStyle('A' . 7 . ':A' . 9)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
+						$countSheet[$sh]->setCellValue($colAlpha[1] . 7, 'INDIKATOR')->mergeCells('B' . 7 . ':B' . 9);
+						$countSheet[$sh]->getStyle('B' . 7 . ':B' . 9)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
+						$countSheet[$sh]->setCellValue($colAlpha[2] . 7, 'TANGGAL')->mergeCells('C' . 7 . ':BL' . 7);
+						$countSheet[$sh]->getStyle('C' . 7 . ':BL' . 7)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
+
+						$columnTgl = 2;
+						$tgl = 1;
+						for ($i = 0; $i < 62; $i++) {
+							if ($columnTgl % 2 == 0) {
+								$countSheet[$sh]->setCellValue($colAlpha[$columnTgl] . 8, $tgl)->mergeCells($colAlpha[$columnTgl] . 8 . ':' . $colAlpha[($columnTgl + 1)] . 8);
+								$countSheet[$sh]->getStyle($colAlpha[$columnTgl] . 8 . ':' . $colAlpha[($columnTgl + 1)] . 8)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
+								$countSheet[$sh]->setCellValue($colAlpha[$columnTgl] . 9, 'Y');
+								$countSheet[$sh]->getStyle($colAlpha[$columnTgl] . 9, 'Y')->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
+								$tgl++;
+							} else {
+								$countSheet[$sh]->setCellValue($colAlpha[$columnTgl] . 9, 'T');
+								$countSheet[$sh]->getStyle($colAlpha[$columnTgl] . 9, 'T')->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
+							}
+							$columnTgl++;
+						}
+
 						//Indikator
 						$countSheet[$sh]->setCellValue($colAlpha[0] . $rowIdx, $v->indikator_kategori)->mergeCells('A' . $rowIdx . ':BF' . $rowIdx);
 						$countSheet[$sh]->setCellValue('BG' . $rowIdx, 'HASIL')->mergeCells('BG' . $rowIdx . ':BJ' . $rowIdx);
@@ -662,34 +639,67 @@ class Cetak extends JI_Controller
 						$countSheet[$sh]->getStyle('A' . $rowIdx . ':BL' . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
 						$countSheet[$sh]->getStyle('A' . $rowIdx . ':BL' . $rowIdx)->getFill()->setFillType('solid')->getStartColor()->setARGB('66bb6a');
 						$rowIdx++;
+						$rowTgl++;
+
+						// auto fit columns
+						foreach ($countSheet[$sh]->getColumnIterator() as $column) {
+							if ($column->getColumnIndex() != 'B') {
+								$countSheet[$sh]->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+							} else {
+								$countSheet[$sh]->getColumnDimension($column->getColumnIndex())->setWidth(35);
+								$countSheet[$sh]->getStyle('B')->getAlignment()->setWrapText(true);
+							}
+						}
 					}
-					$rowTgl++;
+					if ($tempTgl != $v->tgl) {
+						$tempTgl = $v->tgl;
+						$rowTgl = 10;
+						$isFirst = false;
+					}
+					if ($tempKategori != $v->indikator_kategori) {
+						$tempKategori = $v->indikator_kategori;
+						if ($isFirst) {
+							$nomor = 1;
+							//Indikator
+							$countSheet[$sh]->setCellValue($colAlpha[0] . $rowIdx, $v->indikator_kategori)->mergeCells('A' . $rowIdx . ':BF' . $rowIdx);
+							$countSheet[$sh]->setCellValue('BG' . $rowIdx, 'HASIL')->mergeCells('BG' . $rowIdx . ':BJ' . $rowIdx);
+							$countSheet[$sh]->setCellValue('BK' . $rowIdx, $v->aksi_persentase)->mergeCells('BK' . $rowIdx . ':BL' . $rowIdx);
+							$countSheet[$sh]->getStyle('A' . $rowIdx . ':BL' . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
+							$countSheet[$sh]->getStyle('A' . $rowIdx . ':BL' . $rowIdx)->getFill()->setFillType('solid')->getStartColor()->setARGB('66bb6a');
+							$rowIdx++;
+						}
+						$rowTgl++;
+					}
 				}
-			}
 
-			if ($isFirst) {
-				$countSheet[$sh]->getStyle('C' . $rowIdx . ':BL' . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-				$countSheet[$sh]->setCellValue($colAlpha[1] . $rowIdx, $v->indikator_nama);
-				$countSheet[$sh]->getStyle($colAlpha[1] . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
-				$countSheet[$sh]->setCellValue($colAlpha[0] . $rowIdx, $nomor);
-				$countSheet[$sh]->getStyle($colAlpha[0] . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
-				$rowIdx++;
-				$nomor++;
-			}
-			$countSheet[$sh]->setCellValue($colTgl[$v->tgl][$v->aksi] . $rowTgl, '√');
-			$rowTgl++;
+				if ($isFirst) {
+					$countSheet[$sh]->getStyle('C' . $rowIdx . ':BL' . $rowIdx)->applyFromArray($this->ss->_textBorderBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
+					$countSheet[$sh]->setCellValue($colAlpha[1] . $rowIdx, $v->indikator_nama);
+					$countSheet[$sh]->getStyle($colAlpha[1] . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
+					$countSheet[$sh]->setCellValue($colAlpha[0] . $rowIdx, $nomor);
+					$countSheet[$sh]->getStyle($colAlpha[0] . $rowIdx)->applyFromArray($this->ss->_textBorderBold());
+					$rowIdx++;
+					$nomor++;
+				}
+				$countSheet[$sh]->setCellValue($colTgl[$v->tgl][$v->aksi] . $rowTgl, '√');
+				$rowTgl++;
 
-			if ($k == count($list) - 1) {
-				$rowIdx++;
-				$countSheet[$sh]->setCellValue('AQ' . $rowIdx, 'IPCN')->mergeCells('AQ' . $rowIdx . ':BB' . $rowIdx);
-				$countSheet[$sh]->getStyle('AQ' . $rowIdx . ':BB' . $rowIdx)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-				$rowIdx++;
-				$rowIdx++;
-				$rowIdx++;
-				$rowIdx++;
-				$countSheet[$sh]->setCellValue('AQ' . $rowIdx, '(………………………………………)')->mergeCells('AQ' . $rowIdx . ':BB' . $rowIdx);
-				$countSheet[$sh]->getStyle('AQ' . $rowIdx . ':BB' . $rowIdx)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
-				$ssheet->setActiveSheetIndex(0);
+				if ($k == count($list) - 1) {
+					$rowIdx++;
+					$countSheet[$sh]->setCellValue('AQ' . $rowIdx, 'IPCN')->mergeCells('AQ' . $rowIdx . ':BB' . $rowIdx);
+					$countSheet[$sh]->getStyle('AQ' . $rowIdx . ':BB' . $rowIdx)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
+					$rowIdx++;
+					$rowIdx++;
+					$rowIdx++;
+					$rowIdx++;
+					$countSheet[$sh]->setCellValue('AQ' . $rowIdx, '(………………………………………)')->mergeCells('AQ' . $rowIdx . ':BB' . $rowIdx);
+					$countSheet[$sh]->getStyle('AQ' . $rowIdx . ':BB' . $rowIdx)->applyFromArray($this->ss->_textBold())->getAlignment()->applyFromArray($this->ss->_textCenter());
+					$ssheet->setActiveSheetIndex(0);
+				}
+			} catch (Exception $e) {
+				if ($this->is_log) {
+					$this->seme_log->wrhite("Cetak::Monev -- " . $e->getMessage());
+				}
 			}
 		}
 
