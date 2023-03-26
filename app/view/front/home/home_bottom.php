@@ -249,7 +249,7 @@ function grafik_asesmen(){
 	});
 }
 
-function grafik_hygiene(respon){
+function grafik_hygiene(name, respon){
 	let today = new Date();
 	let series = [];
 
@@ -273,7 +273,7 @@ function grafik_hygiene(respon){
 	}, 100)
 }
 
-function grafik_apd(respon){
+function grafik_apd(name, respon){
 	let today = new Date();
 	let series = [];
 
@@ -297,7 +297,7 @@ function grafik_apd(respon){
 	}, 100)
 }
 
-function grafik_monev(respon){
+function grafik_monev(name, respon){
 	let today = new Date();
 	let series = [];
 
@@ -342,6 +342,7 @@ function initData(fd=[]){
 			hideLoading();
 			if(respon.status==200){
 				var slug = respon.data.ajm.slug;
+				var name = respon.data.ajm.nama;
 				var type_form = respon.data.ajm.type_form;
 				var permission = respon.data.permission;
 				if(respon.data.list && respon.data.list.length > 0){
@@ -406,17 +407,17 @@ function initData(fd=[]){
 						$("#card-apd-chart").hide();
 						$("#card-monev-chart").hide();
 						$("#card-hygiene-chart").show();
-						grafik_hygiene(respon.data.data);
+						grafik_hygiene(name, respon.data.data);
 					} else if(type_form == 3){
 						$("#card-monev-chart").hide();
 						$("#card-hygiene-chart").hide();
 						$("#card-apd-chart").show();
-						grafik_apd(respon.data.data);
+						grafik_apd(name, respon.data.data);
 					} else if (type_form == 2){
 						$("#card-hygiene-chart").hide();
 						$("#card-apd-chart").hide();
 						$("#card-monev-chart").show();
-						grafik_monev(respon.data.data);
+						grafik_monev(name, respon.data.data);
 					}
 					$(".panel-statistik").show();
 					$(".panel-filter").show();
@@ -629,21 +630,22 @@ $("#btn_print").on('click', function(e){
 	}
 	
 	var name = $('#jenis_penilaian').find('option:selected').text();
+	var type_form = $('#jenis_penilaian').find('option:selected').attr('data-type-form');
 	var url = '';
-	if(name == 'Audit Hand Hygiene'){
+	if(type_form == 1){
 		var fd = $("#ffilter").serialize();
 		if(fd){
 			fd += '&a_jpenilaian_id='+$('#jenis_penilaian').find('option:selected').val();
 		}
 		url = '<?=base_url('cetak/hh/?')?>'+fd;
 		window.open(url, 'blank');
-	}else if(name == 'Audit Kepatuhan APD'){
+	}else if(type_form == 3){
 		url = '<?=base_url('cetak/apd/')?>'
 	}else{
 		url = '<?=base_url('cetak/monev/')?>'
 	}
 
-	if(name != 'Audit Hand Hygiene'){
+	if(type_form != 1){
 		NProgress.start();
 		$.ajax({
 			url: url,

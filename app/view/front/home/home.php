@@ -38,7 +38,7 @@
 			<select name="" id="jenis_penilaian" class="form-control">
 				<?php if (isset($ajm) && count($ajm)) : ?>
 					<?php foreach ($ajm as $k => $v) : ?>
-						<option value="<?= $v->id ?>"><?= $v->nama ?></option>
+						<option value="<?= $v->id ?>" data-type-form="<?= $v->type_form ?>"><?= $v->nama ?></option>
 					<?php endforeach ?>
 				<?php endif ?>
 			</select>

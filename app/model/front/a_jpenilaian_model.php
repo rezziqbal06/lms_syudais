@@ -24,7 +24,7 @@ class A_JPenilaian_Model extends \Model\A_JPenilaian_Concern
 
 	public function getAll($is_active = 1)
 	{
-		$this->db->select('id')->select('nama')->select('slug');
+		$this->db->select('id')->select('nama')->select('slug')->select('type_form');
 		$this->db->where('is_active', $is_active);
 		return $this->db->get('', 0);
 	}

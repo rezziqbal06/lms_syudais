@@ -787,7 +787,7 @@ class Cetak extends JI_Controller
 		$ssheet = $this->ss->newSpreadSheet();
 		$ssheet->setActiveSheetIndex(0);
 		$sheet = $ssheet->getActiveSheet();
-		$sheet->setTitle($ajm->nama);
+		// $sheet->setTitle($ajm->nama);
 
 		$aksi = [];
 		if (isset($aim) && is_array($aim) && count($aim)) {
