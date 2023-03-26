@@ -24,7 +24,7 @@
 			<div class="col-md-6"></div>
 			<div class="col-md-6">
 				<div class="btn-group pull-right">
-					<button id="atambah" type="button" class="btn btn-info btn-submit"><i class="fa fa-plus icon-submit"></i> Baru</button>
+					<!-- <button id="atambah" type="button" class="btn btn-info btn-submit"><i class="fa fa-plus icon-submit"></i> Baru</button> -->
 				</div>
 			</div>
 		</div>

@@ -57,6 +57,10 @@
 									<label for="islug" class="control-label">Slug</label>
 									<input id="islug" type="text" name="slug" class="form-control" required>
 								</div>
+								<div class="col-md-6">
+									<label for="itype_form" class="control-label">Tipe Formulir</label>
+									<input id="itype_form" type="number" name="type_form" class="form-control" required>
+								</div>
 								<div class="col-md-12">
 									<label for="ideskripsi" class="control-label">Deskripsi</label>
 									<textarea name="deskripsi" id="ideskripsi" class="form-control" cols="30" rows="10"></textarea>
@@ -166,6 +170,10 @@
 								<div class="col-md-6">
 									<label for="ieslug" class="control-label">Slug</label>
 									<input id="ieslug" type="text" name="slug" class="form-control" required>
+								</div>
+								<div class="col-md-6">
+									<label for="ietype_form" class="control-label">Tipe Formulir</label>
+									<input id="ietype_form" type="number" name="type_form" class="form-control" required>
 								</div>
 								<div class="col-md-12">
 									<label for="iedeskripsi" class="control-label">Deskripsi</label>
