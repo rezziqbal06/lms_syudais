@@ -46,6 +46,8 @@ class Home extends JI_Controller
 		$data['arm'] = $arm;
 		unset($arm);
 
+		$data['jp'] = $this->input->request('jp', 2);
+
 		$this->putThemeContent("home/home", $data);
 		$this->putThemeContent("home/home_modal", $data);
 		$this->putThemeContent("home/print_hh", $data);

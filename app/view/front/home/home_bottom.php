@@ -174,6 +174,8 @@ function download(file, filename) {
 		chartHygiene.render();
 		chartApd.render();
 		chartMonev.render();
+		var jp = <?=$jp ?? 2?>;
+		if(jp) $("#jenis_penilaian").val(jp);
 		setTimeout(function(){
 			var fd = new FormData($("#ffilter")[0]);
 			initData(fd);
@@ -708,7 +710,6 @@ $(document).on('change',"[id^='im_']", function(e){
 	}
 	var id = $(this).attr('id');
 	id = id.replace('im_','i');
-	console.log(id, value, tag);
 	if(tag == 'SELECT'){
 		$("#"+id).val(value).select2();
 

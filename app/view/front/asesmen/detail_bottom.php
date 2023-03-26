@@ -1,8 +1,45 @@
+function removeLocalData(){
+<?php if(!isset($cam)) : ?>
+	var key = '<?=$ajm->id.'-'.$sess->user->id?>';
+	localStorage.removeItem(key);
+<?php endif ?>
+}
+
+function initLocalData(){
+<?php if(!isset($cam)) : ?>
+	var key = '<?=$ajm->id.'-'.$sess->user->id?>';
+	let data = localStorage.getItem(key);
+	if(data){
+		data = JSON.parse(data);
+		console.log(data, 'data local')
+		$.each(data, function(k,v){
+			if(v.name.includes('[]')){
+
+			}else{
+				var tag = $("#"+v.name).prop('tagName');
+				if(tag == 'SELECT'){
+					$("#"+v.name).val(v.value).select2();
+				}else{
+					$("#"+v.name).val(v.value);
+				}
+				var tag = $("#i"+v.name).prop('tagName');
+				if(tag == 'SELECT'){
+					$("#i"+v.name).val(v.value).select2();
+				}else{
+					$("#i"+v.name).val(v.value);
+				}
+			}
+		})
+	} 
+	
+<?php endif ?>
+}
 
 $("#btn_back").on('click', function(e){
     e.preventDefault();
     var c = confirm('Apakah anda yakin?');
     if(c){
+		removeLocalData();
         history.back()
     }
 })
@@ -10,12 +47,13 @@ $("#btn_back").on('click', function(e){
 //submit form
 $("#ftambah").on("submit",function(e){
 	e.preventDefault();
-	var c = confirm('Apakah anda yakin? Penilaian yang tersimpan tidak bisa diedit kembali.');
+	var c = confirm('Apakah anda yakin?');
+	// var c = confirm('Apakah anda yakin? Penilaian yang tersimpan tidak bisa diedit kembali.');
 	if(!c){
 		return;
 		return false;
 	}
-	if(!$("#tgl_asesmen").val()){
+	if(!$("#cdate").val()){
 		gritter('<p>Tanggal belum terisi</p>','warning');
 		return false;
 	}
@@ -55,9 +93,10 @@ $("#ftambah").on("submit",function(e){
 			type: $(this).attr('method'),
 			success: function(respon){
 				if(respon.status==200){
+					removeLocalData();
 					gritter('<h4>Sukses</h4><p>Data berhasil ditambahkan</p>','success');
 					setTimeout(function(){
-						window.location = '<?=base_url('home')?>';
+						window.location = '<?=base_url('home/?jp=').$ajm->id?>';
 					},500);
 				}else{
 					gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','warning');
@@ -123,13 +162,14 @@ $(document).on('ready',() => {
 	$(".select2").select2();
 	cariUser();
 	
+	//initLocalData();
 })
 
 
 $("#pilih_user").on('click', function(e){
     e.preventDefault();
     var id = $('#cari_user').find('option:selected').val();
-	var cdate = $('#tgl_asesmen').val();
+	var cdate = $('#cdate').val();
     $.get('<?=base_url('api_front/user/detail/')?>' + id + '/' + '?jenis_penilaian=<?=$ajm->slug?>&cdate='+cdate).done(function(dt){
         if(dt.data){
             $("#ib_user_id").val(id);
@@ -147,7 +187,7 @@ $("#pilih_user").on('click', function(e){
 						$('.progress-bar').addClass('bg-warning');
 						message = 'penilaian sudah maksimal di bulan ini (10 kali)';
 					}else{
-						message = dt.data.jumlah_penilaian+' kali penilaian di bulan ini';
+						message = dt.data.jumlah_penilaian;
 					}
                     $('.progress-bar').css('width', dt.data.progress_penilaian+'%').attr('aria-valuenow', dt.data.progress_penilaian).text(message); 
                     $('.progress').slideDown();
@@ -177,7 +217,7 @@ $("#pilih_user").on('click', function(e){
 						$('.progress-bar').addClass('bg-warning');
 						message = 'penilaian sudah maksimal di bulan ini (10 kali)';
 					}else{
-						message = dt.data.jumlah_penilaian+' kali penilaian di bulan ini';
+						message = dt.data.jumlah_penilaian;
 					}
                     $('.progress-bar').css('width', dt.data.progress_penilaian+'%').attr('aria-valuenow', dt.data.progress_penilaian).text(message); 
                     $('.progress').slideDown();
@@ -399,7 +439,7 @@ function initDataByRuanganId(r_id=0, val_edit = []){
 	});
 }
 
-$('#tgl_asesmen').datepicker({format: 'yyyy-mm-dd'})
+$('#cdate').datepicker({format: 'yyyy-mm-dd'})
 
 
 <?php if(($permission->create && !isset($value)) || ($permission->edit && isset($value))){ ?>
@@ -474,7 +514,7 @@ if(<?= $type_form ?> == 1){
 			$('.progress-bar').addClass('bg-warning');
 			items = 'penilaian sudah maksimal di bulan ini (10 kali)';
 		}else{
-			items = items+' kali penilaian di bulan ini';
+			items = items;
 		}
 		$('.progress').slideUp();
 		if(items){
@@ -497,3 +537,23 @@ $(document).on('change', '.indikator-select', function(e){
 	let value = $(this).find('option:selected').val();
 	$("#ia_indikator_id_"+count).val(value);
 });
+
+<?php if(!isset($cam)) : ?>
+//Offline mode
+$(document).off('change', 'select');
+$(document).on('change', 'select', function(e){
+	e.preventDefault();
+	var key = '<?=$ajm->id.'-'.$sess->user->id?>';
+	var data = $("#ftambah").serializeArray();
+	localStorage.setItem(key, JSON.stringify(data));
+	console.log('simpan local', key, data);
+});
+$(document).off('input', 'input');
+$(document).on('input', 'input', function(e){
+	e.preventDefault();
+	var key = '<?=$ajm->id.'-'.$sess->user->id?>';
+	var data = $("#ftambah").serializeArray();
+	localStorage.setItem(key, JSON.stringify(data));
+	console.log('simpan local', key, data);
+});
+<?php endif ?>

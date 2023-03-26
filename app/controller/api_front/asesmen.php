@@ -101,6 +101,7 @@ class Asesmen extends JI_Controller
 			$this->__json_out($data);
 			die();
 		}
+
 		if (!$this->cam->validates()) {
 			$this->status = 444;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -120,6 +121,95 @@ class Asesmen extends JI_Controller
 			die();
 		}
 
+		$nomor = $this->input->request('nomor');
+		// Validasi Value
+		if ($ajm->type_form == 1) {
+			$indikator = $this->input->request('a_indikator_id');
+			if (!is_array($indikator) || !count($indikator)) {
+				$this->status = 444;
+				$this->message = API_ADMIN_ERROR_CODES[$this->status];
+				$validation_message = $this->cam->validation_message();
+				if (strlen($validation_message)) {
+					$this->message = $validation_message;
+				}
+				$this->__json_out($data);
+				die();
+			}
+			foreach ($indikator as $k => $v) {
+				if (!empty((int) $v) && empty((int) $this->input->request('a_aksi_id_' . $nomor[$k], null))) {
+					$this->status = 444;
+					$this->message = API_ADMIN_ERROR_CODES[$this->status];
+					$validation_message = $this->cam->validation_message();
+					if (strlen($validation_message)) {
+						$this->message = $validation_message;
+					}
+					$this->__json_out($data);
+					die();
+				} else if (empty((int) $v) && !empty((int) $this->input->request('a_aksi_id_' . $nomor[$k], null))) {
+					$this->status = 444;
+					$this->message = API_ADMIN_ERROR_CODES[$this->status];
+					$validation_message = $this->cam->validation_message();
+					if (strlen($validation_message)) {
+						$this->message = $validation_message;
+					}
+					$this->__json_out($data);
+					die();
+				}
+			}
+		} elseif ($ajm->type_form == 2) {
+			$aksi = $this->input->request("aksi");
+			if (!is_array($aksi) || !count($aksi)) {
+				$this->status = 444;
+				$this->message = API_ADMIN_ERROR_CODES[$this->status];
+				$validation_message = $this->cam->validation_message();
+				if (strlen($validation_message)) {
+					$this->message = $validation_message;
+				}
+				$this->__json_out($data);
+				die();
+			}
+		} elseif ($ajm->type_form == 3) {
+			$a_indikator_id = $this->input->request('a_indikator_id');
+			if (!is_array($a_indikator_id) || !count($a_indikator_id)) {
+				$this->status = 444;
+				$this->message = API_ADMIN_ERROR_CODES[$this->status];
+				$validation_message = $this->cam->validation_message();
+				if (strlen($validation_message)) {
+					$this->message = $validation_message;
+				}
+				$this->__json_out($data);
+				die();
+			}
+			$a_indikator_aksi = $this->input->request('a_indikator_aksi');
+			$aksi = $this->aim->getByPenilaian('aksi', $ajm->id);
+			$params = [];
+			$persentase = 0;
+			foreach ($aksi as $key => $v) {
+				$params[] = $v->id;
+			}
+			$is_empty = 0;
+			$is_empty_indikator = 1;
+			foreach ($a_indikator_id as $k => $v) {
+				if (isset($v) && !empty((int)$v)) {
+					$is_empty_indikator = 0;
+				}
+				if (isset($v) && !empty((int)$v) && !isset($a_indikator_aksi[$k])) {
+					$is_empty = 1;
+				} else if (isset($v) && empty((int)$v) && isset($a_indikator_aksi[$k])) {
+					$is_empty = 1;
+				}
+			}
+			if ($is_empty_indikator || $is_empty) {
+				$this->status = 444;
+				$this->message = API_ADMIN_ERROR_CODES[$this->status];
+				$validation_message = $this->cam->validation_message();
+				if (strlen($validation_message)) {
+					$this->message = $validation_message;
+				}
+				$this->__json_out($data);
+				die();
+			}
+		}
 
 
 		$b_user_id = !empty((int) $this->input->request('b_user_id')) ? $this->input->request('b_user_id') : '';
@@ -177,7 +267,6 @@ class Asesmen extends JI_Controller
 		$this->cam->columns['durasi']->value = $timediff->h . '.' . $timediff->i;
 
 		$penilais = $this->input->request('b_user_id_penilais');
-		$nomor = $this->input->request('nomor');
 		$value = [];
 		if ($ajm->type_form == 1) {
 			$nilai = 0;
