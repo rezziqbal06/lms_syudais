@@ -139,7 +139,7 @@ $("#pilih_user").on('click', function(e){
             $("#ia_ruangan_id").val(dt.data.a_unit_id).select2();
             $("#modal_cari_user").modal('hide');
 			$('.progress').slideUp();
-            <?php if($ajm->slug == 'audit-hand-hygiene') : ?>
+            <?php if($ajm->type_form == 1) : ?>
 				console.log('ini hand higene');
                 if(dt.data.jumlah_penilaian){
 					var message = '';
@@ -169,7 +169,7 @@ $("#pilih_user").on('click', function(e){
 				}
             <?php endif; ?>
 
-			<?php if($ajm->slug == 'audit-kepatuhan-apd') :?>
+			<?php if($ajm->type_form == 3) :?>
 				console.log('dt', dt);
 				if(dt.data.jumlah_penilaian){
 					var message = '';

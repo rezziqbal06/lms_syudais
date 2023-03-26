@@ -6,6 +6,7 @@ function showLoading(){
 	$(".panel-list").hide();
 	$(".panel-statistik").hide();
 	$(".panel-filter").hide();
+	$("#filter").hide();
 	$(".panel-pagination").empty();
 	$(".panel-pagination").hide();
 }
@@ -14,6 +15,7 @@ function hideLoading(){
 	$(".panel-empty").hide();
 	$(".panel-list").hide();
 	$(".panel-filter").hide();
+	$("#filter").hide();
 	$(".panel-pagination").empty();
 	$(".panel-pagination").hide();
 }
@@ -345,36 +347,40 @@ function initData(fd=[]){
 				if(respon.data.list && respon.data.list.length > 0){
 					var s = '';
 					
-					
 					$.each(respon.data.list, function(k,v){
 						var is_show = 'd-none'
 						if(v.nilai) is_show = '';
-						s += `<a class="col-md-4 mb-3" data-id="${v.id}" href="<?=base_url('asesmen/')?>${v.slug}/${v.id}"><div class="card">
-							<div class="card-body">
-								<div class="row">
-									<div class="col-6">
-										<span class="" style="font-size: smaller;">${v.type_form != 2 ? v.ruangan : ''}</span>
-									</div>
-									<div class="col-6">
-										<span class="pill pill-warning ${is_show} float-end">${v.nilai} poin</span>
+						s += `
+						<div class="col-md-4 mb-3">
+							<a class="" data-id="${v.id}" href="<?=base_url('asesmen/')?>${v.slug}/${v.id}">
+								<div class="card">
+									<div class="card-body">
+										<div class="row">
+											<div class="col-6">
+												<span class="" style="font-size: smaller;">${v.type_form != 2 ? v.ruangan : ''}</span>
+											</div>
+											<div class="col-6">
+												<span class="pill pill-warning ${is_show} float-end">${v.nilai} poin</span>
+											</div>
+										</div>
+										<p class=""><b>${v.type_form == 2 ? v.ruangan : v.nama}</b></p>
+										<figcaption class="blockquote-footer">
+											${v.type_form != 2 ? v.profesi : ''}
+										</figcaption>
+										<div class="row">
+											<div class="col-8">
+												<span class="text-grey" style="font-size: smaller;">${v.cdate}</span>
+											</div>
+											<div class="col-4">
+												<span class="float-end" style="font-size: smaller;">${v.durasi}</span>
+											</div>
+										</div>
+										<div class="d-flex justify-content-end">
+											<a href="#" onclick="confirm('apakah anda yakin?') ? window.location.replace('<?=base_url('api_front/asesmen/hardDelete')?>/${v.id}') : '' " class="btn btn-danger"><i class="fas fa-trash"></i></a>
+										</div>
 									</div>
 								</div>
-								<p class=""><b>${v.type_form == 2 ? v.ruangan : v.nama}</b></p>
-								<figcaption class="blockquote-footer">
-									${v.type_form != 2 ? v.profesi : ''}
-								</figcaption>
-								<div class="row">
-									<div class="col-8">
-										<span class="text-grey" style="font-size: smaller;">${v.cdate}</span>
-									</div>
-									<div class="col-4">
-										<span class="float-end" style="font-size: smaller;">${v.durasi}</span>
-									</div>
-								</div>
-								<div class="d-flex justify-content-end">
-									<a href="#" onclick="confirm('apakah anda yakin?') ? window.location.replace('<?=base_url('api_front/asesmen/hardDelete')?>/${v.id}') : '' " class="btn btn-danger"><i class="fas fa-trash"></i></a>
-								</div>
-							</div>
+							</a>
 						</div>`;
 					});
 					if(respon.data.pagination){
@@ -385,6 +391,7 @@ function initData(fd=[]){
 					$(".panel-list").html(s);
 					
 					$(".panel-filter").show();
+					$("#filter").show();
 					$(".panel-list").show();
 					$(".panel-list").addClass("row");
 					$(".panel-empty").hide();

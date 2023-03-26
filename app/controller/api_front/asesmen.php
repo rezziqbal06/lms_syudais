@@ -141,7 +141,7 @@ class Asesmen extends JI_Controller
 			}
 		}
 
-		if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
+		if ($ajm->type_form == 2) {
 			$cdate = $this->input->request('cdate');
 			$a_ruangan_id = $this->input->request('a_ruangan_id');
 			$cam_this_date = $this->cam->getByDateAndUser($ajm->id, $cdate, $d['sess']->user->id, '', $a_ruangan_id);
@@ -179,7 +179,7 @@ class Asesmen extends JI_Controller
 		$penilais = $this->input->request('b_user_id_penilais');
 		$nomor = $this->input->request('nomor');
 		$value = [];
-		if ($ajm->slug == 'audit-hand-hygiene') {
+		if ($ajm->type_form == 1) {
 			$nilai = 0;
 			$value = [];
 			$indikator = $this->input->request('a_indikator_id');
@@ -200,7 +200,7 @@ class Asesmen extends JI_Controller
 
 
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
-		} else if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
+		} else if ($ajm->type_form == 2) {
 			$value = [];
 			$aksi = $this->input->request("aksi");
 			$poin = 0;
@@ -218,7 +218,7 @@ class Asesmen extends JI_Controller
 			$nilai = ceil($nilai);
 			$this->cam->columns['nilai']->value = $nilai;
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
-		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
+		} else if ($ajm->type_form == 3) {
 			$value = [];
 			$a_indikator_id = $this->input->request('a_indikator_id');
 			$a_indikator_aksi = $this->input->request('a_indikator_aksi');
@@ -252,7 +252,7 @@ class Asesmen extends JI_Controller
 		$this->cam->columns['value']->value = $json_value;
 		$res = $this->cam->save();
 		if ($res) {
-			if ($ajm->slug != 'audit-kepatuhan-apd') {
+			if ($ajm->type_form != 3) {
 				if ($value) {
 					foreach ($value as $k => $v) {
 						$value[$k]['c_asesmen_id'] = $res;
@@ -401,7 +401,7 @@ class Asesmen extends JI_Controller
 		$this->cam->columns['durasi']->value = $timediff->h . '.' . $timediff->i;
 
 		$value = [];
-		if ($ajm->slug == 'audit-hand-hygiene') {
+		if ($ajm->type_form == 1) {
 			$nilai = 0;
 			$value = [];
 			$indikator = $this->input->request('a_indikator_id');
@@ -423,7 +423,7 @@ class Asesmen extends JI_Controller
 
 				$this->cam->columns['nilai']->value = $nilai;
 			}
-		} else if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
+		} else if ($ajm->type_form == 2) {
 			$value = [];
 			$aksi = $this->input->request("aksi");
 			$penilais = $this->input->request('b_user_id_penilais');
@@ -444,7 +444,7 @@ class Asesmen extends JI_Controller
 			$nilai = ceil($nilai);
 			$this->cam->columns['nilai']->value = $nilai;
 			$this->cam->columns['cdate']->value = date('Y-m-d', strtotime($this->input->request('cdate')));
-		} else if ($ajm->slug == 'audit-kepatuhan-apd') {
+		} else if ($ajm->type_form == 3) {
 			$value = [];
 			$indikator = $this->input->request('a_indikator_id');
 			$penilais = $this->input->request('b_user_id_penilais');
@@ -482,7 +482,7 @@ class Asesmen extends JI_Controller
 			$res = $this->cam->save($id);
 			if ($res) {
 
-				if ($ajm->slug != 'audit-kepatuhan-apd') {
+				if ($ajm->type_form != 3) {
 					$resDeleteValue = $this->dvm->delByAsesmenId($id);
 					$resValue = $this->dvm->setMass($value);
 				}
@@ -1051,7 +1051,7 @@ class Asesmen extends JI_Controller
 		}
 		$data['aim'] = $aim;
 
-		if ($ajm->slug == 'monitoring-kegiatan-harian-pencegahan-pengendalian-infeksi-ppi') {
+		if ($ajm->type_form == 2) {
 			$ddata = $this->dvm->print_ppi(
 				$page,
 				$pagesize,
