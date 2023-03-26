@@ -526,11 +526,11 @@ class Asesmen extends JI_Controller
 			$this->dvm->delByAsesmenId($id);
 		}
 		$this->cam->delById($id);
-		if(isset($_SERVER['HTTP_REFERER'])) {
+		if (isset($_SERVER['HTTP_REFERER'])) {
 			header('Location: ' . $_SERVER['HTTP_REFERER']);
-		 } else {
+		} else {
 			// handle case where there is no previous page
-		 }
+		}
 	}
 
 	/**
@@ -750,6 +750,7 @@ class Asesmen extends JI_Controller
 		$data['pagination'] = $pg;
 
 		$data['data'] = $hand_hygiene;
+		$data['is_zip_loaded'] = extension_loaded('zip');
 
 		$this->__json_out($data);
 	}
