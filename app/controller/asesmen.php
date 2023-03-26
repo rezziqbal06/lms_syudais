@@ -202,7 +202,7 @@ class Asesmen extends JI_Controller
 		}
 		$cam->b_user_name = $user->fnama ?? '';
 		$bulan = date('m', strtotime($cam->cdate));
-		if ($ajm->slug == 'audit-hand-hygiene') {
+		if ($ajm->type_form == 1) {
 			$value = $this->dvm->getByFilter($user->id, $cam->b_user_id_penilai, $ajm->id, date('Y-' . (int)$bulan . '-1'), date('Y-' . (int)$bulan . '-t'));
 		} else {
 			$value = json_decode($cam->value);

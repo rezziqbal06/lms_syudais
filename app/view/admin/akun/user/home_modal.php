@@ -13,7 +13,7 @@
 			<div class="modal-body">
 				<div class="row">
 					<div class="col-xs-12 btn-group-vertical">
-						<a id="adetail" href="#" class="btn btn-info btn-left"><i class="fa fa-info-circle"></i> Detail</a>
+						<!-- <a id="adetail" href="#" class="btn btn-info btn-left"><i class="fa fa-info-circle"></i> Detail</a> -->
 						<a id="aedit" href="#" class="btn btn-primary btn-left"><i class="fa fa-pencil"></i> Edit</a>
 						<a id="amodule" href="#" class="btn btn-warning btn-left"><i class="fa fa-gear"></i> Module</a>
 						<a id="aresetpass" href="#" class="btn btn-danger bg-primary btn-left"><i class="fa fa-key"></i> Reset Password</a>

@@ -31,7 +31,7 @@ class A_JPenilaian_Model extends \Model\A_JPenilaian_Concern
 
 	public function getBySlug($slug = '')
 	{
-		$this->db->select('id')->select('nama')->select('slug')->select('deskripsi');
+		$this->db->select('id')->select('nama')->select('slug')->select('type_form')->select('deskripsi');
 		if (strlen($slug)) $this->db->where('slug', $slug);
 		return $this->db->get_first('', 0);
 	}
