@@ -57,10 +57,12 @@ $("#ftambah").on("submit",function(e){
 		gritter('<p>Tanggal belum terisi</p>','warning');
 		return false;
 	}
+	<?php if($type_form != 2) : ?>
 	if(!$("#iuser").val()){
 		gritter('<p>Nama belum terisi</p>','warning');
 		return false;
 	}
+	<?php endif; ?>
 	NProgress.start();
 	$('.btn-submit').prop('disabled',true);
 	$('.icon-submit').addClass('fa-circle-o-notch fa-spin');
