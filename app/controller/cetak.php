@@ -177,11 +177,17 @@ class Cetak extends JI_Controller
 				if ((int) $durasis[1]) $gd->durasi .= $durasis[1] . ' menit';
 			}
 
-			if (isset($dcal) && isset($gd->ruangan) && isset($gd->indikator_kategori)) {
-				$gd->aksi_y = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->y;
-				$gd->aksi_n = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->n;
-				$gd->aksi_jumlah = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->jumlah;
-				$gd->aksi_persentase = $gd->aksi_y ? ceil($gd->aksi_y / $gd->aksi_jumlah * 100) : 0;
+			if (isset($dcal) && isset($gd->ruangan) && strlen($gd->ruangan) && isset($gd->indikator_kategori) && strlen($gd->indikator_kategori)) {
+				$gd->aksi_y = 0;
+				$gd->aksi_n = 0;
+				$gd->aksi_jumlah = 0;
+				$gd->aksi_persentase = 0;
+				if(isset($dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->y)) $gd->aksi_y = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->y;
+				if(isset($dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->n)) $gd->aksi_n = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->n;
+				if(isset($dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->jumlah)) $gd->aksi_jumlah = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->jumlah;
+				if($gd->aksi_y && $gd->aksi_n && $gd->aksi_jumlah){
+					$gd->aksi_persentase = $gd->aksi_y ? ceil($gd->aksi_y / $gd->aksi_jumlah * 100) : 0;
+				}
 			}else{
 				$gd->aksi_y = 0;
 				$gd->aksi_n = 0;
