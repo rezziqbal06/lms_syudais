@@ -156,14 +156,16 @@ $("#fedit").on("submit",function(e){
 		success: function(respon){
 			if(respon.status==200){
 				gritter('<h4>Sukses</h4><p>Data berhasil diubah</p>','success');
-				
+				setTimeout(function(){
+					window.location = '<?=base_url_admin('pengaturan/jenis_penilaian/')?>';
+				},500);
 			}else{
 				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
 
 				$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
 				$('.btn-submit').prop('disabled',false);
-				NProgress.done();
 			}
+			NProgress.done();
 		},
 		error:function(){
 			setTimeout(function(){
