@@ -5,7 +5,7 @@ var nIndikator;
 function addIndikator(type='tambah'){
 	nIndikator = $("#panel_indikator_"+type).children().length;
 	var row = $("#row_indikator_"+type+"_0").get(0).outerHTML;
-	row = row.replaceAll('0', `${nIndikator}`);
+	row = row.replaceAll('_0', `_${nIndikator}`);
 	row = row.replaceAll('none', '');
 	$("#panel_indikator_"+type).append(row);
 }
@@ -156,9 +156,7 @@ $("#fedit").on("submit",function(e){
 		success: function(respon){
 			if(respon.status==200){
 				gritter('<h4>Sukses</h4><p>Data berhasil diubah</p>','success');
-				setTimeout(function(){
-					window.location = '<?=base_url_admin('pengaturan/jenis_penilaian/')?>';
-				},500);
+				
 			}else{
 				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
 
