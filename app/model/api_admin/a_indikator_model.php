@@ -51,6 +51,7 @@ class A_Indikator_Model extends \Model\A_Indikator_Concern
   public function getByPenilaianId($id)
   {
     $this->db->where('a_jpenilaian_id', $id);
+    $this->db->limit(100000);
     return $this->db->get('', 0);
   }
 

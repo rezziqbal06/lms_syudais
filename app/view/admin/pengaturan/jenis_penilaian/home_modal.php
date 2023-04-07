@@ -78,6 +78,7 @@
 											<th rowspan="2" class="">Sub Kategori</th>
 											<th rowspan="2" class="">Nama</th>
 											<th rowspan="2" class="">Tipe</th>
+											<th rowspan="2" class="">Optional</th>
 											<th rowspan="2" class="">Ruangan</th>
 										</tr>
 									</thead>
@@ -106,6 +107,14 @@
 													<select id="itype_0" type="text" name="type[]" class="form-control">
 														<option value="indikator">indikator</option>
 														<option value="aksi">aksi</option>
+													</select>
+												</div>
+											</td>
+											<td>
+												<div class="form-group">
+													<select id="iis_optional_0" type="text" name="is_optional[]" class="form-control">
+														<option value="0">Tidak</option>
+														<option value="1">Iya</option>
 													</select>
 												</div>
 											</td>
@@ -190,6 +199,7 @@
 											<th rowspan="2" class="">Sub Kategori</th>
 											<th rowspan="2" class="">Nama</th>
 											<th rowspan="2" class="">Tipe</th>
+											<th rowspan="2" class="">Optional</th>
 											<th rowspan="2" class="">Ruangan</th>
 										</tr>
 									</thead>
@@ -218,6 +228,14 @@
 													<select id="ietype_0" type="text" name="type[]" class="form-control">
 														<option value="indikator">indikator</option>
 														<option value="aksi">aksi</option>
+													</select>
+												</div>
+											</td>
+											<td>
+												<div class="form-group">
+													<select id="ieis_optional_0" type="text" name="is_optional[]" class="form-control">
+														<option value="0">Tidak</option>
+														<option value="1">Iya</option>
 													</select>
 												</div>
 											</td>

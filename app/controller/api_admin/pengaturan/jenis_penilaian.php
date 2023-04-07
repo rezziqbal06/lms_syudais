@@ -101,6 +101,7 @@ class Jenis_Penilaian extends JI_Controller
 					$dai[$k]['a_ruangan_ids'] = isset($_POST['a_ruangan_ids_' . $k]) ? json_encode($_POST['a_ruangan_ids_' . $k]) : '';
 					$dai[$k]['kategori'] = $_POST['kategori'][$k] ?? '';
 					$dai[$k]['subkategori'] = $_POST['subkategori'][$k] ?? '';
+					$dai[$k]['is_optional'] = $_POST['is_optional'][$k] ?? 0;
 					$dai[$k]['type'] = $_POST['type'][$k] ?? '';
 					$dai[$k]['a_jpenilaian_id'] = $res;
 					$dai[$k]['cdate'] = 'NOW()';
@@ -154,6 +155,7 @@ class Jenis_Penilaian extends JI_Controller
 		}
 
 		$data->indikator = $this->aim->getByPenilaianId($id);
+		// dd(count($data->indikator));
 		$this->__json_out($data);
 	}
 
@@ -235,6 +237,7 @@ class Jenis_Penilaian extends JI_Controller
 						$dai[$k]['a_ruangan_ids'] = isset($_POST['a_ruangan_ids_' . $k]) ? json_encode($_POST['a_ruangan_ids_' . $k]) : '';
 						$dai[$k]['kategori'] = $_POST['kategori'][$k] ?? '';
 						$dai[$k]['subkategori'] = $_POST['subkategori'][$k] ?? '';
+						$dai[$k]['is_optional'] = $_POST['is_optional'][$k] ?? '';
 						$dai[$k]['type'] = $_POST['type'][$k] ?? '';
 						$dai[$k]['a_jpenilaian_id'] = $id;
 						$dai[$k]['cdate'] = 'NOW()';

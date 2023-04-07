@@ -315,7 +315,7 @@ class Asesmen extends JI_Controller
 			$params = [];
 			$persentase = 0;
 			foreach ($aksi as $key => $v) {
-				$params[] = $v->id;
+				if (isset($v->is_optional) && !$v->is_optional) $params[] = $v->id;
 			}
 			foreach ($a_indikator_id as $k => $v) {
 				if (isset($a_indikator_aksi[$k]) && $a_indikator_aksi[$k] != "") {
