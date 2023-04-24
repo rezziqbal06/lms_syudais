@@ -1,3 +1,26 @@
+function changeChoice(selector, custom_aksi = ''){
+	$("#"+selector).removeClass("border border-success border-danger");
+	let aksi = $("#aksi-"+selector).val();
+	console.log(selector, custom_aksi);
+	if(custom_aksi){
+		if(custom_aksi == 'y'){
+			$("#aksi-"+selector).val('y');
+			$("#"+selector).addClass("border border-success");
+		}else{
+			$("#aksi-"+selector).val('n');
+			$("#"+selector).addClass("border border-danger");
+		}
+	}else{
+		if(!aksi || aksi == 'n'){
+			$("#aksi-"+selector).val('y');
+			$("#"+selector).addClass("border border-success");
+		}else{
+			$("#aksi-"+selector).val('n');
+			$("#"+selector).addClass("border border-danger");
+		}
+	}
+}
+
 function saveLocal(){
 	var key = '<?=$ajm->id.'-'.$sess->user->id?>';
 	var data = $("#ftambah").serializeArray();
@@ -53,7 +76,11 @@ function initLocalData(){
 							if(v.value) $("#i"+v.name+"_"+v.value).prop('checked', true);
 						}
 					}else if(<?= $type_form ?> == 2){ //MM
-
+						if(v.name.includes('aksi')){
+							var selector = v.name.replaceAll('aksi[','');
+							selector = selector.replaceAll(']','');
+							changeChoice(selector, v.value);
+						}
 					}else if(<?= $type_form ?> == 3){ //APD
 						if(v.name.includes('a_indikator_aksi')){
 							$("[name='"+v.name+"']").prop('checked', true);
@@ -66,6 +93,7 @@ function initLocalData(){
 			}
 		})
 	} 
+	NProgress.done();
 	
 <?php endif ?>
 }
@@ -199,7 +227,15 @@ $(document).on('ready',() => {
 	$(".select2").select2();
 	cariUser();
 	
-	initLocalData();
+	if(<?= $type_form ?> == 2){
+		NProgress.start();
+		setTimeout(function(){
+			initLocalData();
+		},1500)
+	}else{
+		NProgress.start();
+		initLocalData();
+	}
 })
 
 
@@ -281,19 +317,12 @@ $("#pilih_user").on('click', function(e){
     })
 })
 
+
 $(document).off('click', '.choice');
 $(document).on('click', '.choice', function(e){
 	e.preventDefault();
 	let selector = $(this).attr("data-id");
-	$("#"+selector).removeClass("border border-success border-danger");
-	let aksi = $("#aksi-"+selector).val();
-	if(!aksi || aksi == 'n'){
-		$("#aksi-"+selector).val('y');
-		$("#"+selector).addClass("border border-success");
-	}else{
-		$("#aksi-"+selector).val('n');
-		$("#"+selector).addClass("border border-danger");
-	}
+	changeChoice(selector);
 	saveLocal();
 });
 
@@ -301,10 +330,7 @@ $(document).off('dblclick', '.choice');
 $(document).on('dblclick', '.choice', function(e){
 	e.preventDefault();
 	let selector = $(this).attr("data-id");
-	$("#"+selector).removeClass("border border-success border-danger");
-	let aksi = $("#aksi-"+selector).val();
-	$("#aksi-"+selector).val('n');
-	$("#"+selector).addClass("border border-danger");
+	changeChoice(selector, 'n');
 	saveLocal();
 });
 
