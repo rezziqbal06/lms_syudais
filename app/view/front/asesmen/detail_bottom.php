@@ -1,3 +1,12 @@
+function saveLocal(){
+	var key = '<?=$ajm->id.'-'.$sess->user->id?>';
+	var data = $("#ftambah").serializeArray();
+	setTimeout(function(){
+		localStorage.setItem(key, JSON.stringify(data));
+		console.log('simpan local', key, data);
+	},333)
+}
+
 function removeLocalData(){
 <?php if(!isset($cam)) : ?>
 	var key = '<?=$ajm->id.'-'.$sess->user->id?>';
@@ -9,24 +18,50 @@ function initLocalData(){
 <?php if(!isset($cam)) : ?>
 	var key = '<?=$ajm->id.'-'.$sess->user->id?>';
 	let data = localStorage.getItem(key);
+	var nomor = -1;
 	if(data){
 		data = JSON.parse(data);
 		console.log(data, 'data local')
 		$.each(data, function(k,v){
-			if(v.name.includes('[]')){
+			if(v.value){
+				if(v.name.includes('[]')){
+					var name = v.name.replaceAll('[]','');
+					if(v.name.includes('b_user_id_penilais')){
+						nomor++;
+					}
+					console.log("#i"+name+'_'+nomor, v.value)
+					$("#i"+name+'_'+nomor).val(v.value);
+					if(name.includes('indikator')) $("#i"+name+'_select_'+nomor).val(v.value).select2();
 
-			}else{
-				var tag = $("#"+v.name).prop('tagName');
-				if(tag == 'SELECT'){
-					$("#"+v.name).val(v.value).select2();
 				}else{
-					$("#"+v.name).val(v.value);
-				}
-				var tag = $("#i"+v.name).prop('tagName');
-				if(tag == 'SELECT'){
-					$("#i"+v.name).val(v.value).select2();
-				}else{
-					$("#i"+v.name).val(v.value);
+					var tag = $("#"+v.name).prop('tagName');
+					console.log(tag,v.name);
+					if(tag == 'SELECT'){
+						$("#"+v.name).val(v.value).select2();
+					}else{
+						$("#"+v.name).val(v.value);
+					}
+					var tag = $("#i"+v.name).prop('tagName');
+					if(tag == 'SELECT'){
+						$("#i"+v.name).val(v.value).select2();
+					}else{
+						$("#i"+v.name).val(v.value);
+					}
+
+					if(<?= $type_form ?> == 1){ //Hand hygiene
+						if(v.name.includes('a_aksi_id')){
+							if(v.value) $("#i"+v.name+"_"+v.value).prop('checked', true);
+						}
+					}else if(<?= $type_form ?> == 2){ //MM
+
+					}else if(<?= $type_form ?> == 3){ //APD
+						if(v.name.includes('a_indikator_aksi')){
+							$("[name='"+v.name+"']").prop('checked', true);
+						}
+					}
+				
+
+
 				}
 			}
 		})
@@ -164,7 +199,7 @@ $(document).on('ready',() => {
 	$(".select2").select2();
 	cariUser();
 	
-	//initLocalData();
+	initLocalData();
 })
 
 
@@ -200,7 +235,6 @@ $("#pilih_user").on('click', function(e){
 					if(penilaian && penilaian.length >= 10){
 						var pesan = `Penilaian untuk ${dt.data.fnama} sudah selesai dikerjakan/sudah 10kali kesempatan. Silakan untuk kembali`;
 						var a = alert(pesan);
-						history.back();
 						$(".btn-submit").hide();				
 					}
 					$.each(penilaian, function(k,v){
@@ -242,6 +276,7 @@ $("#pilih_user").on('click', function(e){
 			<?php endif; ?>
 			$('.select2').select2();
 			cariUser();
+			saveLocal();
         } 
     })
 })
@@ -259,6 +294,7 @@ $(document).on('click', '.choice', function(e){
 		$("#aksi-"+selector).val('n');
 		$("#"+selector).addClass("border border-danger");
 	}
+	saveLocal();
 });
 
 $(document).off('dblclick', '.choice');
@@ -269,6 +305,7 @@ $(document).on('dblclick', '.choice', function(e){
 	let aksi = $("#aksi-"+selector).val();
 	$("#aksi-"+selector).val('n');
 	$("#"+selector).addClass("border border-danger");
+	saveLocal();
 });
 
 $(document).on('click',"#filter-empty",function(e){
@@ -532,6 +569,7 @@ function tambahForm(now){
 }
 
 
+
 $(document).off('change', '.indikator-select');
 $(document).on('change', '.indikator-select', function(e){
 	e.preventDefault();
@@ -545,17 +583,11 @@ $(document).on('change', '.indikator-select', function(e){
 $(document).off('change', 'select');
 $(document).on('change', 'select', function(e){
 	e.preventDefault();
-	var key = '<?=$ajm->id.'-'.$sess->user->id?>';
-	var data = $("#ftambah").serializeArray();
-	localStorage.setItem(key, JSON.stringify(data));
-	console.log('simpan local', key, data);
+	saveLocal();
 });
 $(document).off('input', 'input');
 $(document).on('input', 'input', function(e){
 	e.preventDefault();
-	var key = '<?=$ajm->id.'-'.$sess->user->id?>';
-	var data = $("#ftambah").serializeArray();
-	localStorage.setItem(key, JSON.stringify(data));
-	console.log('simpan local', key, data);
+	saveLocal();
 });
 <?php endif ?>

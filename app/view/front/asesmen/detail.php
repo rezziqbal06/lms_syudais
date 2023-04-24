@@ -94,6 +94,10 @@
 			<input type="hidden" name="a_jpenilaian_id" id="ia_jpenilaian_id" value="<?= $ajm->id ?>">
 			<input type="hidden" name="stime" id="istime" value="<?= $stime ?? '' ?>">
 			<!-- <input type="hidden" name="etime" id="ietime"> -->
+			<div class="col-md-12">
+				<label for="cdate">Tanggal Asesmen</label>
+				<input type="text" class="form-control" readonly placeholder="Tanggal Asesmen" value="<?= isset($cam->cdate) ? $cam->cdate : '' ?>" name="cdate" id="cdate">
+			</div>
 			<?php if ($type_form != 2) { ?>
 				<div class="col-md-4">
 					<label for="iuser">Nama</label>
@@ -139,10 +143,7 @@
 					</select>
 				</div>
 			<?php } ?>
-			<div class="col-md-12">
-				<label for="cdate">Tanggal Asesmen</label>
-				<input type="text" class="form-control" readonly placeholder="Tanggal Asesmen" value="<?= isset($cam->cdate) ? $cam->cdate : '' ?>" name="cdate" id="cdate">
-			</div>
+
 		</div>
 	</div>
 	<?php //dd(['val'=> $value,'sess'=>$sess->user]); 
