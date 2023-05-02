@@ -182,13 +182,13 @@ class Cetak extends JI_Controller
 				$gd->aksi_n = 0;
 				$gd->aksi_jumlah = 0;
 				$gd->aksi_persentase = 0;
-				if(isset($dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->y)) $gd->aksi_y = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->y;
-				if(isset($dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->n)) $gd->aksi_n = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->n;
-				if(isset($dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->jumlah)) $gd->aksi_jumlah = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->jumlah;
-				if($gd->aksi_y && $gd->aksi_n && $gd->aksi_jumlah){
+				if (isset($dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->y)) $gd->aksi_y = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->y;
+				if (isset($dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->n)) $gd->aksi_n = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->n;
+				if (isset($dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->jumlah)) $gd->aksi_jumlah = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->jumlah;
+				if ($gd->aksi_y && $gd->aksi_n && $gd->aksi_jumlah) {
 					$gd->aksi_persentase = $gd->aksi_y ? ceil($gd->aksi_y / $gd->aksi_jumlah * 100) : 0;
 				}
-			}else{
+			} else {
 				$gd->aksi_y = 0;
 				$gd->aksi_n = 0;
 				$gd->aksi_jumlah = 0;
@@ -467,7 +467,6 @@ class Cetak extends JI_Controller
 		$newAim = [];
 		try {
 			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Manipulate Data ");
-			$content = $this->_list_for_print();
 			foreach ($aim as $k => $v) {
 				$newAim[$v->id] = $v;
 			}

@@ -749,7 +749,7 @@ class Asesmen extends JI_Controller
 		$dcount = 0;
 
 		if ($data['permission']->read) {
-			$dcount = $this->cam->count($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active);
+			$dcount = $this->cam->count($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $bulan, $keyword, $is_active);
 			$ddata = $this->cam->data(
 				$page,
 				$pagesize,
@@ -761,11 +761,11 @@ class Asesmen extends JI_Controller
 				$a_ruangan_id,
 				$sdate,
 				$edate,
+				$bulan,
 				$keyword,
 				$is_active
 			);
-
-			$datasets = $this->cam->datasets($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active);
+			$datasets = $this->cam->datasets($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $bulan, $keyword, $is_active);
 			foreach ($datasets as $k => $v) {
 				$percent = ($v->nilai / $v->jumlah) * 100;
 				$v->percent = $percent;
@@ -1152,6 +1152,7 @@ class Asesmen extends JI_Controller
 				$a_ruangan_id,
 				$sdate,
 				$edate,
+				$bulan,
 				$keyword,
 				$is_active
 			);
@@ -1166,6 +1167,7 @@ class Asesmen extends JI_Controller
 				$a_ruangan_id,
 				$sdate,
 				$edate,
+				$bulan,
 				$keyword,
 				$is_active
 			);
@@ -1181,6 +1183,7 @@ class Asesmen extends JI_Controller
 				$a_ruangan_id,
 				$sdate,
 				$edate,
+				$bulan,
 				$keyword,
 				$is_active
 			);

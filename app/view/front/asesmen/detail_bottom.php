@@ -93,9 +93,9 @@ function initLocalData(){
 			}
 		})
 	} 
-	NProgress.done();
 	
 <?php endif ?>
+	NProgress.done();
 }
 
 $("#btn_back").on('click', function(e){
