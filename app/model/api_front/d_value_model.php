@@ -36,14 +36,14 @@ class D_Value_Model extends \Model\D_Value_Concern
       // $this->db->where_as("$this->tbl_as.is_active", $this->db->esc($is_active));
     }
     if (strlen($bulan)) {
-      $this->db->where_as("MONTH($this->tbl_as.cdate)", 'MONTH("' . $bulan . '")', "AND", '=');
+      $this->db->where_as("MONTH($this->tbl2_as.cdate)", 'MONTH("' . $bulan . '")', "AND", '=');
     } else {
       if (strlen($sdate) == 10 && strlen($edate) == 10) {
-        $this->db->between("DATE($this->tbl_as.cdate)", 'DATE("' . $sdate . '")', 'DATE("' . $edate . '")');
+        $this->db->between("DATE($this->tbl2_as.cdate)", 'DATE("' . $sdate . '")', 'DATE("' . $edate . '")');
       } elseif (strlen($sdate) != 10 && strlen($edate) == 10) {
-        $this->db->where_as("DATE($this->tbl_as.cdate)", 'DATE("' . $edate . '")', "AND", '<=');
+        $this->db->where_as("DATE($this->tbl2_as.cdate)", 'DATE("' . $edate . '")', "AND", '<=');
       } elseif (strlen($sdate) == 10 && strlen($edate) != 10) {
-        $this->db->where_as("DATE($this->tbl_as.cdate)", 'DATE("' . $sdate . '")', "AND", '>=');
+        $this->db->where_as("DATE($this->tbl2_as.cdate)", 'DATE("' . $sdate . '")', "AND", '>=');
       }
     }
     if (strlen($keyword) > 0) {
