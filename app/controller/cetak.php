@@ -104,6 +104,7 @@ class Cetak extends JI_Controller
 				$a_ruangan_id,
 				$sdate,
 				$edate,
+				$bulan,
 				$keyword,
 				$is_active
 			);
@@ -118,6 +119,7 @@ class Cetak extends JI_Controller
 				$a_ruangan_id,
 				$sdate,
 				$edate,
+				$bulan,
 				$keyword,
 				$is_active
 			);
@@ -133,6 +135,7 @@ class Cetak extends JI_Controller
 				$a_ruangan_id,
 				$sdate,
 				$edate,
+				$bulan,
 				$keyword,
 				$is_active
 			);

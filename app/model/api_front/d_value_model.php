@@ -18,7 +18,7 @@ class D_Value_Model extends \Model\D_Value_Concern
     $this->point_of_view = 'front';
   }
 
-  private function filters($b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
+  private function filters($b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $bulan = '', $keyword = '', $is_active = '')
   {
     if (strlen($b_user_id)) {
       // $this->db->where_as("$this->tbl_as.b_user_id", $this->db->esc($b_user_id));
@@ -35,12 +35,16 @@ class D_Value_Model extends \Model\D_Value_Concern
     if (strlen($is_active)) {
       // $this->db->where_as("$this->tbl_as.is_active", $this->db->esc($is_active));
     }
-    if (strlen($sdate) == 10 && strlen($edate) == 10) {
-      $this->db->between("DATE($this->tbl2_as.cdate)", 'DATE("' . $sdate . '")', 'DATE("' . $edate . '")');
-    } elseif (strlen($sdate) != 10 && strlen($edate) == 10) {
-      $this->db->where_as("DATE($this->tbl2_as.cdate)", 'DATE("' . $edate . '")', "AND", '<=');
-    } elseif (strlen($sdate) == 10 && strlen($edate) != 10) {
-      $this->db->where_as("DATE($this->tbl2_as.cdate)", 'DATE("' . $sdate . '")', "AND", '>=');
+    if (strlen($bulan)) {
+      $this->db->where_as("MONTH($this->tbl_as.cdate)", 'MONTH("' . $bulan . '")', "AND", '=');
+    } else {
+      if (strlen($sdate) == 10 && strlen($edate) == 10) {
+        $this->db->between("DATE($this->tbl_as.cdate)", 'DATE("' . $sdate . '")', 'DATE("' . $edate . '")');
+      } elseif (strlen($sdate) != 10 && strlen($edate) == 10) {
+        $this->db->where_as("DATE($this->tbl_as.cdate)", 'DATE("' . $edate . '")', "AND", '<=');
+      } elseif (strlen($sdate) == 10 && strlen($edate) != 10) {
+        $this->db->where_as("DATE($this->tbl_as.cdate)", 'DATE("' . $sdate . '")', "AND", '>=');
+      }
     }
     if (strlen($keyword) > 0) {
       // $this->db->where_as("COALESCE($this->tbl2_as.fnama, '')", $keyword, "AND", "%like%", 1, 0);
@@ -68,22 +72,22 @@ class D_Value_Model extends \Model\D_Value_Concern
     return $this;
   }
 
-  public function data($page = 0, $pagesize = 10, $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
+  public function data($page = 0, $pagesize = 10, $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $bulan = '', $keyword = '', $is_active = '')
   {
     $this->datatables[$this->point_of_view]->selections($this->db);
     $this->db->from($this->tbl, $this->tbl_as);
     $this->join_company();
-    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
+    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $bulan, $keyword, $is_active)->scoped();
     $this->db->order_by($sortCol, $sortDir)->limit($page, $pagesize);
     return $this->db->get("object", 0);
   }
 
-  public function count($b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
+  public function count($b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $bulan = '', $keyword = '', $is_active = '')
   {
     $this->db->select_as("COUNT($this->tbl_as.id)", "jumlah", 0);
     $this->db->from($this->tbl, $this->tbl_as);
     $this->join_company();
-    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
+    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $bulan, $keyword, $is_active)->scoped();
     $d = $this->db->get_first("object", 0);
     if (isset($d->jumlah)) {
       return $d->jumlah;
@@ -131,17 +135,17 @@ class D_Value_Model extends \Model\D_Value_Concern
     return $this->db->delete($this->tbl);
   }
 
-  public function print_ppi($page = '', $pagesize = '', $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
+  public function print_ppi($page = '', $pagesize = '', $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $bulan = '', $keyword = '', $is_active = '')
   {
     $this->datatables[$this->point_of_view]->selections($this->db);
     $this->db->from($this->tbl, $this->tbl_as);
     $this->join_company();
-    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
+    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $bulan, $keyword, $is_active)->scoped();
     $this->db->order_by("$this->tbl2_as.a_ruangan_id", 'ASC')->order_by("$this->tbl_as.id", 'ASC')->order_by("$this->tbl2_as.cdate", 'ASC');
     return $this->db->get("object", 0);
   }
 
-  public function calculate_ppi($page = '', $pagesize = '', $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
+  public function calculate_ppi($page = '', $pagesize = '', $sortCol = "id", $sortDir = "DESC", $b_user_id = '', $b_user_id_penilai = '', $a_jpenilaian_id = '', $a_ruangan_id = '', $sdate = '', $edate = '', $bulan = '', $keyword = '', $is_active = '')
   {
     $this->db->select_as("$this->tbl6_as.nama", 'ruangan', 0);
     $this->db->select_as("$this->tbl3_as.kategori", 'kategori', 0);
@@ -150,7 +154,7 @@ class D_Value_Model extends \Model\D_Value_Concern
     $this->db->select_as("COUNT(CASE WHEN $this->tbl_as.aksi = 'n' THEN 1 END)", 'n', 0);
     $this->db->from($this->tbl, $this->tbl_as);
     $this->join_company();
-    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $keyword, $is_active)->scoped();
+    $this->filters($b_user_id, $b_user_id_penilai, $a_jpenilaian_id, $a_ruangan_id, $sdate, $edate, $bulan, $keyword, $is_active)->scoped();
     $this->db->group_by("CONCAT($this->tbl6_as.nama,'-',$this->tbl3_as.kategori)");
     $this->db->order_by("$this->tbl_as.id", 'ASC');
     return $this->db->get("object", 0);
