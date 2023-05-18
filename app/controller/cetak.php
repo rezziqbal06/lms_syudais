@@ -142,13 +142,13 @@ class Cetak extends JI_Controller
 		}
 
 		// dd($calculate);
+		$dcal = [];
 		if (isset($calculate)) {
-			$dcal = [];
 			foreach ($calculate as $k => $v) {
 				$dcal[$v->ruangan . ' - ' . $v->kategori] = $v;
 			}
 		}
-
+		// dd($dcal);
 		foreach ($ddata as &$gd) {
 			if (isset($gd->is_active)) {
 				$gd->is_active = $this->cam->label('is_active', $gd->is_active);
@@ -180,17 +180,18 @@ class Cetak extends JI_Controller
 				if ((int) $durasis[1]) $gd->durasi .= $durasis[1] . ' menit';
 			}
 
+			// dd('pass');
+			// if ($gd->indikator_kategori == 'Fasilitas Hand Hygiene') dd($gd->indikator_kategori);
 			if (isset($dcal) && isset($gd->ruangan) && strlen($gd->ruangan) && isset($gd->indikator_kategori) && strlen($gd->indikator_kategori)) {
 				$gd->aksi_y = 0;
 				$gd->aksi_n = 0;
 				$gd->aksi_jumlah = 0;
 				$gd->aksi_persentase = 0;
+				// if (isset($dcal['Anggrek - Fasilitas Hand Hygiene'])) dd($dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->y);
 				if (isset($dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->y)) $gd->aksi_y = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->y;
 				if (isset($dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->n)) $gd->aksi_n = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->n;
 				if (isset($dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->jumlah)) $gd->aksi_jumlah = $dcal[$gd->ruangan . ' - ' . $gd->indikator_kategori]->jumlah;
-				if ($gd->aksi_y && $gd->aksi_n && $gd->aksi_jumlah) {
-					$gd->aksi_persentase = $gd->aksi_y ? ceil($gd->aksi_y / $gd->aksi_jumlah * 100) : 0;
-				}
+				$gd->aksi_persentase = $gd->aksi_y ? ceil($gd->aksi_y / $gd->aksi_jumlah * 100) : 0;
 			} else {
 				$gd->aksi_y = 0;
 				$gd->aksi_n = 0;
@@ -198,6 +199,7 @@ class Cetak extends JI_Controller
 				$gd->aksi_persentase = 0;
 			}
 		}
+		// dd('pass2');
 		unset($aim);
 		unset($ajm);
 		$data['list'] = $ddata;
@@ -454,6 +456,7 @@ class Cetak extends JI_Controller
 		} catch (Exception $e) {
 			if ($this->is_log) $this->seme_log->write("Cetak::Monev -- Get Data Error : " . $e->getMessage());
 		}
+		// dd('pass');
 		$json_data = [];
 		if ($content['status'] != 200) {
 			$this->status = $content['status'];
