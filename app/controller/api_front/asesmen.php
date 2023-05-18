@@ -279,7 +279,7 @@ class Asesmen extends JI_Controller
 						$value[$k]['indikator'] = $v;
 						$value[$k]['aksi'] = $this->input->request('a_aksi_id_' . $nomor[$k], null);
 						$aksi = $this->aim->id($value[$k]['aksi']);
-						if (isset($aksi->nama) && ($aksi->nama == 'HW' || $aksi->nama == 'HR')) {
+						if (isset($aksi->nama) && ($aksi->nama == 'HW' || $aksi->nama == 'HR' || strtolower($aksi->nama) == 'iya' || strtolower($aksi->nama) == 'ya')) {
 							$nilai++;
 						}
 					}
@@ -783,7 +783,6 @@ class Asesmen extends JI_Controller
 		unset($ajm);
 
 		if (count($ddata)) {
-
 			foreach ($ddata as &$gd) {
 				if (isset($gd->is_active)) {
 					$gd->is_active = $this->cam->label('is_active', $gd->is_active);
