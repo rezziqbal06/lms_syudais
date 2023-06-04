@@ -1,7 +1,8 @@
 function changeChoice(selector, custom_aksi = ''){
 	$("#"+selector).removeClass("border border-success border-danger");
+	$("#aksi-"+selector).val('');
+	if(custom_aksi == 'reset') return false;
 	let aksi = $("#aksi-"+selector).val();
-	console.log(selector, custom_aksi);
 	if(custom_aksi){
 		if(custom_aksi == 'y'){
 			$("#aksi-"+selector).val('y');
@@ -21,12 +22,18 @@ function changeChoice(selector, custom_aksi = ''){
 	}
 }
 
+function changeAllChoice(custom_aksi = ''){
+	$(".choice").map(function(){
+		var id = $(this).attr('id');
+		changeChoice(id, custom_aksi);
+	})
+}
+
 function saveLocal(){
 	var key = '<?=$ajm->id.'-'.$sess->user->id?>';
 	var data = $("#ftambah").serializeArray();
 	setTimeout(function(){
 		localStorage.setItem(key, JSON.stringify(data));
-		console.log('simpan local', key, data);
 	},333)
 }
 
@@ -44,7 +51,6 @@ function initLocalData(){
 	var nomor = -1;
 	if(data){
 		data = JSON.parse(data);
-		console.log(data, 'data local')
 		$.each(data, function(k,v){
 			if(v.value){
 				if(v.name.includes('[]')){
@@ -52,13 +58,11 @@ function initLocalData(){
 					if(v.name.includes('b_user_id_penilais')){
 						nomor++;
 					}
-					console.log("#i"+name+'_'+nomor, v.value)
 					$("#i"+name+'_'+nomor).val(v.value);
 					if(name.includes('indikator')) $("#i"+name+'_select_'+nomor).val(v.value).select2();
 
 				}else{
 					var tag = $("#"+v.name).prop('tagName');
-					console.log(tag,v.name);
 					if(tag == 'SELECT'){
 						$("#"+v.name).val(v.value).select2();
 					}else{
@@ -137,8 +141,6 @@ $("#ftambah").on("submit",function(e){
 		var vals = $(value).val();
 		var data_id = $(value).attr('data-id');
 		var id = $(value).attr('id');
-		console.log(vals,"value");
-		console.log(value,"val");
 		if(!vals){
 			gritter('<p>Beberapa belum terisi</p>','warning');
 			$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
@@ -161,7 +163,14 @@ $("#ftambah").on("submit",function(e){
 					removeLocalData();
 					gritter('<h4>Sukses</h4><p>Data berhasil ditambahkan</p>','success');
 					setTimeout(function(){
-						window.location = '<?=base_url('asesmen/')?>';
+						if(<?=$type_form?> == 2){
+							$("#cdate").val('');
+							changeAllChoice('reset');
+							$('html, body').animate({scrollTop : 0}, 800);
+							NProgress.done();
+						}else{
+							window.location = '<?=base_url('asesmen/')?>';
+						}
 					},500);
 				}else{
 					gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','warning');
@@ -247,13 +256,11 @@ $("#pilih_user").on('click', function(e){
         if(dt.data){
             $("#ib_user_id").val(id);
             $("#iuser").val(dt.data.fnama);
-			console.log(dt.data);
             $("#ia_jabatan_id").val(dt.data.a_jabatan_id).select2();
             $("#ia_ruangan_id").val(dt.data.a_unit_id).select2();
             $("#modal_cari_user").modal('hide');
 			$('.progress').slideUp();
             <?php if($ajm->type_form == 1) : ?>
-				console.log('ini hand higene');
                 if(dt.data.jumlah_penilaian){
 					var message = '';
 					if(dt.data.jumlah_penilaian >= 10){
@@ -267,7 +274,6 @@ $("#pilih_user").on('click', function(e){
                 }
 				if(dt.data.histori_penilaian && dt.data.histori_penilaian.length > 0){
 					var penilaian = dt.data.histori_penilaian;
-					console.log(penilaian, 'penilaian');
 					if(penilaian && penilaian.length >= 10){
 						var pesan = `Penilaian untuk ${dt.data.fnama} sudah selesai dikerjakan/sudah 10kali kesempatan. Silakan untuk kembali`;
 						var a = alert(pesan);
@@ -282,7 +288,6 @@ $("#pilih_user").on('click', function(e){
             <?php endif; ?>
 
 			<?php if($ajm->type_form == 3) :?>
-				console.log('dt', dt);
 				if(dt.data.jumlah_penilaian){
 					var message = '';
 					if(dt.data.jumlah_penilaian >= 10){
@@ -296,7 +301,6 @@ $("#pilih_user").on('click', function(e){
                 }
 				if(dt.data.histori_penilaian && dt.data.histori_penilaian.length > 0){
 					var penilaian = dt.data.histori_penilaian;
-					console.log(penilaian, 'penilaian');
 					if(penilaian && penilaian.length >= 10){
 						var pesan = `Penilaian untuk ${dt.data.fnama} sudah selesai dikerjakan/sudah 10kali kesempatan. Silakan untuk kembali`;
 						var a = alert(pesan);
@@ -348,7 +352,6 @@ $(document).on('click',"#filter-empty",function(e){
 			var data_id = $(value).attr('data-id');
 			var id = $(value).attr('id');
 			var value = $("#aksi-"+data_id).val();
-			console.log(value);
 			if(value || value == 'y'){
 				$("#aksi-"+data_id).parent().hide();
 			}
@@ -363,7 +366,6 @@ $(document).on('click',"#filter-empty",function(e){
 			var data_id = $(value).attr('data-id');
 			var id = $(value).attr('id');
 			var value = $("#aksi-"+data_id).val();
-			console.log(value);
 			if(value || value == 'y'){
 				$("#aksi-"+data_id).parent().show();
 			}
@@ -389,9 +391,12 @@ function initDataByRuanganId(r_id=0, val_edit = []){
 						$("#panel-judul").removeClass("col-md-12");
 						$("#panel-judul").addClass("col-md-6");
 						$("#panel-filter").addClass("col-md-6");
-						$("#panel-filter").html(`<div class="card col-md-5 p-3 text-center transition" id="filter-empty">
-							<input type="hidden" id="aksi-empty">
-							<h6>Tampilkan yang belum diisi</h6>
+						$("#panel-filter").append(`<div class="card col-md-1 me-2 text-center transition" id="filter-check-all">
+							<div class="card-body"><input type="checkbox" id="aksi-check-all"></div>
+						</div>`)
+						$("#panel-filter").append(`<div class="card col-md-5  text-center transition" id="filter-empty">
+							<div class="card-body"><input type="hidden" id="aksi-empty">
+							<h6 style="margin:0">Tampilkan yang belum diisi</h6></div>
 						</div>`);
 						$.each(respon.data.aim, function(k,v){
 							$.each(v, function(k1,v1){
@@ -425,9 +430,12 @@ function initDataByRuanganId(r_id=0, val_edit = []){
 						$("#panel-judul").removeClass("col-md-12");
 						$("#panel-judul").addClass("col-md-6");
 						$("#panel-filter").addClass("col-md-6");
-						$("#panel-filter").html(`<div class="card col-md-5 p-3 text-center transition" id="filter-empty">
-							<input type="hidden" id="aksi-empty">
-							<h6>Tampilkan yang belum diisi</h6>
+						$("#panel-filter").append(`<div class="card col-md-1 me-2 text-center transition" id="filter-check-all">
+							<div class="card-body"><input type="checkbox" id="aksi-check-all"></div>
+						</div>`)
+						$("#panel-filter").append(`<div class="card col-md-5  text-center transition" id="filter-empty">
+							<div class="card-body"><input type="hidden" id="aksi-empty">
+							<h6 style="margin:0">Tampilkan yang belum diisi</h6></div>
 						</div>`);
 						$.each(respon.data.aim, function(k,v){
 							
@@ -456,7 +464,6 @@ function initDataByRuanganId(r_id=0, val_edit = []){
 						});
 						$("#panel-form-2").html('');
 						$("#panel-form-2").html(s);
-						console.log(val_edit);
 						$.each(val_edit, function(k,v){
 							$("#"+v.indikator).removeClass("border border-success border-danger");
 							$("#aksi-"+v.indikator).val(v.aksi);
@@ -533,7 +540,6 @@ if(<?= $type_form ?> == 1){
 		if(items){
 			$('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress).text(items); 
 			$('.progress').slideDown();
-			console.log('slide down', items)
 		}
 	}
 
@@ -563,10 +569,8 @@ if(<?= $type_form ?> == 1){
 	console.log(<?= $type_form ?>);
 	var val_edit = <?= isset($value) ? json_encode($value) : json_encode([]) ?>;
 	if(val_edit.length > 0){
-		console.log(val_edit);
 		$.each(val_edit, function(k,v){
 			$.each(v.aksi,function(k1,v1){
-				console.log(v1);
 				$("#checkbox_"+v1+"_"+v.indikator).prop('checked', true);
 			})
 		});
@@ -585,7 +589,6 @@ if(<?= $type_form ?> == 1){
 		if(items){
 			$('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress).text(items); 
 			$('.progress').slideDown();
-			console.log('slide down', items)
 		}
 	}
 }
@@ -617,3 +620,13 @@ $(document).on('input', 'input', function(e){
 	saveLocal();
 });
 <?php endif ?>
+$(document).off('change', '#aksi-check-all');
+$(document).on('change', '#aksi-check-all', function(e){
+	e.preventDefault();
+	console.log('clicked')
+	if($(this).is(':checked')){
+		changeAllChoice('y');
+	}else{{
+		changeAllChoice('n');
+	}}
+});
