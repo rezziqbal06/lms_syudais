@@ -24,16 +24,13 @@ class B_User_Module_Concern extends \JI_Model
     public $tbl4_as = 'aj';
 
     const COLUMNS = [
-        'a_jabatan_id',
         'b_user_id',
-        'a_jpenilaian_id',
         'type',
         'cdate',
         'is_active',
         'is_deleted'
     ];
     const DEFAULTS = [
-        0,
         0,
         0,
         'create',

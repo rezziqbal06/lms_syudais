@@ -64,6 +64,35 @@ class User extends JI_Controller
 			if (isset($gd->is_active)) {
 				$gd->is_active = $this->bum->label('is_active', $gd->is_active);
 			}
+
+			if (isset($gd->utype)) {
+				switch ($gd->utype) {
+					case 'pembina':
+						$gd->utype = '<span class="badge badge-sm bg-gradient-warning">' . $gd->utype . '</span>';
+						break;
+					case 'tim12':
+						$gd->utype = '<span class="badge badge-sm bg-gradient-success">Tim 12</span>';
+						break;
+					case 'muttabi':
+						$gd->utype = '<span class="badge badge-sm bg-gradient-danger">Tim 12</span>';
+						break;
+					case 'Tim Pengembangan Santri':
+						$gd->utype = '<span class="badge badge-sm bg-gradient-primary">Tim Pengembangan Santri</span>';
+						break;
+					case 'Tim TTQ':
+						$gd->utype = '<span class="badge badge-sm bg-gradient-primary">Tim Tahsin & Tahfidz Al-Qur\'an</span>';
+						break;
+					case 'Tim Kreatifitas':
+						$gd->utype = '<span class="badge badge-sm bg-gradient-primary">Tim Kreatifitas</span>';
+						break;
+					case 'Tim Ta\'lim Wa Ta\'allum':
+						$gd->utype = '<span class="badge badge-sm bg-gradient-primary">Tim Ta\'lim Wa Ta\'allum</span>';
+						break;
+					default:
+						$gd->utype = '<span class="badge badge-sm bg-gradient-info">' . $gd->utype . '</span>';
+						break;
+				}
+			}
 		}
 
 		$this->__jsonDataTable($ddata, $dcount);
@@ -91,7 +120,7 @@ class User extends JI_Controller
 			$this->__json_out($data);
 			die();
 		}
-		$this->bum->columns['password']->value = md5('123456');
+		$this->bum->columns['password']->value = md5('mumtaz');
 
 		$res = $this->bum->save();
 		if ($res) {
@@ -101,7 +130,7 @@ class User extends JI_Controller
 			$token = $this->conumtext->genRand($type = "str", 9, 9);
 			$update_apikey = $this->bum->update($res, ['apikey' => $token]);
 		} else {
-			$this->status = 110;
+			$this->status = 901;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 		}
 		$this->__json_out($data);
@@ -191,12 +220,7 @@ class User extends JI_Controller
 		}
 		$this->bum->columns['cdate']->value = $this->__($bum, 'cdate', 'NOW()');
 		$this->bum->columns['bdate']->value = $this->__($bum, 'bdate', 'NOW()');
-		$this->bum->columns['umur']->value = $this->__($bum, 'umur', '30');
-		$this->bum->columns['adate']->value = $this->__($bum, 'adate', 'NOW()');
-		$this->bum->columns['edate']->value = $this->__($bum, 'edate', 'NOW()');
-		$this->bum->columns['api_reg_date']->value = $this->__($bum, 'api_reg_date', 'NOW()');
 		$this->bum->columns['is_deleted']->value = $this->__($bum, 'is_deleted', '0');
-		$this->bum->columns['b_user_id']->value = $this->__($bum, 'b_user_id', 'NULL');
 
 		$res = $this->bum->save($id);
 		if ($res) {

@@ -77,7 +77,7 @@
  * Site Base URL with http:// or https:// prefix and trailing slash
  * @var string
  */
-$site = "http://" . $_SERVER['HTTP_HOST'] . "/asesmen_rs/";
+$site = "http://" . $_SERVER['HTTP_HOST'] . "/lms/";
 
 /**
  * URL parse method
@@ -130,7 +130,7 @@ $cdn_url = '';
 $db['host']  = 'localhost';
 $db['user']  = 'root';
 $db['pass']  = '';
-$db['name']  = 'asesmen_rs_db';
+$db['name']  = 'ppisu_db';
 $db['port'] = '3306';
 $db['charset'] = 'utf8mb4';
 $db['engine'] = 'mysqli';
@@ -202,15 +202,15 @@ $semevar['fcm']->storageBucket = '';
 $semevar['fcm']->messagingSenderId = '';
 $semevar['fcm']->appId = '';
 
-$semevar['site_title'] = 'Assessment Bina Sehat';
+$semevar['site_title'] = 'Syudais LMS';
 $semevar['site_author'] = $semevar['site_title'];
 $semevar['site_keyword'] = $semevar['site_title'];
 $semevar['site_description'] = $semevar['site_title'];
 $semevar['site_version'] = '1.0.0-dev';
-$semevar['site_name'] = 'Assessment Bina Sehat';
-$semevar['admin_site_suffix'] = 'Assessment Bina Sehat';
-$semevar['site_suffix'] = ' - Assessment Bina Sehat';
-$semevar['site_description'] = 'Assessment Bina Sehat';
+$semevar['site_name'] = 'Syudais LMS';
+$semevar['admin_site_suffix'] = 'Syudais LMS';
+$semevar['site_suffix'] = ' - Syudais LMS';
+$semevar['site_description'] = 'Syudais LMS';
 $semevar['site_logo'] = new stdClass();
 $semevar['site_logo']->path = 'media/logo.png';
 $semevar['site_logo']->width = '117';

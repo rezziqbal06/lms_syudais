@@ -789,15 +789,7 @@ class JI_Controller extends \SENE_Controller
         }
     }
 
-    public function footer_text()
-    {
-        $sess = $this->getKey();
-        if (isset($sess->user->reseller->nama)) {
-            return $sess->user->reseller->nama;
-        }
-
-        return $this->current_reseller->nama;
-    }
+    
 
     /**
      * Global variable replacements for email templates

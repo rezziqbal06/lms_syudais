@@ -42,8 +42,10 @@ $admin_foto = $this->cdn_url($admin_foto);
 				</a>
 			</li>
 			<li class="nav-item mt-3">
-				<h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Akun</h6>
+				<h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6"></h6>
 			</li>
+
+
 			<li class="nav-item">
 				<a class="nav-link " href="<?= base_url_admin() ?>akun/user">
 					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -55,47 +57,22 @@ $admin_foto = $this->cdn_url($admin_foto);
 			<li class="nav-item mt-3">
 				<h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Pengaturan</h6>
 			</li>
-			<!-- <li class="nav-item">
-				<a class="nav-link " href="<?= base_url_admin() ?>pengaturan/unit">
-					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-						<i class="ni ni-building text-dark text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Unit</span>
-				</a>
-			</li> -->
-			<li class="nav-item">
-				<a class="nav-link " href="<?= base_url_admin() ?>pengaturan/ruangan">
-					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-						<i class="ni ni-app text-info text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Ruangan</span>
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link " href="<?= base_url_admin() ?>pengaturan/unit">
-					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-						<i class="ni ni-building text-info text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Unit</span>
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link " href="<?= base_url_admin() ?>pengaturan/jenis_penilaian">
-					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-						<i class="ni ni-app text-info text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Jenis Penilaian</span>
-				</a>
-			</li>
 			<li class="nav-item">
 				<a class="nav-link " href="<?= base_url_admin() ?>pengaturan/jabatan">
 					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
 						<i class="ni ni-app text-info text-sm opacity-10"></i>
 					</div>
-					<span class="nav-link-text ms-1">Jabatan / Profesi</span>
+					<span class="nav-link-text ms-1">Jabatan</span>
 				</a>
 			</li>
-
+			<li class="nav-item">
+				<a class="nav-link " href="<?= base_url_admin() ?>pengaturan/program">
+					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+						<i class="ni ni-app text-danger text-sm opacity-10"></i>
+					</div>
+					<span class="nav-link-text ms-1">Program</span>
+				</a>
+			</li>
 		</ul>
 	</div>
 	<div class="sidenav-footer mx-3 vertical-end">

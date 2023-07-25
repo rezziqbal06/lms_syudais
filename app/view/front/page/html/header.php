@@ -1,88 +1,96 @@
 <?php
-$admin_foto = '';
-if (isset($sess->admin->foto)) $admin_foto = $sess->admin->foto;
-if (empty($admin_foto)) $admin_foto = 'media/pengguna/default.png';
-$admin_foto = base_url($admin_foto);
+$user_foto = '';
+if (isset($sess->user->foto)) $user_foto = $sess->user->foto;
+if (empty($user_foto)) $user_foto = 'media/pengguna/default.png';
+$user_foto = base_url($user_foto);
 ?>
-<header class="navbar navbar-default bg-secondary">
-	<!-- Left Header Navigation -->
-	<ul class="nav navbar-nav-custom">
-		<!-- Main Sidebar Toggle Button -->
-		<li>
-			<a href="javascript:void(0)" onclick="App.sidebar('toggle-sidebar');this.blur();">
-				<i class="fa fa-bars fa-fw"></i>
-			</a>
-		</li>
-		<!-- END Main Sidebar Toggle Button -->
+<style>
+	.btn-group-vertical button {
+		margin-bottom: 0;
+	}
 
-		<!-- Template Options -->
-		<!-- Change Options functionality can be found in js/app.js - templateOptions() -->
-		<li class="dropdown" style="display:none;">
-			<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-				<i class="gi gi-settings"></i>
-			</a>
-			<ul class="dropdown-menu dropdown-custom dropdown-options">
-				<li class="dropdown-header text-center">Header Style</li>
-				<li>
-					<div class="btn-group btn-group-justified btn-group-sm">
-						<a href="javascript:void(0)" class="btn btn-primary" id="options-header-default">Light</a>
-						<a href="javascript:void(0)" class="btn btn-primary" id="options-header-inverse">Dark</a>
-					</div>
+	th,
+	td {
+		font-size: small;
+		text-align: start;
+	}
+
+	@media screen and (max-width: 480px) {
+		.dataTables_length label {
+			margin-bottom: 0.5em;
+		}
+
+		.dataTables_filter label {
+			float: left !important;
+		}
+	}
+</style>
+<!-- Navbar -->
+<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" data-scroll="false">
+	<div class="container-fluid py-1 px-3">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+				<li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">user</a></li>
+				<li class="breadcrumb-item text-sm text-white active" aria-current="page"><?= $this->current_parent ?></li>
+			</ol>
+			<h6 class="font-weight-bolder text-white mb-0 text-capitalize"><?= $this->current_page ?></h6>
+		</nav>
+		<div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+			<div class="ms-md-auto pe-md-3 d-flex align-items-center">
+				<div class="input-group d-none">
+					<span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+					<input type="text" class="form-control" placeholder="Type here...">
+				</div>
+			</div>
+			<ul class="navbar-nav  justify-content-end">
+				<li class="nav-item dropdown pe-2 d-flex align-items-center">
+					<a href="javascript:;" class="nav-link text-white p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+						<i class="fa fa-user cursor-pointer" aria-hidden="true"></i>
+					</a>
+					<ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+						<li>
+							<a class="dropdown-item border-radius-md" href="<?= base_url("edit") ?>" id="btn_user">
+								<div class="d-flex py-1">
+									<?php if (isset($sess->user->foto) && strlen($sess->user->foto)) { ?>
+										<div class="avatar avatar-sm me-3  my-auto">
+											<img src="<?= base_url() . $sess->user->foto ?>" class="img-fluid" style="border-radius:8px">
+										</div>
+									<?php } else { ?>
+										<div class="avatar avatar-sm bg-gradient-secondary me-3  my-auto">
+											<i class="fa fa-user"></i>
+										</div>
+									<?php } ?>
+									<div class="d-flex flex-column justify-content-center">
+										<h6 class="text-sm font-weight-normal mb-1 text-primary">
+											<?= $sess->user->fnama ?>
+										</h6>
+										<p class="text-xs text-secondary mb-0">
+											<i class="fa fa-pencil me-1" aria-hidden="true"></i>
+											edit profil
+										</p>
+									</div>
+								</div>
+							</a>
+						</li>
+					</ul>
 				</li>
-				<li class="dropdown-header text-center">Page Style</li>
-				<li>
-					<div class="btn-group btn-group-justified btn-group-sm">
-						<a href="javascript:void(0)" class="btn btn-primary" id="options-main-style">Default</a>
-						<a href="javascript:void(0)" class="btn btn-primary" id="options-main-style-alt">Alternative</a>
-					</div>
-				</li>
-			</ul>
-		</li>
-		<!-- END Template Options -->
-	</ul>
-	<!-- END Left Header Navigation -->
 
-	<!-- Search Form -->
-	<form id="fmenu_cari" action="<?= base_url('cari/'); ?>" method="post" class="navbar-form-custom" onsubmit="return false;">
-		<div class="form-group">
-			<input id="top-search" type="text" name="keyword" class="form-control" placeholder="Cari menu/modul..">
-		</div>
-	</form>
-	<!-- END Search Form -->
-
-	<!-- Right Header Navigation -->
-	<ul class="nav navbar-nav-custom pull-right">
-		<!-- Alternative Sidebar Toggle Button -->
-		<!-- chat toggle -->
-		<li>
-			<!-- If you do not want the main sidebar to open when the alternative sidebar is closed, just remove the second parameter: App.sidebar('toggle-sidebar-alt'); -->
-			<a href="javascript:void(0)" onclick="App.sidebar('toggle-sidebar-alt', 'toggle-other');this.blur();">
-				<i class="fa fa-comments"></i>
-				<span id="chat-online-count" class="label label-primary label-indicator animation-floating">0</span>
-			</a>
-		</li>
-		<!-- end chat toggle -->
-
-		<!-- User Dropdown -->
-		<li class="dropdown">
-			<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-				<img src="<?= $admin_foto ?>" alt="avatar" onerror="this.null;this.src='<?= base_url('media/pengguna/default.png') ?>';"> <i class="fa fa-angle-down"></i>
-			</a>
-			<ul class="dropdown-menu dropdown-custom dropdown-menu-right">
-				<li class="dropdown-header text-center">Account</li>
-				<li>
-					<a href="<?= base_url('profil') ?>" title="Profil">
-						<i class="fa fa-user fa-fw pull-right"></i>
-						Profil
+				<li class="nav-item px-3 d-flex align-items-center d-none">
+					<a href="javascript:;" class="nav-link text-white p-0">
+						<i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
 					</a>
 				</li>
-				<li class="divider"></li>
-				<li>
-					<a href="<?= base_url('logout'); ?>"><i class="fa fa-ban fa-fw pull-right"></i> Logout</a>
+				<li class="nav-item d-xl-none ps-3 px-3 d-flex align-items-center">
+					<a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
+						<div class="sidenav-toggler-inner">
+							<i class="sidenav-toggler-line bg-white"></i>
+							<i class="sidenav-toggler-line bg-white"></i>
+							<i class="sidenav-toggler-line bg-white"></i>
+						</div>
+					</a>
 				</li>
 			</ul>
-		</li>
-		<!-- END User Dropdown -->
-	</ul>
-	<!-- END Right Header Navigation -->
-</header>
+		</div>
+	</div>
+</nav>
+<!-- End Navbar -->

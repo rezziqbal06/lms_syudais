@@ -1,8 +1,8 @@
 :root{
-    --primary:#6c9b87;
-    --accent:#d7a510;
-    --secondary:#086867;
-    --background:#fefefe;
+    --primary:#3F72AF;
+    --accent:#112D4E;
+    --secondary:#DBE2EF;
+    --background:#F9F7F7;
     --dark-primary:#50577A;
     --dark-accent:#6B728E;
     --dark-secondary:#474E68;
@@ -111,6 +111,10 @@
     padding: 0.1rem 0.3rem;
     height: 40px;
     transition: box-shadow 0.15s ease, border-color 0.15s ease !important;
+}
+
+.btn {
+    margin-bottom: 1.5em !important;
 }
 
 .select2-container--open {

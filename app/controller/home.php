@@ -13,8 +13,8 @@ class Home extends JI_Controller
 		$this->load('a_jpenilaian_concern');
 		$this->load('b_user_concern');
 
-		$this->load('front/a_jpenilaian_model', 'ajm');
-		$this->load('front/a_ruangan_model', 'arm');
+		// $this->load('front/a_jpenilaian_model', 'ajm');
+		// $this->load('front/a_ruangan_model', 'arm');
 		$this->load('front/b_user_model', 'bum');
 	}
 
@@ -28,11 +28,11 @@ class Home extends JI_Controller
 		$this->setTitle('Dashboard ' . $this->config->semevar->site_suffix);
 
 
-		$ajm = $this->ajm->getAll();
-		if (isset($ajm[0]->id)) $data['ajm'] = $ajm;
+		// $ajm = $this->ajm->getAll();
+		// if (isset($ajm[0]->id)) $data['ajm'] = $ajm;
 
-		$data['ajm'] = $ajm;
-		unset($ajm);
+		// $data['ajm'] = $ajm;
+		// unset($ajm);
 
 		$bum = $this->bum->getAll();
 		if (isset($bum[0]->id)) $data['bum'] = $bum;
@@ -40,19 +40,17 @@ class Home extends JI_Controller
 		$data['bum'] = $bum;
 		unset($bum);
 
-		$arm = $this->arm->getAll();
-		if (isset($arm[0]->id)) $data['arm'] = $arm;
+		// $arm = $this->arm->getAll();
+		// if (isset($arm[0]->id)) $data['arm'] = $arm;
 
-		$data['arm'] = $arm;
-		unset($arm);
+		// $data['arm'] = $arm;
+		// unset($arm);
 
 		$data['jp'] = $this->input->request('jp', 2);
 
 		$this->putThemeContent("home/home", $data);
-		$this->putThemeContent("home/home_modal", $data);
-		$this->putThemeContent("home/print_hh", $data);
 		$this->putJsContent("home/home_bottom", $data);
-		$this->loadLayout('col-1-bar', $data);
+		$this->loadLayout('col-2-left', $data);
 		$this->render();
 	}
 }

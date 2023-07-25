@@ -22,46 +22,30 @@ class B_User_Concern extends \JI_Model
     // public $tbl3_as = 'ac';
 
     const COLUMNS = [
-        'a_jabatan_id',
-        'a_unit_id',
+        'utype',
         'google_id',
         'kode',
         'email',
         'username',
-        'foto',
-        'welcome_message',
+        'image',
         'password',
         'fnama',
         'lnama',
         'alamat',
         'alamat2',
-        'kelurahan',
         'kecamatan',
         'kabkota',
         'provinsi',
-        'negara',
         'kodepos',
         'kelamin',
-        'tlahir',
         'bdate',
         'cdate',
         'adate',
         'edate',
         'telp',
         'image',
-        'umur',
-        'api_reg_date',
-        'api_reg_token',
-        'api_web_date',
-        'api_web_token',
-        'api_mobile_date',
-        'api_mobile_token',
-        'fcm_token',
-        'device',
-        'apikey',
         'is_active',
-        'is_deleted',
-        'b_user_id'
+        'is_deleted'
     ];
     const DEFAULTS = [
         '',
@@ -85,32 +69,14 @@ class B_User_Concern extends \JI_Model
         '',
         '',
         '',
-        null,
-        null,
-        null,
         '',
         '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        null
     ];
     const REQUIREDS = [
-        'a_jabatan_id',
+        'utype',
         'email',
         'username',
         'fnama',
-        'telp',
     ];
     const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
@@ -141,7 +107,7 @@ class B_User_Concern extends \JI_Model
         $this->datatables['admin'] = new \Seme_Datatable([
             ["$this->tbl_as.id", 'id', 'ID'],
             ["$this->tbl_as.fnama", 'fnama', 'Nama'],
-            ["$this->tbl_as.telp", 'telp', 'Telp'],
+            ["$this->tbl_as.utype", 'utype', 'Posisi'],
             ["$this->tbl_as.email", 'email', 'Email'],
             ["$this->tbl_as.is_active", 'is_active', 'Status']
         ]);
@@ -149,7 +115,7 @@ class B_User_Concern extends \JI_Model
         $this->datatables['front'] = new \Seme_Datatable([
             ["$this->tbl_as.id", 'id', 'ID'],
             ["$this->tbl_as.fnama", 'fnama', 'Nama'],
-            ["$this->tbl_as.telp", 'telp', 'Telp'],
+            ["$this->tbl_as.utype", 'utype', 'Posisi'],
             ["$this->tbl_as.email", 'email', 'Email'],
             ["$this->tbl_as.utype", 'utype', 'Utype'],
             ["$this->tbl_as.is_active", 'is_active', 'Status']

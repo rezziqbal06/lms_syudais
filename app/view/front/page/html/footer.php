@@ -1,8 +1,24 @@
-<footer class="clearfix">
-	<div class="pull-right teks-pudar" style="">
-		<?=$this->config->semevar->app_name?> <?=$this->config->semevar->site_version?> dibuat sepenuh <i class="fa fa-heart text-danger"></i> oleh <a href="https://cenah.co.id" target="_blank" title="Cipta Esensi Merenah" style="color: rgba(0,0,0,0.4);">Cenah.co.id</a> dengan Seme Framework <?=SEME_VERSION?>
-	</div>
-	<div class="pull-left">
-		<?=$this->footer_text()?> <a href="<?=base_url("releases/index/".$this->config->semevar->site_version)?>" target="_blank" title="Catatan rilis"><?=$this->config->semevar->site_version?></a> &copy; 2016-<?=date("Y")?>
+<footer class="footer pt-3  ">
+	<div class="container-fluid">
+		<div class="row align-items-center justify-content-lg-between">
+			<div class="col-lg-6 mb-lg-0 mb-4">
+				<div class="copyright text-center text-sm text-muted text-lg-start">
+					© 1444,
+					Dibuat dengan <i class="fa fa-heart"></i> oleh
+					<a href="#" class="font-weight-bold" target="_blank">Qaanii</a>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<ul class="nav nav-footer justify-content-center justify-content-lg-end">
+
+					<!-- <li class="nav-item">
+						<a href="<?= base_url_admin() ?>tugas" class="nav-link text-muted">Tugas</a>
+					</li>
+					<li class="nav-item">
+						<a href="<?= base_url_admin() ?>kelas" class="nav-link text-muted">Ruang Kelas</a>
+					</li> -->
+				</ul>
+			</div>
+		</div>
 	</div>
 </footer>

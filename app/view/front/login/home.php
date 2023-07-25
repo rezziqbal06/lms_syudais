@@ -34,9 +34,9 @@
                         </div>
                     </div>
                     <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
-                        <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url('<?= base_url("media/bg-login.jpg") ?>');
+                        <div class="position-relative bg-gradient-secondary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url('<?= base_url("media/bg-login.jpg") ?>');
           background-size: cover;">
-                            <span class="mask bg-gradient-primary opacity-6"></span>
+                            <span class="mask bg-gradient-secondary opacity-6"></span>
                             <h4 class="mt-5 text-white font-weight-bolder position-relative">"Ahlan wa Sahlan Fii"</h4>
                             <p class="text-white position-relative"><?= $this->config->semevar->site_name ?></p>
                         </div>

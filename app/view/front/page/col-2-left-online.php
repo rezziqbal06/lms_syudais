@@ -6,10 +6,7 @@
 		<div id="page-wrapper" class="page-loading">
 			<!-- Preloader -->
 			<div class="preloader themed-background">
-				<h1 class="push-top-bottom text-light text-center" >
-                    <strong><?=$this->current_reseller->nama?></strong>
-                    <br><small>Loading...</small>
-                </h1>
+				<h1 class="push-top-bottom text-light text-center" ><strong><?=$this->config->semevar->app_name;?></strong><br><small>Loading...</small></h1>
 				<div class="inner">
 					<h3 class="text-light visible-lt-ie10"><strong>Loading..</strong></h3>
 					<div class="preloader-spinner hidden-lt-ie10"></div>
@@ -19,17 +16,17 @@
 
 			<div id="page-container" class="">
 				<!-- Alternative Sidebar -->
-				<?php $this->getThemeElement("page/html/sidebar_alt",$__forward); ?>
+				<?php if($this->admin_login) $this->getThemeElement("page/html/sidebar_alt",$__forward); ?>
 				<!-- END Alternative Sidebar -->
 
 				<!-- Main Sidebar -->
-				<?php $this->getThemeElement("page/html/sidebar",$__forward); ?>
+				<?php if($this->admin_login) $this->getThemeElement("page/html/sidebar",$__forward); ?>
 				<!-- END Main Sidebar -->
 
 				<!-- Main Container -->
 				<div id="main-container">
 					<!-- Header -->
-					<?php $this->getThemeElement("page/html/header",$__forward); ?>
+					<?php if($this->admin_login) $this->getThemeElement("page/html/header",$__forward); ?>
 					<!-- END Header -->
 
 					<!-- Main Container -->
@@ -37,16 +34,6 @@
 					<!-- Global Message -->
 					<?php $this->getThemeElement("page/html/global_message",$__forward); ?>
 					<!-- Global Message -->
-					<?php if(isset($sess->admin->is_karyawan)){ if(empty($sess->admin->is_karyawan)){ ?>
-					<div id="global_message_user_warning" class="alert alert-danger alert-dismissible" role="alert" style="margin: 0;">
-					  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-					  <span class="sr-only">Info:</span>
-					  <span id="global_message_info_text"><i class="fa fa-info-circle"></i> Anda login sebagai admin billing, mungkin terjadi error. Silakan login sebagai karyawan untuk hasil yang maksimal.</span>
-					</div>
-					<?php }} ?>
 
 					<?php $this->getThemeContent(); ?>
 					<!-- Main Container End -->
@@ -91,17 +78,10 @@
 			var chat_active = 1;
 			var last_pesan_id = 0;
 			var iterator = 1;
-			var hari = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-			var bulan = ['Januari','Ferbruari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-			var tahun = Number(new Date().getYear());
-			tahun += 1900;
-			function topbartimer(){
-				$("#topbar_hari_tgl_waktu").html(hari[(new Date().getDay())]+', '+(new Date().getDate())+' '+bulan[(new Date().getMonth())]+' '+tahun+' '+("0"+(new Date().getHours())).slice(-2)+':'+("0"+new Date().getMinutes()).slice(-2));
-			}
+			var base_url = '<?=base_url_admin()?>';
 			$(document).ready(function(e){
 				<?php $this->getJsReady(); ?>
-				<?php //$this->getThemeElement('page/html/script',$__forward); ?>
-				feather.replace();
+				<?php $this->getThemeElement('page/html/script',$__forward); ?>
 			});
 			<?php $this->getJsContent(); ?>
 		</script>

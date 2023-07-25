@@ -12,7 +12,7 @@
 		<li><a href="">Static Layout</a></li>
 	</ul>
 	<!-- END Static Layout Header -->
-	
+
 	<!-- Dummy Content -->
 	<div class="block full block-alt-noborder">
 		<h3 class="sub-header text-center"><strong>Dummy Content</strong> for layout demostration</h3>

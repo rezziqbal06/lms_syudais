@@ -49,10 +49,10 @@
     <!-- Add the class .full-width for a full width page -->
     <div id="page-container" class="full-width">
       <div id="non_printable" style="margin-left:23%;">
-        <a href="<?=base_url('penjualan/cabang/')?>" id="btn-back" class="btn btn-default"><i class="icon-arrow-left"></i> Manajemen Penjualan</a>
-        <a href="<?=base_url('penjualan/cabang/print_struk_tindakan/'.$order->id)?>" id="btn-back" class="btn btn-success"><i class="icon-file"></i> Struk Tindakan</a>
-        <!--<a href="<?=base_url('penjualan/cabang/print_struk_inventory/'.$order->id)?>" id="btn-back" class="btn btn-success"><i class="icon-file"></i> Struk Inventory</a>-->
-        <a href="<?=base_url('penjualan/cabang/print_struk_penjualan/'.$order->id)?>" id="btn-back" class="btn btn-success"><i class="icon-file"></i> Struk Penjualan</a>
+        <a href="<?=base_url_admin('penjualan/cabang/')?>" id="btn-back" class="btn btn-default"><i class="icon-arrow-left"></i> Manajemen Penjualan</a>
+        <a href="<?=base_url_admin('penjualan/cabang/print_struk_tindakan/'.$order->id)?>" id="btn-back" class="btn btn-success"><i class="icon-file"></i> Struk Tindakan</a>
+        <!--<a href="<?=base_url_admin('penjualan/cabang/print_struk_inventory/'.$order->id)?>" id="btn-back" class="btn btn-success"><i class="icon-file"></i> Struk Inventory</a>-->
+        <a href="<?=base_url_admin('penjualan/cabang/print_struk_penjualan/'.$order->id)?>" id="btn-back" class="btn btn-success"><i class="icon-file"></i> Struk Penjualan</a>
 				<button onclick="window.print()" class="btn btn-info"><i class="icon-print"></i> Cetak</button>
       </div>
       <!-- Page Content -->
@@ -72,7 +72,7 @@
   						<div>
   							<div style="width:100px;display:inline-block;">Tanggal</div>
   							<div style="width:20px;display:inline-block;">:</div>
-  							<div style="display:inline-block;"><?=$this->__dateIndonesia($order->date_order,'hari_tanggal_jam')?></div>
+  							<div style="display:inline-block;"><?=$this->tgl->convert($order->date_order,'hari_tanggal_jam')?></div>
   						</div>
   						<div>
   							<div style="width:100px;display:inline-block;">Kode Pasien</div>
@@ -118,7 +118,7 @@
   						<div>
   							<div style="width:100px;display:inline-block;">Tanggal</div>
   							<div style="width:20px;display:inline-block;">:</div>
-  							<div style="display:inline-block;"><?=$this->__dateIndonesia($order->date_order,'hari_tanggal_jam')?></div>
+  							<div style="display:inline-block;"><?=$this->tgl->convert($order->date_order,'hari_tanggal_jam')?></div>
   						</div>
   						<div>
   							<div style="width:100px;display:inline-block;">Kode Pasien</div>

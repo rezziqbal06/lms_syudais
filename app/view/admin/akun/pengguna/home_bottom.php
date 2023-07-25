@@ -74,7 +74,7 @@ if(jQuery('#drTable').length>0){
 					fnCallback(response);
 				}).error(function (response, status, headers, config) {
 					NProgress.done();
-					gritter("<h4>Error</h4><p>Tidak dapat mengambil data dari server</p>",'warning');
+					gritter("<h4>Error</h4><p>Tidak dapat mengambil data dari server</p>",'danger');
 				});
 			},
 	});

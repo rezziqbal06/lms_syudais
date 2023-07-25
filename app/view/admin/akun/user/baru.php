@@ -39,25 +39,16 @@
                         <input type="text" name="fnama" id="ifnama" class="form-control" placeholder="Nama" required>
                     </div>
                     <div class="col-md-6">
-                        <label for="ia_jabatan_id" class="control-label">Profesi</label>
-                        <select name="a_jabatan_id" id="ia_jabatan_id" class="form-control select2" required>
+                        <label for="iutype" class="control-label">Profesi</label>
+                        <select name="utype" id="iutype" class="form-control select2" required>
                             <?php if (isset($jabatans) && count($jabatans)) { ?>
                                 <?php foreach ($jabatans as $jb) { ?>
-                                    <option value="<?= $jb->id ?>"><?= $jb->nama ?></option>
+                                    <option value="<?= $jb->nama ?>"><?= $jb->nama ?></option>
                                 <?php } ?>
                             <?php } ?>
                         </select>
                     </div>
-                    <div class="col-md-6">
-                        <label for="ia_unit_id" class="control-label">Unit</label>
-                        <select name="a_unit_id" id="ia_unit_id" class="form-control select2" required>
-                            <?php if (isset($units) && count($units)) { ?>
-                                <?php foreach ($units as $un) { ?>
-                                    <option value="<?= $un->id ?>"><?= $un->nama ?></option>
-                                <?php } ?>
-                            <?php } ?>
-                        </select>
-                    </div>
+
                 </div>
 
                 <!-- <div class="form-group row">

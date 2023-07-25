@@ -1,6 +1,6 @@
 <?php
-$user_name = '';
-if (isset($sess->user->fnama)) if (strlen($sess->user->fnama) > 1) $user_name = $sess->user->fnama;
+$user_name = $sess->user->username;
+if (isset($sess->user->nama)) if (strlen($sess->user->nama) > 1) $user_name = $sess->user->nama;
 if (!isset($this->current_page)) $this->current_page = "";
 if (!isset($this->current_parent)) $this->current_parent = "";
 $current_page = $this->current_page;
@@ -22,69 +22,99 @@ if (isset($sess->user->foto)) $user_foto = $sess->user->foto;
 if (empty($user_foto)) $user_foto = 'media/pengguna/default.png';
 $user_foto = $this->cdn_url($user_foto);
 ?>
-<div id="sidebar">
-	<!-- Wrapper for scrolling functionality -->
-	<div id="sidebar-scroll">
-		<!-- Sidebar Content -->
-		<div class="sidebar-content">
-			<!-- Brand -->
-			<a href="<?= base_url(); ?>" class="sidebar-brand">
-				<img src="<?= $this->cdn_url("skin/user/") ?>img/logo.png" />
-			</a>
-			<!-- END Brand -->
+<aside class="sidenav bg-nav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
+	<div class="sidenav-header">
+		<i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+		<a class="navbar-brand m-0" href="<?= base_url() ?>">
+			<img src="<?= $this->cdn_url("media/logo.png") ?>" class="navbar-brand-img h-100" alt="main_logo">
+			<span class="ms-1 font-weight-bold"><?= $this->config->semevar->site_name ?></span>
+		</a>
+	</div>
+	<hr class="horizontal dark mt-0">
+	<div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+		<ul class="navbar-nav">
+			<li class="nav-item">
+				<a class="nav-link active" href="<?= base_url() ?>">
+					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+						<i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
+					</div>
+					<span class="nav-link-text ms-1">Dashboard</span>
+				</a>
+			</li>
+			<li class="nav-item mt-3">
+				<h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6"></h6>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link " href="<?= base_url() ?>order">
+					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+						<i class="ni ni-cart text-primary text-sm opacity-10"></i>
+					</div>
+					<span class="nav-link-text ms-1">Order</span>
+				</a>
+			</li>
 
-			<!-- User Info -->
-			<div class="sidebar-section sidebar-user clearfix sidebar-nav-mini-hide">
-				<div class="sidebar-user-avatar">
-					<a href="<?= base_url('profil'); ?>">
-						<img src="<?= $user_foto ?>" alt="avatar" onerror="this.null;this.src='<?= base_url('media/pengguna/default.png') ?>';" />
-					</a>
-				</div>
-				<div class="sidebar-user-name"><?= $user_name; ?></div>
-				<div class="sidebar-user-links">
-					<a href="<?= base_url('profil'); ?>" data-toggle="tooltip" data-placement="bottom" title="Profile"><i class="gi gi-user"></i></a>
-					<a href="<?= base_url("logout"); ?>" data-toggle="tooltip" data-placement="bottom" title="Logout"><i class="gi gi-exit"></i></a>
+			<li class="nav-item">
+				<a class="nav-link " href="<?= base_url() ?>akun/user">
+					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+						<i class="ni ni-single-02 text-warning text-sm opacity-10"></i>
+					</div>
+					<span class="nav-link-text ms-1">Pelanggan</span>
+				</a>
+			</li>
+			<li class="nav-item mt-3">
+				<h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Pengaturan</h6>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link " href="<?= base_url() ?>pengaturan/kategori">
+					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+						<i class="ni ni-app text-info text-sm opacity-10"></i>
+					</div>
+					<span class="nav-link-text ms-1">Kategori</span>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link " href="<?= base_url() ?>pengaturan/produk">
+					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+						<i class="ni ni-app text-danger text-sm opacity-10"></i>
+					</div>
+					<span class="nav-link-text ms-1">Produk</span>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link " href="<?= base_url() ?>pengaturan/banner">
+					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+						<i class="ni ni-world text-success text-sm opacity-10"></i>
+					</div>
+					<span class="nav-link-text ms-1">Banner / Promotion</span>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link " href="<?= base_url() ?>pengaturan/partner">
+					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+						<i class="ni ni-building text-success text-sm opacity-10"></i>
+					</div>
+					<span class="nav-link-text ms-1">Partner</span>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link " href="<?= base_url() ?>pengaturan/blog">
+					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+						<i class="ni ni-books text-warning text-sm opacity-10"></i>
+					</div>
+					<span class="nav-link-text ms-1">Blog</span>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<div class="sidenav-footer mx-3 vertical-end">
+		<div class="card card-plain shadow-none " id="sidenavCard">
+			<div class="card-body text-center p-3 w-100 pt-0 d-none">
+				<div class="docs-info">
+					<h6 class="mb-0">Need help?</h6>
+					<p class="text-xs font-weight-bold mb-0">Please check our docs</p>
 				</div>
 			</div>
-			<!-- END User Info -->
-
-			<!-- Sidebar Navigation -->
-			<ul class="sidebar-nav">
-				<?php foreach ($sess->user->menus->left as $key => $v) { ?>
-					<?php if (count($v->childs) > 0) { ?>
-						<li class="<?php if ($parent[$v->identifier] == 1) echo 'active'; ?>">
-							<a href="#" class="sidebar-nav-menu ">
-								<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-								<i class="<?= $v->fa_icon; ?> sidebar-nav-icon"></i>
-								<span class="sidebar-nav-mini-hide"><?= $v->name; ?></span>
-							</a>
-							<ul class="">
-								<?php foreach ($v->childs as $f) { ?>
-									<?php if ($f->utype == "external") { ?>
-										<li>
-											<a href="<?= $f->path; ?>" class="<?php if ($this->current_page == $f->identifier) echo 'active'; ?>">
-												<?= $f->name; ?>
-											</a>
-										</li>
-									<?php } else { ?>
-										<li>
-											<a href="<?= base_url($f->path); ?>" class="<?php if ($this->current_page == $f->identifier) echo 'active'; ?>">
-												<?= $f->name; ?>
-											</a>
-										</li>
-									<?php } ?>
-								<?php } ?>
-							</ul>
-						</li>
-					<?php } else { ?>
-						<li class="<?php if ($current_page == $key) echo 'active'; ?>"><a href="<?= base_url($v->path); ?>" class="<?php if ($current_page == $key) echo 'active'; ?>"><i class="<?= $v->fa_icon; ?>"></i> <span><?= $v->name; ?></span></a></li>
-					<?php } ?>
-				<?php } ?>
-			</ul>
-			<!-- END Sidebar Navigation -->
-
 		</div>
-		<!-- END Sidebar Content -->
+		<a href="<?= base_url("logout/") ?>" class="btn btn-dark btn-sm w-100 mb-3">Logout</a>
 	</div>
-	<!-- END Wrapper for scrolling functionality -->
-</div>
+</aside>
