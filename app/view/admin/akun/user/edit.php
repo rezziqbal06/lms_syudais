@@ -28,15 +28,15 @@
 					<div class="col-md-4">
 						<label for="ieis_active" class="control-label">Aktif?</label>
 						<select id="ieis_active" name="is_active" class="form-control">
-							<option value="1">Ya</option>
-							<option value="0">Tidak</option>
+							<option value="1" <?= $bum->is_active ? 'active' : '' ?>>Ya</option>
+							<option value="0" <?= !$bum->is_active ? 'active' : '' ?>>Tidak</option>
 						</select>
 					</div>
 				</div>
 				<div class="form-group row">
 					<div class="col-md-12">
 						<label for="iefnama" class="control-label">Nama Lengkap*</label>
-						<input type="text" name="fnama" id="iefnama" class="form-control" placeholder="Nama" required>
+						<input type="text" name="fnama" id="iefnama" class="form-control" value="<?= $bum->fnama ?? '' ?>" placeholder="Nama" required>
 					</div>
 					<div class="col-md-6">
 						<label for="ieutype" class="control-label">User Type</label>
@@ -44,7 +44,7 @@
 							<option value="">-- pilih jabatan --</option>
 							<?php if (isset($jabatans) && count($jabatans)) { ?>
 								<?php foreach ($jabatans as $jb) { ?>
-									<option value="<?= $jb->nama ?>"><?= $jb->nama ?></option>
+									<option value="<?= $jb->nama ?>" <?= isset($bum->utype) && $bum->utype == $jb->nama ? 'selected' : '' ?>><?= $jb->nama ?></option>
 								<?php } ?>
 							<?php } ?>
 						</select>
@@ -95,15 +95,15 @@
 				<div class="form-group row">
 					<div class="col-md-4">
 						<label for="ieitelp" class="control-label">Telepon</label>
-						<input id="ieitelp" type="number" class="form-control" name="telp" placeholder="Telepon" />
+						<input id="ieitelp" type="number" class="form-control" name="telp" value="<?= $bum->telp ?? '' ?>" placeholder="Telepon" />
 					</div>
 					<div class="col-md-4">
 						<label for="ieemail" class="control-label">Email</label>
-						<input id="ieemail" type="email" class="form-control" name="email" placeholder="Email" />
+						<input id="ieemail" type="email" class="form-control" name="email" value="<?= $bum->email ?? '' ?>" placeholder="Email" />
 					</div>
 					<div class="col-md-4">
 						<label for="ieusername" class="control-label">Username</label>
-						<input id="ieusername" type="username" class="form-control" name="username" placeholder="Username" />
+						<input id="ieusername" type="username" class="form-control" name="username" value="<?= $bum->username ?? '' ?>" placeholder="Username" />
 					</div>
 					<!-- <div class="col-md-4">
 						<label for="iepassword" class="control-label">Password</label>

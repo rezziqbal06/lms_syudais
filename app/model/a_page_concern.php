@@ -32,7 +32,6 @@ class A_Page_Concern extends \JI_Model
         0,
         '',
         '',
-
     ];
 
     const REQUIREDS = [];
@@ -62,6 +61,7 @@ class A_Page_Concern extends \JI_Model
         $this->define_columns(self::COLUMNS, self::REQUIREDS, self::DEFAULTS);
         $this->datatables['front'] = new \Seme_Datatable([
             ["$this->tbl_as.id", 'id', 'ID'],
+            ["$this->tbl_as.icon", 'icon', 'Ikon'],
             ["COALESCE($this->tbl2_as.fnama, COALESCE($this->tbl3_as.nama, '-'))", 'nama', 'Reseller'],
             ["$this->tbl_as.is_active", 'is_active', 'Status']
         ]);

@@ -6,8 +6,10 @@ class User extends JI_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load('a_jabatan_concern');
 		$this->load('b_user_concern');
 		$this->load('b_user_alamat_concern');
+		$this->load("api_admin/a_jabatan_model", 'ajm');
 		$this->load("api_admin/b_user_model", 'bum');
 	}
 
@@ -67,10 +69,10 @@ class User extends JI_Controller
 
 			if (isset($gd->utype)) {
 				switch ($gd->utype) {
-					case 'pembina':
+					case 'Pembina':
 						$gd->utype = '<span class="badge badge-sm bg-gradient-warning">' . $gd->utype . '</span>';
 						break;
-					case 'tim12':
+					case 'Tim 12':
 						$gd->utype = '<span class="badge badge-sm bg-gradient-success">Tim 12</span>';
 						break;
 					case 'muttabi':
@@ -121,6 +123,8 @@ class User extends JI_Controller
 			die();
 		}
 		$this->bum->columns['password']->value = md5('mumtaz');
+		$jabatan = $this->ajm->getByName($_POST['utype']);
+		$this->bum->columns['a_jabatan_id']->value = $jabatan->id;
 
 		$res = $this->bum->save();
 		if ($res) {
@@ -219,8 +223,10 @@ class User extends JI_Controller
 			die();
 		}
 		$this->bum->columns['cdate']->value = $this->__($bum, 'cdate', 'NOW()');
-		$this->bum->columns['bdate']->value = $this->__($bum, 'bdate', 'NOW()');
+		// $this->bum->columns['bdate']->value = $this->__($bum, 'bdate', 'NOW()');
 		$this->bum->columns['is_deleted']->value = $this->__($bum, 'is_deleted', '0');
+		$jabatan = $this->ajm->getByName($_POST['utype']);
+		$this->bum->columns['a_jabatan_id']->value = $jabatan->id;
 
 		$res = $this->bum->save($id);
 		if ($res) {

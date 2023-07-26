@@ -57,9 +57,30 @@
 									<label for="islug" class="control-label">Slug</label>
 									<input id="islug" type="text" name="slug" class="form-control" required>
 								</div>
+								<div class="col-md-6">
+									<label for="iwarna" class="form-label">Warna</label>
+									<input type="color" class="form-control form-control-color" name="warna" id="iwarna" value="#563d7c" title="Choose your color">
+								</div>
+								<div class="col-md-6">
+									<label for="iicon" class="form-label">icon</label>
+									<div class="row">
+										<?php if (isset($icons[0])) : ?>
+											<?php foreach ($icons as $k => $v) : ?>
+												<div class="col">
+													<div class="form-check">
+														<input class="form-check-input" type="radio" name="icon" value="<?= $v ?>" id="iradio<?= $k ?>">
+														<label class="form-check-label" for="iradio<?= $k ?>">
+															<i class="<?= $v ?>"></i>
+														</label>
+													</div>
+												</div>
+											<?php endforeach ?>
+										<?php endif ?>
+									</div>
+								</div>
 								<div class="col-md-6 d-none">
 									<label for="itype_form" class="control-label">Tipe Formulir</label>
-									<input id="itype_form" type="number" name="type_form" class="form-control" required>
+									<input id="itype_form" type="number" name="type_form" class="form-control">
 								</div>
 								<div class="col-md-12">
 									<label for="ideskripsi" class="control-label">Deskripsi</label>
@@ -131,7 +152,7 @@
 									</tbody>
 								</table>
 							</div>
-							<div class="row mb-1 mt-1">
+							<div class="row mb-1 mt-1 d-none">
 								<div class="col-10"></div>
 								<div class="col-2">
 									<button class="btn btn-info float-end btn-tambah-indikator" data-type="tambah"><i class="fa fa-plus"></i></button>
@@ -179,9 +200,30 @@
 									<label for="ieslug" class="control-label">Slug</label>
 									<input id="ieslug" type="text" name="slug" class="form-control" required>
 								</div>
+								<div class="col-md-6">
+									<label for="iewarna" class="form-label">Warna</label>
+									<input type="color" class="form-control form-control-color" name="warna" id="iewarna" value="#563d7c" title="Choose your color">
+								</div>
+								<div class="col-md-6">
+									<label for="iicon" class="form-label">icon</label>
+									<div class="row">
+										<?php if (isset($icons[0])) : ?>
+											<?php foreach ($icons as $k => $v) : ?>
+												<div class="col">
+													<div class="form-check">
+														<input class="form-check-input" type="radio" name="icon" value="<?= $v ?>" id="ieradio<?= $k ?>">
+														<label class="form-check-label" for="ieradio<?= $k ?>">
+															<i class="<?= $v ?>"></i>
+														</label>
+													</div>
+												</div>
+											<?php endforeach ?>
+										<?php endif ?>
+									</div>
+								</div>
 								<div class="col-md-6 d-none">
 									<label for="ietype_form" class="control-label">Tipe Formulir</label>
-									<input id="ietype_form" type="number" name="type_form" class="form-control" required>
+									<input id="ietype_form" type="number" name="type_form" class="form-control">
 								</div>
 								<div class="col-md-12">
 									<label for="iedeskripsi" class="control-label">Deskripsi</label>
@@ -252,7 +294,7 @@
 									</tbody>
 								</table>
 							</div>
-							<div class="row mb-1 mt-1 mt-1">
+							<div class="row mb-1 mt-1 mt-1 d-none">
 								<div class="col-10"></div>
 								<div class="col-2">
 									<button class="btn btn-info float-end btn-tambah-indikator" data-type="edit"><i class="fa fa-plus"></i></button>

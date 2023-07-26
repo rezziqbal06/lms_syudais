@@ -10,10 +10,10 @@ class Home extends JI_Controller
 		$this->current_page = 'dashboard';
 
 		$this->load('a_ruangan_concern');
-		$this->load('a_jpenilaian_concern');
+		$this->load('a_program_concern');
 		$this->load('b_user_concern');
 
-		// $this->load('front/a_jpenilaian_model', 'ajm');
+		// $this->load('front/a_program_model', 'apm');
 		// $this->load('front/a_ruangan_model', 'arm');
 		$this->load('front/b_user_model', 'bum');
 	}
@@ -27,18 +27,18 @@ class Home extends JI_Controller
 		}
 		$this->setTitle('Dashboard ' . $this->config->semevar->site_suffix);
 
+		// $apm = $this->apm->getAll();
+		// if (isset($apm[0]->id)) $data['apm'] = $apm;
 
-		// $ajm = $this->ajm->getAll();
-		// if (isset($ajm[0]->id)) $data['ajm'] = $ajm;
-
-		// $data['ajm'] = $ajm;
-		// unset($ajm);
+		// $data['apm'] = $apm;
+		// unset($apm);
 
 		$bum = $this->bum->getAll();
 		if (isset($bum[0]->id)) $data['bum'] = $bum;
 
 		$data['bum'] = $bum;
 		unset($bum);
+
 
 		// $arm = $this->arm->getAll();
 		// if (isset($arm[0]->id)) $data['arm'] = $arm;

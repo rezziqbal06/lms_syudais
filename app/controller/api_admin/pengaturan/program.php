@@ -181,7 +181,10 @@ class Program extends JI_Controller
 		$du = [];
 		$du['nama'] = $_POST['nama'];
 		$du['deskripsi'] = $_POST['deskripsi'];
-		$du['slug'] = $_POST['slug'];
+		$du['slug'] = $_POST['slug'] ?? null;
+		$du['warna'] = $_POST['warna'] ?? null;
+		$du['icon'] = $_POST['icon'] ?? null;
+		// $du['kategori'] = $_POST['kategori'] ?? null;
 
 		if (!$this->admin_login) {
 			$this->status = 400;

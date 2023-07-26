@@ -223,21 +223,12 @@ class A_Jabatan_Model extends \Model\A_Jabatan_Concern
     return $this->db->get('', 0);
   }
 
-  public function getByNameAndTelp($name = "", $telp = "")
+  public function getByName($name = "")
   {
     $this->db->flushQuery();
-    $this->db->select('id')
-      ->select('fnama')
-      ->select('telp')
-      ->select('alamat')
-      ->select('provinsi')
-      ->select('kabkota')
-      ->select('kecamatan')
-      ->select('kodepos')
-      ->select('is_active');
+    $this->db->select('*');
     $this->db->from($this->tbl, $this->tbl_as);
-    $this->db->where("telp", $telp, "OR", "%like%", 1, 0);
-    $this->db->where("fnama", $name, "OR", "%like%", 0, 1);
+    $this->db->where("nama", $name);
     return $this->db->get_first("", 0);
   }
   public function cari_alamat($keyword = '')

@@ -6,17 +6,7 @@ if (!isset($this->current_parent)) $this->current_parent = "";
 $current_page = $this->current_page;
 $current_parent = $this->current_parent;
 $parent = array();
-foreach ($sess->user->menus->left as $key => $v) {
-	$parent[$v->identifier] = 0;
-	if (count($v->childs) > 0) {
-		foreach ($v->childs as $f) {
-			if ($current_page == $f->identifier) {
-				$current_page = $v->identifier;
-				$parent[$v->identifier] = 1;
-			}
-		}
-	}
-}
+
 $user_foto = '';
 if (isset($sess->user->foto)) $user_foto = $sess->user->foto;
 if (empty($user_foto)) $user_foto = 'media/pengguna/default.png';
@@ -41,69 +31,27 @@ $user_foto = $this->cdn_url($user_foto);
 					<span class="nav-link-text ms-1">Dashboard</span>
 				</a>
 			</li>
+			<!-- Header -->
 			<li class="nav-item mt-3">
 				<h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6"></h6>
 			</li>
-			<li class="nav-item">
-				<a class="nav-link " href="<?= base_url() ?>order">
-					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-						<i class="ni ni-cart text-primary text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Order</span>
-				</a>
-			</li>
 
-			<li class="nav-item">
-				<a class="nav-link " href="<?= base_url() ?>akun/user">
-					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-						<i class="ni ni-single-02 text-warning text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Pelanggan</span>
-				</a>
-			</li>
+			<!-- Header -->
 			<li class="nav-item mt-3">
-				<h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Pengaturan</h6>
+				<h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Program</h6>
 			</li>
-			<li class="nav-item">
-				<a class="nav-link " href="<?= base_url() ?>pengaturan/kategori">
-					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-						<i class="ni ni-app text-info text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Kategori</span>
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link " href="<?= base_url() ?>pengaturan/produk">
-					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-						<i class="ni ni-app text-danger text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Produk</span>
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link " href="<?= base_url() ?>pengaturan/banner">
-					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-						<i class="ni ni-world text-success text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Banner / Promotion</span>
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link " href="<?= base_url() ?>pengaturan/partner">
-					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-						<i class="ni ni-building text-success text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Partner</span>
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link " href="<?= base_url() ?>pengaturan/blog">
-					<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-						<i class="ni ni-books text-warning text-sm opacity-10"></i>
-					</div>
-					<span class="nav-link-text ms-1">Blog</span>
-				</a>
-			</li>
+			<?php if (isset($sess->user->program[0])) {
+				foreach ($sess->user->program as $k => $v) { ?>
+					<li class="nav-item">
+						<a class="nav-link" href="<?= base_url("program/" . $v->slug) ?>">
+							<div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+								<i class="<?= $v->icon ?? 'ni ni-app' ?> text-sm opacity-10" style="color:<?= $v->warna ?? '#dedede' ?>"></i>
+							</div>
+							<span class="nav-link-text ms-1 <?= $v->slug == $current_page ? 'active' : '' ?>"><?= $v->nama ?></span>
+						</a>
+					</li>
+			<?php }
+			} ?>
 		</ul>
 	</div>
 	<div class="sidenav-footer mx-3 vertical-end">

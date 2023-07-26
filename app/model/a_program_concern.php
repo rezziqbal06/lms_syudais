@@ -26,11 +26,15 @@ class A_Program_Concern extends \JI_Model
         'slug',
         'deskripsi',
         'type_form',
+        'warna',
+        'icon',
         'is_active',
         'is_deleted',
         'cdate',
     ];
     const DEFAULTS = [
+        '',
+        '',
         '',
         '',
         '',

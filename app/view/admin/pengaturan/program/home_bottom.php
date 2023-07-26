@@ -48,8 +48,12 @@ if(jQuery('#drTable').length>0){
 						ieid = id;
 						$.get('<?=base_url("api_admin/pengaturan/program/detail/")?>'+ieid).done(function(dt){
 							if(dt.data){
+								console.log(dt.data)
 								$.each(dt.data, function(k,v){
 									$("#ie"+k).val(v);
+									if(k == 'icon'){
+										$("[value='"+v+"']").prop('checked', true)
+									}
 								})
 							}
 							if(dt.data.indikator){

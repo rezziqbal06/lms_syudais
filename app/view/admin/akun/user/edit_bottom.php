@@ -181,14 +181,3 @@ $("#iekelurahan").select2({
 });
 
 
-
-<?php if(isset($bum->id)){
-  foreach($bum as $k => $v){ ?>
-    <?php if(isset($v) && strlen($v)){?>
-    $("[name='<?=$k?>']").val('<?=$v?>');
-    <?php if($k == 'utype' || $k == 'a_unit_id' || $k == 'a_ruangan_id'){ ?>
-      $("[name='<?=$k?>']").val('<?=$v?>').select2();
-    <?php } ?>
-    <?php } ?>
-  <?php }
-} ?>

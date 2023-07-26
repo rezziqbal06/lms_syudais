@@ -1,12 +1,11 @@
-:root{
-    --primary:#3F72AF;
-    --accent:#112D4E;
-    --secondary:#DBE2EF;
-    --background:#F9F7F7;
-    --dark-primary:#50577A;
-    --dark-accent:#6B728E;
-    --dark-secondary:#474E68;
-    --dark-background:#404258;
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans@1&family=Poppins&display=swap');
+
+p, a, input, label, i, li, div{
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6{
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .gradient-primary{
