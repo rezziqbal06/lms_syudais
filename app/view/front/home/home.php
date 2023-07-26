@@ -1,36 +1,31 @@
+<style>
+    .card-header {
+        background-image: url('<?= base_url('media/bg-card.png') ?>');
+        background-repeat: no-repeat;
+        background-position: top;
+        padding: 1rem !important;
+    }
+</style>
 <section>
     <div class="row">
-        <?php $title = ["Produk", "Kustomer", "Order On Proses", "Order Selesai"]; ?>
-        <?php $value = [$count_produk ?? 0, $count_kustomer ?? 0, $count_order_on_proses ?? 0, $count_order_done ?? 0]; ?>
-        <?php $icon = ["app", "single-02", "cart", "cart"]; ?>
-        <?php $color = ["danger", "warning", "info", "success"]; ?>
-        <?php foreach ($title as $k => $v) : ?>
-            <div class="col-xl-3 col-sm-6 mb-4">
-                <div class="card">
-                    <div class="card-body p-3">
-                        <div class="row">
-                            <div class="col-8">
-                                <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold"><?= $title[$k] ?></p>
-                                    <h2 class="font-weight-bolder">
-                                        <?= $value[$k] ?>
-                                    </h2>
-                                    <p class="mb-0 d-none">
-                                        <span class="text-success text-sm font-weight-bolder">+55%</span>
-                                        since yesterday
-                                    </p>
-                                </div>
+        <?php if (isset($sess->user->program[0])) {
+            foreach ($sess->user->program as $k => $v) { ?>
+                <div class="col-6 col-md-3">
+                    <a href="<?= base_url('program/' . $v->slug) ?>">
+                        <div class="card mb-3">
+                            <div class="card-header" style="background-color: <?= $v->warna ?? '#dedede' ?>;">
+                                <i class="<?= $v->icon ?? 'ni ni-app' ?> text-white text-lg opacity-10"></i>
                             </div>
-                            <div class="col-4 text-end">
-                                <div class="icon icon-shape bg-<?= $color[$k] ?> shadow-primary text-center rounded-circle">
-                                    <i class="ni ni-<?= $icon[$k] ?> text-lg opacity-10" aria-hidden="true"></i>
-                                </div>
+                            <div class="card-body">
+                                <h6 class="card-title"><?= $v->nama ?? '' ?></h6>
+                                <small class="float-end" style="color:#dedede;">Selengkapnya</small>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
-            </div>
-        <?php endforeach ?>
+        <?php }
+        } ?>
+
     </div>
 </section>
 <section>
