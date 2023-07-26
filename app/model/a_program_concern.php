@@ -4,7 +4,7 @@ namespace Model;
 
 register_namespace(__NAMESPACE__);
 /**
- * Define all general method(s) and constant(s) for a_jpenilaian table,
+ * Define all general method(s) and constant(s) for a_program table,
  *   can be inherited a Concern class also can be reffered as class constants
  *
  * @version 1.0.0
@@ -12,10 +12,10 @@ register_namespace(__NAMESPACE__);
  * @package Model\B_User
  * @since 1.0.0
  */
-class A_JPenilaian_Concern extends \JI_Model
+class A_Program_Concern extends \JI_Model
 {
-    public $tbl = 'a_jpenilaian';
-    public $tbl_as = 'ajp';
+    public $tbl = 'a_program';
+    public $tbl_as = 'ap';
     public $tbl2 = 'b_user_module';
     public $tbl2_as = 'bum';
     // public $tbl3 = 'a_company';
@@ -71,7 +71,7 @@ class A_JPenilaian_Concern extends \JI_Model
 
         $this->datatables['admin'] = new \Seme_Datatable([
             ["$this->tbl_as.id", 'id', 'ID'],
-            ["$this->tbl_as.nama", 'nama', 'Jenis Penilaian'],
+            ["$this->tbl_as.nama", 'nama', 'Program'],
             ["$this->tbl_as.slug", 'slug', 'Slug'],
             ["$this->tbl_as.is_active", 'is_active', 'Status']
         ]);

@@ -1,15 +1,15 @@
 <?php
-class Jenis_Penilaian extends JI_Controller
+class Program extends JI_Controller
 {
 	var $media_pengguna = 'media/pengguna';
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load('a_jpenilaian_concern');
-		$this->load("api_admin/a_jpenilaian_model", 'ajm');
+		$this->load('a_program_concern');
+		$this->load("api_admin/a_program_model", 'apm');
 		$this->load('a_indikator_concern');
-		$this->load("api_admin/a_indikator_model", 'aim');
+		// $this->load("api_admin/a_indikator_model", 'aim');
 	}
 
 	/**
@@ -41,9 +41,9 @@ class Jenis_Penilaian extends JI_Controller
 		// 	$b_user_id = $admin_login->id;
 		// }
 
-		$datatable = $this->ajm->datatable()->initialize();
-		$dcount = $this->ajm->count($datatable->keyword(), $is_active);
-		$ddata = $this->ajm->data(
+		$datatable = $this->apm->datatable()->initialize();
+		$dcount = $this->apm->count($datatable->keyword(), $is_active);
+		$ddata = $this->apm->data(
 			$datatable->page(),
 			$datatable->pagesize(),
 			$datatable->sort_column(),
@@ -57,7 +57,7 @@ class Jenis_Penilaian extends JI_Controller
 				$gd->fnama = htmlentities(rtrim($gd->fnama, ' - '));
 			}
 			if (isset($gd->is_active)) {
-				$gd->is_active = $this->ajm->label('is_active', $gd->is_active);
+				$gd->is_active = $this->apm->label('is_active', $gd->is_active);
 			}
 		}
 
@@ -76,45 +76,45 @@ class Jenis_Penilaian extends JI_Controller
 		$d = $this->__init();
 
 		$data = new \stdClass();
-		if (!$this->ajm->validates()) {
+		if (!$this->apm->validates()) {
 			$this->status = 444;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
-			$validation_message = $this->ajm->validation_message();
+			$validation_message = $this->apm->validation_message();
 			if (strlen($validation_message)) {
 				$this->message = $validation_message;
 			}
 			$this->__json_out($data);
 			die();
 		}
-		$this->ajm->columns['cdate']->value = 'NOW()';
+		$this->apm->columns['cdate']->value = 'NOW()';
 
 
-		$res = $this->ajm->save();
+		$res = $this->apm->save();
 		if ($res) {
 			$this->status = 200;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			$nama_indikator = $this->input->request('nama_indikator') ?? null;
-			if (isset($nama_indikator) && is_array($nama_indikator) && count($nama_indikator)) {
-				$dai = [];
-				foreach ($nama_indikator as $k => $v) {
-					$dai[$k]['nama'] = $v;
-					$dai[$k]['a_ruangan_ids'] = isset($_POST['a_ruangan_ids_' . $k]) ? json_encode($_POST['a_ruangan_ids_' . $k]) : '';
-					$dai[$k]['kategori'] = $_POST['kategori'][$k] ?? '';
-					$dai[$k]['subkategori'] = $_POST['subkategori'][$k] ?? '';
-					$dai[$k]['is_optional'] = $_POST['is_optional'][$k] ?? 0;
-					$dai[$k]['type'] = $_POST['type'][$k] ?? '';
-					$dai[$k]['a_jpenilaian_id'] = $res;
-					$dai[$k]['cdate'] = 'NOW()';
-				}
-				$res = $this->aim->setMass($dai);
-				if ($res) {
-					$this->status = 200;
-					$this->message = API_ADMIN_ERROR_CODES[$this->status];
-				} else {
-					$this->status = 110;
-					$this->message = API_ADMIN_ERROR_CODES[$this->status];
-				}
-			}
+			// if (isset($nama_indikator) && is_array($nama_indikator) && count($nama_indikator)) {
+			// 	$dai = [];
+			// 	foreach ($nama_indikator as $k => $v) {
+			// 		$dai[$k]['nama'] = $v;
+			// 		$dai[$k]['a_ruangan_ids'] = isset($_POST['a_ruangan_ids_' . $k]) ? json_encode($_POST['a_ruangan_ids_' . $k]) : '';
+			// 		$dai[$k]['kategori'] = $_POST['kategori'][$k] ?? '';
+			// 		$dai[$k]['subkategori'] = $_POST['subkategori'][$k] ?? '';
+			// 		$dai[$k]['is_optional'] = $_POST['is_optional'][$k] ?? 0;
+			// 		$dai[$k]['type'] = $_POST['type'][$k] ?? '';
+			// 		$dai[$k]['a_program_id'] = $res;
+			// 		$dai[$k]['cdate'] = 'NOW()';
+			// 	}
+			// 	$res = $this->aim->setMass($dai);
+			// 	if ($res) {
+			// 		$this->status = 200;
+			// 		$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			// 	} else {
+			// 		$this->status = 110;
+			// 		$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			// 	}
+			// }
 		} else {
 			$this->status = 110;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -145,7 +145,7 @@ class Jenis_Penilaian extends JI_Controller
 
 		$this->status = 200;
 		$this->message = API_ADMIN_ERROR_CODES[$this->status];
-		$data = $this->ajm->id($id);
+		$data = $this->apm->id($id);
 		if (!isset($data->id)) {
 			$data = new \stdClass();
 			$this->status = 441;
@@ -154,7 +154,7 @@ class Jenis_Penilaian extends JI_Controller
 			die();
 		}
 
-		$data->indikator = $this->aim->getByPenilaianId($id);
+		// $data->indikator = $this->aim->getByPenilaianId($id);
 		// dd(count($data->indikator));
 		$this->__json_out($data);
 	}
@@ -199,18 +199,18 @@ class Jenis_Penilaian extends JI_Controller
 			die();
 		}
 
-		$ajm = $this->ajm->id($id);
-		if (!isset($ajm->id)) {
+		$apm = $this->apm->id($id);
+		if (!isset($apm->id)) {
 			$this->status = 445;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			$this->__json_out($data);
 			die();
 		}
 
-		if (!$this->ajm->validates()) {
+		if (!$this->apm->validates()) {
 			$this->status = 444;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
-			$validation_message = $this->ajm->validation_message();
+			$validation_message = $this->apm->validation_message();
 			if (strlen($validation_message)) {
 				$this->message = $validation_message;
 			}
@@ -219,37 +219,37 @@ class Jenis_Penilaian extends JI_Controller
 		}
 		if ($id > 0) {
 			unset($du['id']);
-			$res = $this->ajm->update($id, $du);
+			$res = $this->apm->update($id, $du);
 			if ($res) {
 				$nama_indikator = $this->input->request('nama_indikator') ?? null;
 				if (isset($nama_indikator) && is_array($nama_indikator) && count($nama_indikator)) {
-					$resDelete = $this->aim->deleteByPenilaianId($id);
-					if (!$resDelete) {
-						$this->status = 200;
-						$this->message = API_ADMIN_ERROR_CODES[$this->status];
-						$this->__json_out($data);
-						die();
-					}
+					// $resDelete = $this->aim->deleteByPenilaianId($id);
+					// if (!$resDelete) {
+					// 	$this->status = 200;
+					// 	$this->message = API_ADMIN_ERROR_CODES[$this->status];
+					// 	$this->__json_out($data);
+					// 	die();
+					// }
 
-					$dai = [];
-					foreach ($nama_indikator as $k => $v) {
-						$dai[$k]['nama'] = $v;
-						$dai[$k]['a_ruangan_ids'] = isset($_POST['a_ruangan_ids_' . $k]) ? json_encode($_POST['a_ruangan_ids_' . $k]) : '';
-						$dai[$k]['kategori'] = $_POST['kategori'][$k] ?? '';
-						$dai[$k]['subkategori'] = $_POST['subkategori'][$k] ?? '';
-						$dai[$k]['is_optional'] = $_POST['is_optional'][$k] ?? '';
-						$dai[$k]['type'] = $_POST['type'][$k] ?? '';
-						$dai[$k]['a_jpenilaian_id'] = $id;
-						$dai[$k]['cdate'] = 'NOW()';
-					}
-					$res = $this->aim->setMass($dai);
-					if ($res) {
-						$this->status = 200;
-						$this->message = API_ADMIN_ERROR_CODES[$this->status];
-					} else {
-						$this->status = 110;
-						$this->message = API_ADMIN_ERROR_CODES[$this->status];
-					}
+					// $dai = [];
+					// foreach ($nama_indikator as $k => $v) {
+					// 	$dai[$k]['nama'] = $v;
+					// 	$dai[$k]['a_ruangan_ids'] = isset($_POST['a_ruangan_ids_' . $k]) ? json_encode($_POST['a_ruangan_ids_' . $k]) : '';
+					// 	$dai[$k]['kategori'] = $_POST['kategori'][$k] ?? '';
+					// 	$dai[$k]['subkategori'] = $_POST['subkategori'][$k] ?? '';
+					// 	$dai[$k]['is_optional'] = $_POST['is_optional'][$k] ?? '';
+					// 	$dai[$k]['type'] = $_POST['type'][$k] ?? '';
+					// 	$dai[$k]['a_program_id'] = $id;
+					// 	$dai[$k]['cdate'] = 'NOW()';
+					// }
+					// $res = $this->aim->setMass($dai);
+					// if ($res) {
+					// 	$this->status = 200;
+					// 	$this->message = API_ADMIN_ERROR_CODES[$this->status];
+					// } else {
+					// 	$this->status = 110;
+					// 	$this->message = API_ADMIN_ERROR_CODES[$this->status];
+					// }
 				}
 				$this->status = 200;
 				$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -298,21 +298,21 @@ class Jenis_Penilaian extends JI_Controller
 		}
 		$pengguna = $d['sess']->admin;
 
-		$ajm = $this->ajm->id($id);
-		if (!isset($ajm->id)) {
+		$apm = $this->apm->id($id);
+		if (!isset($apm->id)) {
 			$this->status = 521;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			$this->__json_out($data);
 			die();
 		}
-		if (!empty($ajm->is_deleted)) {
+		if (!empty($apm->is_deleted)) {
 			$this->status = 522;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			$this->__json_out($data);
 			die();
 		}
 
-		$res = $this->ajm->update($id, array('is_deleted' => 1));
+		$res = $this->apm->update($id, array('is_deleted' => 1));
 		if ($res) {
 			$this->status = 200;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -340,7 +340,7 @@ class Jenis_Penilaian extends JI_Controller
 		if ($id > 0) {
 			if (strlen($du['password'])) {
 				$du['password'] = md5($du['password']);
-				$res = $this->ajm->update($id, $du);
+				$res = $this->apm->update($id, $du);
 				$this->status = 200;
 				$this->message = 'Perubahan berhasil diterapkan';
 			} else {
@@ -373,7 +373,7 @@ class Jenis_Penilaian extends JI_Controller
 			$id = (int) $du['id'];
 			unset($du['id']);
 		}
-		$pengguna = $this->ajm->getById($id);
+		$pengguna = $this->apm->getById($id);
 		if ($id > 0 && isset($pengguna->id)) {
 			if (!empty($penguna_foto)) {
 				if (strlen($pengguna->foto) > 4) {
@@ -382,7 +382,7 @@ class Jenis_Penilaian extends JI_Controller
 				}
 				$du = array();
 				$du['foto'] = $penguna_foto;
-				$res = $this->ajm->update($id, $du);
+				$res = $this->apm->update($id, $du);
 				if ($res) {
 					$this->status = 200;
 					$this->message = 'Upload foto berhasil';
@@ -404,10 +404,10 @@ class Jenis_Penilaian extends JI_Controller
 	//Temporary Select2 di Pengguna API
 	public function select2()
 	{
-		$this->load("api_admin/b_user_model", 'ajm');
+		$this->load("api_admin/b_user_model", 'apm');
 		$d = $this->__init();
 		$keyword = $this->input->request('q');
-		$ddata = $this->ajm->select2($keyword);
+		$ddata = $this->apm->select2($keyword);
 		$datares = array();
 		$i = 0;
 		foreach ($ddata as $key => $value) {
@@ -428,11 +428,11 @@ class Jenis_Penilaian extends JI_Controller
 			$this->__json_out($data);
 			die();
 		}
-		$this->load('api_admin/a_pengguna_module_model', 'ajmm');
+		$this->load('api_admin/a_pengguna_module_model', 'apmm');
 		$a_pengguna_id			= $_POST['a_pengguna_id'];
 		$a_modules_identifier	= $_POST['a_modules_identifier'];
 
-		$this->ajmm->updateModule(array('tmp_active' => 'N'), $a_pengguna_id);
+		$this->apmm->updateModule(array('tmp_active' => 'N'), $a_pengguna_id);
 
 		foreach ($a_modules_identifier as $ami) {
 			$arr							= array();
@@ -441,15 +441,15 @@ class Jenis_Penilaian extends JI_Controller
 			$arr['rule']					= 'allowed';
 			$arr['tmp_active']				= 'Y';
 
-			$check_ami = $this->ajmm->check_access($a_pengguna_id, $ami);
+			$check_ami = $this->apmm->check_access($a_pengguna_id, $ami);
 			if ($check_ami == 0) {
-				$this->ajmm->set($arr);
+				$this->apmm->set($arr);
 			} else {
-				$this->ajmm->updateModule($arr, $a_pengguna_id, $ami);
+				$this->apmm->updateModule($arr, $a_pengguna_id, $ami);
 			}
 		}
 
-		$res = $this->ajmm->delModule($a_pengguna_id);
+		$res = $this->apmm->delModule($a_pengguna_id);
 
 		if ($res) {
 			$this->status 	= 200;
@@ -463,10 +463,10 @@ class Jenis_Penilaian extends JI_Controller
 	}
 	public function pengguna_module()
 	{
-		$this->load('api_admin/a_pengguna_module_model', 'ajmm');
+		$this->load('api_admin/a_pengguna_module_model', 'apmm');
 		$d 			= $this->__init();
 		$id			= $this->input->post('id');
-		$ddata 		= $this->ajmm->pengguna_module($id);
+		$ddata 		= $this->apmm->pengguna_module($id);
 		$datares 	= array();
 		$i 			= 0;
 		foreach ($ddata as $key => $value) {
@@ -482,7 +482,7 @@ class Jenis_Penilaian extends JI_Controller
 		$p = new stdClass();
 		$p->id = 'NULL';
 		$p->text = '-';
-		$data = $this->ajm->cari($keyword);
+		$data = $this->apm->cari($keyword);
 		array_unshift($data, $p);
 		$this->__json_select2($data);
 	}

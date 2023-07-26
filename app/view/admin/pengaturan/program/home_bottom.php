@@ -27,7 +27,7 @@ if(jQuery('#drTable').length>0){
 			"responsive"	  : true,
 			"bProcessing"		: true,
 			"bServerSide"		: true,
-			"sAjaxSource"		: "<?=base_url("api_admin/pengaturan/jenis_penilaian/")?>",
+			"sAjaxSource"		: "<?=base_url("api_admin/pengaturan/program/")?>",
 			"fnServerParams": function ( aoData ) {
 				aoData.push(
 					{ "name": "a_company_id", "value": $("#fl_a_company_id").val() },
@@ -46,7 +46,7 @@ if(jQuery('#drTable').length>0){
 						e.preventDefault();
 						var id = $(this).find("td").html();
 						ieid = id;
-						$.get('<?=base_url("api_admin/pengaturan/jenis_penilaian/detail/")?>'+ieid).done(function(dt){
+						$.get('<?=base_url("api_admin/pengaturan/program/detail/")?>'+ieid).done(function(dt){
 							if(dt.data){
 								$.each(dt.data, function(k,v){
 									$("#ie"+k).val(v);
@@ -72,8 +72,8 @@ if(jQuery('#drTable').length>0){
 								})
 							}
 						})
-						$("#adetail").attr("href","<?=base_url_admin("pengaturan/jenis_penilaian/detail/")?>"+ieid);
-						//$("#aedit").attr("href","<?=base_url_admin("pengaturan/jenis_penilaian/edit/")?>"+ieid);
+						$("#adetail").attr("href","<?=base_url_admin("pengaturan/program/detail/")?>"+ieid);
+						//$("#aedit").attr("href","<?=base_url_admin("pengaturan/program/edit/")?>"+ieid);
 						$("#areseller").attr("href","<?=base_url_admin("partner/reseller/baru/")?>"+ieid);
 						$("#modal_option").modal("show");
 						
@@ -103,7 +103,7 @@ $("#ftambah").on("submit",function(e){
 	$('.icon-submit').addClass('fa-circle-o-notch fa-spin');
 
 	var fd = new FormData($(this)[0]);
-	var url = '<?= base_url("api_admin/pengaturan/jenis_penilaian/baru/")?>';
+	var url = '<?= base_url("api_admin/pengaturan/program/baru/")?>';
 
 	$.ajax({
 		type: $(this).attr('method'),
@@ -115,7 +115,7 @@ $("#ftambah").on("submit",function(e){
 			if(respon.status==200){
 				gritter('<h4>Sukses</h4><p>Data berhasil ditambahkan</p>','success');
 				setTimeout(function(){
-					window.location = '<?=base_url_admin('pengaturan/jenis_penilaian/')?>';
+					window.location = '<?=base_url_admin('pengaturan/program/')?>';
 				},500);
 			}else{
 				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
@@ -145,7 +145,7 @@ $("#fedit").on("submit",function(e){
 	$('.icon-submit').addClass('fa-circle-o-notch fa-spin');
 
 	var fd = new FormData($(this)[0]);
-	var url = '<?=base_url("api_admin/pengaturan/jenis_penilaian/edit/")?>';
+	var url = '<?=base_url("api_admin/pengaturan/program/edit/")?>';
 
 	$.ajax({
 		type: $(this).attr('method'),
@@ -157,7 +157,7 @@ $("#fedit").on("submit",function(e){
 			if(respon.status==200){
 				gritter('<h4>Sukses</h4><p>Data berhasil diubah</p>','success');
 				setTimeout(function(){
-					window.location = '<?=base_url_admin('pengaturan/jenis_penilaian/')?>';
+					window.location = '<?=base_url_admin('pengaturan/program/')?>';
 				},500);
 			}else{
 				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','danger');
@@ -190,7 +190,7 @@ $("#bhapus").on("click",function(e){
 			NProgress.start();
 			$('.btn-submit').prop('disabled',true);
 			$('.icon-submit').addClass('fa-circle-o-notch fa-spin');
-			var url = '<?=base_url('api_admin/pengaturan/jenis_penilaian/hapus/')?>'+ieid;
+			var url = '<?=base_url('api_admin/pengaturan/program/hapus/')?>'+ieid;
 			$.get(url).done(function(response){
 				NProgress.done();
 				if(response.status==200){
@@ -223,7 +223,7 @@ $("#bhapus").on("click",function(e){
 $("#fl_a_company_id_parent").select2({
 	ajax: {
 		method: 'post',
-		url: '<?=base_url("api_admin/pengaturan/jenis_penilaian/get_parent/")?>',
+		url: '<?=base_url("api_admin/pengaturan/program/get_parent/")?>',
 		dataType: 'json',
     delay: 250,
 		data: function (params) {

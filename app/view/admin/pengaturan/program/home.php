@@ -34,7 +34,7 @@
 	<div class="card">
 
 		<div class="card-header">
-			<h6><strong>Daftar Jenis Penilaian</strong></h6>
+			<h6><strong>Daftar Program</strong></h6>
 		</div>
 
 		<div class="card-body">
@@ -42,7 +42,7 @@
 			<div class="table-responsive">
 				<table id="drTable" class="table table-vcenter table-hover">
 					<thead>
-						<?= $this->ajm->datatable()->table_headers() ?>
+						<?= $this->apm->datatable()->table_headers() ?>
 					</thead>
 					<tbody>
 					</tbody>

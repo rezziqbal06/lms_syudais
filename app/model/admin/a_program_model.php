@@ -11,7 +11,7 @@ register_namespace(__NAMESPACE__);
  * @package Model\Front
  * @since 1.0.0
  */
-class A_JPenilaian_Model extends \Model\A_JPenilaian_Concern
+class A_Program_Model extends \Model\A_Program_Concern
 {
 
 

@@ -38,16 +38,16 @@ class B_User_Module_Model extends \Model\B_User_Module_Concern
 		return $this->db->delete($this->tbl);
 	}
 
-	public function delByPenilaianDanJabatan($a_jpenilaian_id = [], $a_jabatan_id = "")
+	public function delByProgramDanJabatan($a_program_id = [], $a_jabatan_id = "")
 	{
-		$this->db->where_in("a_jpenilaian_id", $a_jpenilaian_id);
+		$this->db->where_in("a_program_id", $a_program_id);
 		$this->db->where("a_jabatan_id", $a_jabatan_id);
 		return $this->db->delete($this->tbl);
 	}
 
-	public function delByPenilaianDanUser($a_jpenilaian_id = [], $b_user_id = "")
+	public function delByProgramDanUser($a_program_id = [], $b_user_id = "")
 	{
-		$this->db->where_in("a_jpenilaian_id", $a_jpenilaian_id);
+		$this->db->where_in("a_program_id", $a_program_id);
 		$this->db->where("b_user_id", $b_user_id);
 		return $this->db->delete($this->tbl);
 	}

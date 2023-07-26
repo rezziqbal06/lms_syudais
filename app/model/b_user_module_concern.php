@@ -20,8 +20,8 @@ class B_User_Module_Concern extends \JI_Model
     public $tbl2_as = 'bu';
     public $tbl3 = 'a_jabatan';
     public $tbl3_as = 'aj';
-    public $tbl4 = 'a_jpenilaian';
-    public $tbl4_as = 'aj';
+    public $tbl4 = 'a_program';
+    public $tbl4_as = 'ap';
 
     const COLUMNS = [
         'b_user_id',

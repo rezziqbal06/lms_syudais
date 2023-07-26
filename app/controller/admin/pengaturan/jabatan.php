@@ -22,10 +22,10 @@ class Jabatan extends \JI_Controller
 		$this->setTheme('admin');
 		$this->lib("seme_purifier");
 		$this->load("a_jabatan_concern");
-		$this->load("a_jpenilaian_concern");
+		$this->load("a_program_concern");
 		$this->load("b_user_module_concern");
 		$this->load("admin/a_jabatan_model", "ajm");
-		$this->load("admin/a_jpenilaian_model", "ajpm");
+		$this->load("admin/a_program_model", "apm");
 		$this->load("admin/b_user_module_model", "bumm");
 		$this->current_parent = 'pengaturan';
 		$this->current_page = 'jabatan';
@@ -146,8 +146,8 @@ class Jabatan extends \JI_Controller
 			redir(base_url_admin('pengaturan/jabatan/'));
 			die();
 		}
-		$ajpm = $this->ajpm->getAll();
-		if (!isset($ajpm[0]->id)) {
+		$apm = $this->apm->getAll();
+		if (!isset($apm[0]->id)) {
 			redir(base_url_admin('pengaturan/jabatan/'));
 			die();
 		}
@@ -156,16 +156,16 @@ class Jabatan extends \JI_Controller
 		$new_bumm = [];
 		if (isset($bumm[0]->id)) {
 			foreach ($bumm as $bm) {
-				$new_bumm[$bm->a_jpenilaian_id . '-' . $bm->type] = $bm;
+				$new_bumm[$bm->a_program_id . '-' . $bm->type] = $bm;
 			}
 		}
 		$this->setTitle('Manage Jabatan Module #' . $ajm->id . ' ' . $this->config_semevar('site_suffix', ''));
 
 		$data['ajm'] = $ajm;
-		$data['ajpm'] = $ajpm;
+		$data['apm'] = $apm;
 		$data['bumm'] = $new_bumm;
 		unset($ajm);
-		unset($ajpm);
+		unset($apm);
 		unset($bumm);
 		unset($new_bumm);
 

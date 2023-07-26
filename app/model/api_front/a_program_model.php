@@ -1,8 +1,5 @@
 <?php
 
-namespace Model\Admin;
-
-register_namespace(__NAMESPACE__);
 /**
  * Scoped `front` model for `b_user` table
  *
@@ -11,7 +8,7 @@ register_namespace(__NAMESPACE__);
  * @package Model\Front
  * @since 1.0.0
  */
-class A_JPenilaian_Model extends \Model\A_JPenilaian_Concern
+class A_Program_Model extends \Model\A_Program_Concern
 {
   public $tbl2 = 'a_jabatan';
   public $tbl2_as = 'j';
@@ -19,7 +16,7 @@ class A_JPenilaian_Model extends \Model\A_JPenilaian_Concern
   {
     parent::__construct();
     $this->db->from($this->tbl, $this->tbl_as);
-    $this->point_of_view = 'admin';
+    $this->point_of_view = 'front';
   }
 
   private function filters($keyword = '', $is_active = '')
@@ -76,5 +73,11 @@ class A_JPenilaian_Model extends \Model\A_JPenilaian_Concern
   public function setMass($dis)
   {
     return $this->db->insert_multi($this->tbl, $dis);
+  }
+
+  public function getBySlug($slug)
+  {
+    $this->db->where('slug', $slug);
+    return $this->db->get_first('', 0);
   }
 }

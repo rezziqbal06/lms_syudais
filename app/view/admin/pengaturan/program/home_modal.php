@@ -57,7 +57,7 @@
 									<label for="islug" class="control-label">Slug</label>
 									<input id="islug" type="text" name="slug" class="form-control" required>
 								</div>
-								<div class="col-md-6">
+								<div class="col-md-6 d-none">
 									<label for="itype_form" class="control-label">Tipe Formulir</label>
 									<input id="itype_form" type="number" name="type_form" class="form-control" required>
 								</div>
@@ -67,8 +67,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="form-group">
-
+						<div class="form-group d-none">
 							<div class="row">
 								<table class="my_table mt-3">
 									<thead>
@@ -180,7 +179,7 @@
 									<label for="ieslug" class="control-label">Slug</label>
 									<input id="ieslug" type="text" name="slug" class="form-control" required>
 								</div>
-								<div class="col-md-6">
+								<div class="col-md-6 d-none">
 									<label for="ietype_form" class="control-label">Tipe Formulir</label>
 									<input id="ietype_form" type="number" name="type_form" class="form-control" required>
 								</div>
@@ -190,7 +189,7 @@
 								</div>
 							</div>
 
-							<div class="row">
+							<div class="row d-none">
 								<table class="my_table mt-3">
 									<thead>
 										<tr>

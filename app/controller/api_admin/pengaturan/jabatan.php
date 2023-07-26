@@ -452,11 +452,11 @@ class Jabatan extends JI_Controller
 		$d = $this->__init();
 
 		$data = new \stdClass();
-		$a_jpenilaian_id = $this->input->request('a_jpenilaian_id');
+		$a_program_id = $this->input->request('a_program_id');
 		$b_user_id = $this->input->request('b_user_id', null);
 		$a_jabatan_id = $this->input->request('a_jabatan_id', null);
 
-		if (!is_array($a_jpenilaian_id) || !count($a_jpenilaian_id)) {
+		if (!is_array($a_program_id) || !count($a_program_id)) {
 			$this->status = 444;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			$this->__json_out($data);
@@ -464,12 +464,12 @@ class Jabatan extends JI_Controller
 		}
 
 		$di = [];
-		foreach ($a_jpenilaian_id as $k => $v) {
+		foreach ($a_program_id as $k => $v) {
 			$type = $this->input->request('type_' . $v);
 			if (is_array($type)) {
 				foreach ($type as $ktype => $vtype) {
 					$obj = [];
-					$obj['a_jpenilaian_id'] = $v;
+					$obj['a_program_id'] = $v;
 					if (isset($a_jabatan_id)) $obj['a_jabatan_id'] = $a_jabatan_id;
 					if (isset($b_user_id)) $obj['b_user_id'] = $b_user_id;
 					$obj['type'] = $vtype;
@@ -504,11 +504,11 @@ class Jabatan extends JI_Controller
 		$d = $this->__init();
 
 		$data = new \stdClass();
-		$a_jpenilaian_id = $this->input->request('a_jpenilaian_id');
+		$a_program_id = $this->input->request('a_program_id');
 		$b_user_id = $this->input->request('b_user_id', null);
 		$a_jabatan_id = $this->input->request('a_jabatan_id', null);
 
-		if (!is_array($a_jpenilaian_id) || !count($a_jpenilaian_id)) {
+		if (!is_array($a_program_id) || !count($a_program_id)) {
 			$this->status = 444;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
 			$this->__json_out($data);
@@ -516,9 +516,9 @@ class Jabatan extends JI_Controller
 		}
 
 		if (isset($a_jabatan_id)) {
-			$resDelete = $this->bumm->delByPenilaianDanJabatan($a_jpenilaian_id, $a_jabatan_id);
+			$resDelete = $this->bumm->delByProgramDanJabatan($a_program_id, $a_jabatan_id);
 		} else {
-			$resDelete = $this->bumm->delByPenilaianDanUser($a_jpenilaian_id, $b_user_id);
+			$resDelete = $this->bumm->delByProgramDanUser($a_program_id, $b_user_id);
 		}
 		if (!$resDelete) {
 			$this->status = 902;
@@ -528,12 +528,12 @@ class Jabatan extends JI_Controller
 		}
 
 		$di = [];
-		foreach ($a_jpenilaian_id as $k => $v) {
+		foreach ($a_program_id as $k => $v) {
 			$type = $this->input->request('type_' . $v);
 			if (is_array($type)) {
 				foreach ($type as $ktype => $vtype) {
 					$obj = [];
-					$obj['a_jpenilaian_id'] = $v;
+					$obj['a_program_id'] = $v;
 					if (isset($a_jabatan_id)) $obj['a_jabatan_id'] = $a_jabatan_id;
 					if (isset($b_user_id)) $obj['b_user_id'] = $b_user_id;
 					$obj['type'] = $vtype;

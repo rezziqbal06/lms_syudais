@@ -14,19 +14,19 @@ register_namespace(__NAMESPACE__);
  * @package Partner\User
  * @since 1.0.0
  */
-class Jenis_Penilaian extends \JI_Controller
+class Program extends \JI_Controller
 {
 	public function __construct()
 	{
 		parent::__construct();
 		$this->setTheme('admin');
 		$this->lib("seme_purifier");
-		$this->load("a_jpenilaian_concern");
+		$this->load("a_program_concern");
 		$this->load("a_ruangan_concern");
-		$this->load("admin/a_jpenilaian_model", "ajm");
+		$this->load("admin/a_program_model", "apm");
 		$this->load("admin/a_ruangan_model", "arm");
 		$this->current_parent = 'pengaturan';
-		$this->current_page = 'jenis_penilaian';
+		$this->current_page = 'program';
 	}
 	public function index()
 	{
@@ -40,9 +40,9 @@ class Jenis_Penilaian extends \JI_Controller
 		$data['ruangans'] = $this->arm->getAll();
 		$this->setTitle('Jenis Penilaian ' . $this->config_semevar('site_suffix_admin', ''));
 
-		$this->putThemeContent("pengaturan/jenis_penilaian/home_modal", $data);
-		$this->putThemeContent("pengaturan/jenis_penilaian/home", $data);
-		$this->putJsContent("pengaturan/jenis_penilaian/home_bottom", $data);
+		$this->putThemeContent("pengaturan/program/home_modal", $data);
+		$this->putThemeContent("pengaturan/program/home", $data);
+		$this->putJsContent("pengaturan/program/home_bottom", $data);
 		$this->loadLayout('col-2-left', $data);
 		$this->render();
 	}
@@ -55,7 +55,7 @@ class Jenis_Penilaian extends \JI_Controller
 		}
 		$id = (int) $id;
 		if ($id <= 0) {
-			redir(base_url_admin('pengaturan/jenis_penilaian'));
+			redir(base_url_admin('pengaturan/program'));
 			die();
 		}
 		$pengguna = $data['sess']->admin;
@@ -82,18 +82,18 @@ class Jenis_Penilaian extends \JI_Controller
 			redir(base_url_admin('akun/user/'));
 			die();
 		}
-		$ajm = $this->ajm->id($id);
-		if (!isset($ajm->id)) {
+		$apm = $this->apm->id($id);
+		if (!isset($apm->id)) {
 			redir(base_url_admin('akun/user/'));
 			die();
 		}
-		$this->setTitle('Jenis Penilaian Detail #' . $ajm->id . ' ' . $this->config_semevar('site_suffix', ''));
+		$this->setTitle('Jenis Penilaian Detail #' . $apm->id . ' ' . $this->config_semevar('site_suffix', ''));
 
-		$ajm->fnama = htmlentities($ajm->fnama);
-		$ajm->alamat = htmlentities($ajm->alamat);
-		$data['ajm'] = $ajm;
-		$data['ajm']->parent = $this->ajm->id($ajm->a_company_id);
-		unset($ajm);
+		$apm->fnama = htmlentities($apm->fnama);
+		$apm->alamat = htmlentities($apm->alamat);
+		$data['apm'] = $apm;
+		$data['apm']->parent = $this->apm->id($apm->a_company_id);
+		unset($apm);
 
 		$this->putThemeContent("akun/user/detail", $data);
 		$this->putJsContent("akun/user/detail_bottom", $data);

@@ -56,3 +56,15 @@ $(document).on('change', '.btn-all', function(e){
 		$('.btn-module-'+id).prop('checked', false);
 	}
 });
+
+$(document).off('change', '.btn-sub-all');
+$(document).on('change', '.btn-sub-all', function(e){
+	e.preventDefault();
+	var id = $(this).attr('data-id');
+	var feat = $(this).attr('data-feat');
+	if($(this).is(':checked')){
+		$('.btn-module-'+id+'-'+feat).prop('checked', true);
+	}else{
+		$('.btn-module-'+id+'-'+feat).prop('checked', false);
+	}
+});
