@@ -97,7 +97,6 @@ class Login extends \JI_Controller
 				if (!is_object($sess)) $sess = new stdClass();
 				if (!isset($sess->user)) $sess->user = new stdClass();
 				$sess->user = $res;
-				$sess->user->utype = 'Member';
 
 
 

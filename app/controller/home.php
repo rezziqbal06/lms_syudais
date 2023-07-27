@@ -53,4 +53,24 @@ class Home extends JI_Controller
 		$this->loadLayout('col-2-left', $data);
 		$this->render();
 	}
+
+	public function edit()
+	{
+		$data = $this->__init();
+		if (!$this->user_login) {
+			redir(base_url_admin('login'), 0);
+			die();
+		}
+		$this->current_parent = '';
+		$this->current_page = 'edit';
+
+		$this->setTitle('Edit Profil ' . $this->config->semevar->site_suffix);
+
+		$this->putJsFooter($this->cdn_url('skin/admin/') . 'js/pages/index');
+
+		$this->putThemeContent("akun/user/edit", $data);
+		$this->putJsContent("akun/user/edit_bottom", $data);
+		$this->loadLayout('col-2-left', $data);
+		$this->render();
+	}
 }

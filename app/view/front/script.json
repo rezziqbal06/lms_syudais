@@ -25,6 +25,7 @@
     {
       "src": "{{cdn_url}}skin/front/js/bootstrap-datepicker.min.js"
     },
+    
     {
       "src": "{{cdn_url}}skin/front/js/bootstrap.bundle.min.js"
     },
@@ -54,6 +55,9 @@
     },
     {
       "src":"{{cdn_url}}skin/front/js/signature-pad.min.js"
+    },
+    {
+      "src":"{{cdn_url}}skin/admin/js/gambar-alite.js"
     },
     {
       "src":"{{cdn_url}}skin/admin/js/plugins.js"

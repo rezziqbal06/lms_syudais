@@ -1,8 +1,8 @@
 <?php
-$user_foto = '';
-if (isset($sess->user->foto)) $user_foto = $sess->user->foto;
-if (empty($user_foto)) $user_foto = 'media/pengguna/default.png';
-$user_foto = base_url($user_foto);
+$user_image = '';
+if (isset($sess->user->image)) $user_image = $sess->user->image;
+if (empty($user_image)) $user_image = 'media/pengguna/default.png';
+$user_image = base_url($user_image);
 ?>
 <style>
 	.btn-group-vertical button {
@@ -49,11 +49,11 @@ $user_foto = base_url($user_foto);
 					</a>
 					<ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
 						<li>
-							<a class="dropdown-item border-radius-md" href="<?= base_url("edit") ?>" id="btn_user">
+							<a class="dropdown-item border-radius-md" href="<?= base_url("home/edit") ?>" id="btn_user">
 								<div class="d-flex py-1">
-									<?php if (isset($sess->user->foto) && strlen($sess->user->foto)) { ?>
+									<?php if (isset($sess->user->image) && strlen($sess->user->image)) { ?>
 										<div class="avatar avatar-sm me-3  my-auto">
-											<img src="<?= base_url() . $sess->user->foto ?>" class="img-fluid" style="border-radius:8px">
+											<img src="<?= base_url() . $sess->user->image ?>" class="img-fluid" style="border-radius:8px">
 										</div>
 									<?php } else { ?>
 										<div class="avatar avatar-sm bg-gradient-secondary me-3  my-auto">

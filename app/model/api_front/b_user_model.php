@@ -89,6 +89,11 @@ class B_User_Model extends \Model\B_User_Concern
     }
     return 0;
   }
+  public function getById($id)
+  {
+    $this->db->where("id", $id);
+    return $this->db->get_first();
+  }
   public function checktelp($username, $id = 0)
   {
     $this->db->select_as("COUNT(*)", "jumlah", 0);

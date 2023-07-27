@@ -117,4 +117,22 @@ class B_User_Model extends \Model\B_User_Concern
 		$this->db->from($this->tbl, $this->tbl_as);
 		return $this->db->get_first('object', 0);
 	}
+	public function getById($id)
+	{
+		$this->db->where("id", $id);
+		return $this->db->get_first();
+	}
+	public function checkusername($username, $id = 0)
+	{
+		$this->db->select_as("COUNT(*)", "jumlah", 0);
+		$this->db->where("username", $username);
+		if (!empty($id)) {
+			$this->db->where("id", $id, 'AND', '!=');
+		}
+		$d = $this->db->from($this->tbl)->get_first("object", 0);
+		if (isset($d->jumlah)) {
+			return $d->jumlah;
+		}
+		return 0;
+	}
 }

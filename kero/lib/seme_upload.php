@@ -76,7 +76,7 @@ class Seme_Upload
      * @param  int      $nation_code     nation code
      * @return object                    upload result object [status, message, file]
      */
-    public function upload_file($keyname, $unique_id = "0", $ke = "", $jenis = "document", $media_directory = "files", $maks_ukuran = 1000000, $is_use_thumb = 0, $nation_code = 62)
+    public function upload_file($keyname, $media_directory = "files", $unique_id = "0", $ke = "", $jenis = "image",  $maks_ukuran = 1000000, $is_use_thumb = 0, $nation_code = 62)
     {
         $sc = new stdClass();
         $sc->status = 500;
@@ -199,14 +199,14 @@ class Seme_Upload
             $filecheck = $this->directory . $targetdir . DIRECTORY_SEPARATOR . $filename . '.' . $fileext;
             if (file_exists($filecheck)) {
                 unlink($filecheck);
-                $rand = rand(0, 999);
-                $filename = "$nation_code-$unique_id-$ke-" . $rand;
-                $filecheck = $this->directory . $targetdir . DIRECTORY_SEPARATOR . $filename . '.' . $fileext;
-                if (file_exists($filecheck)) {
-                    unlink($filecheck);
-                    $rand = rand(1000, 99999);
-                    $filename = "$nation_code-$unique_id-$ke-" . $rand;
-                }
+                // $rand = rand(0, 999);
+                // $filename = "$nation_code-$unique_id-$ke-" . $rand;
+                // $filecheck = $this->directory . $targetdir . DIRECTORY_SEPARATOR . $filename . '.' . $fileext;
+                // if (file_exists($filecheck)) {
+                //     unlink($filecheck);
+                //     $rand = rand(1000, 99999);
+                //     $filename = "$nation_code-$unique_id-$ke-" . $rand;
+                // }
             }
 
             //upload file
@@ -241,6 +241,7 @@ class Seme_Upload
                     $sc->message = 'Successful';
                     if (($jenis == "image" || $jenis == "video") && $is_use_thumb) $sc->thumb = str_replace("//", "/", $targetdir . '/' . $filethumb);
                     $sc->file = str_replace("//", "/", $targetdir . '/' . $filename);
+                    $sc->file = str_replace("\\", "/", $sc->file);
                 } else {
                     $sc->status = 997;
                     $sc->message = 'Failed';

@@ -7,8 +7,10 @@ class User extends \JI_Controller
 	{
 		parent::__construct();
 		$this->load('b_user_concern');
-		$this->load('b_user_alamat_concern');
+		$this->load("b_user_module_concern");
 		$this->load("api_front/b_user_model", 'bum');
+		$this->load("front/b_user_module_model", "bumm");
+		$this->lib("seme_upload", 'se');
 	}
 
 	/**
@@ -181,7 +183,7 @@ class User extends \JI_Controller
 	 *
 	 * @return void
 	 */
-	public function edit($id)
+	public function edit()
 	{
 		$d = $this->__init();
 		$data = array();
@@ -194,48 +196,58 @@ class User extends \JI_Controller
 			die();
 		}
 
-		$id = (int) $id;
-		if ($id <= 0) {
-			$this->status = 444;
-			$this->message = API_ADMIN_ERROR_CODES[$this->status];
-			$this->__json_out($data);
-			die();
-		}
-
-		if (!$this->bum->validates()) {
-			$this->status = 444;
-			$this->message = API_ADMIN_ERROR_CODES[$this->status];
-			$validation_message = $this->bum->validation_message();
-			if (strlen($validation_message)) {
-				$this->message = $validation_message;
+		$du = $_POST;
+		if (!isset($du['id'])) $du['id'] = 0;
+		$id = (int) $du['id'];
+		unset($du['id']);
+		if ($id > 0) {
+			$check = 0;
+			if (isset($du['username'])) {
+				$check = $this->bum->checkusername($du['username'], $id); //1 = sudah digunakan
 			}
-			$this->__json_out($data);
-			die();
-		}
 
-		$res = $this->bum->save($id);
-		if ($res) {
-			$di = $_POST;
-			$dua = [];
-			$dua['b_user_id'] = $id;
-			$dua['provinsi'] = isset($di['provinsi']) ? $di['provinsi'] : null;
-			$dua['telp'] = isset($di['telp']) ? $di['telp'] : null;
-			$dua['alamat'] = isset($di['alamat']) ? $di['alamat'] : null;
-			$dua['alamat2'] = isset($di['alamat2']) ? $di['alamat2'] : null;
-			$dua['kelurahan'] = isset($di['kelurahan']) ? $di['kelurahan'] : null;
-			$dua['kecamatan'] = isset($di['kecamatan']) ? $di['kecamatan'] : null;
-			$dua['kabkota'] = isset($di['kabkota']) ? $di['kabkota'] : null;
-			$dua['provinsi'] = isset($di['provinsi']) ? $di['provinsi'] : null;
-			$dua['negara'] = isset($di['negara']) ? $di['negara'] : null;
-			$dua['kodepos'] = isset($di['kodepos']) ? $di['kodepos'] : null;
-			$dua['kode_destination'] = isset($di['kode_destination']) ? $di['kode_destination'] : null;
-			$dua['kode_origin'] = isset($di['kode_origin']) ? $di['kode_origin'] : null;
-			$res_alamat = $this->buam->update($di['b_user_alamat_id'], $dua);
-			$this->status = 200;
-			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			if (empty($check)) {
+				if (isset($du['new_password']) && isset($du['re_password']) && strlen($du['new_password']) && strlen($du['re_password'])) {
+					if ($du['new_password'] != $du['re_password']) {
+						$this->status = 401;
+						$this->message = 'Password Tidak sama';
+						$this->__json_out($data);
+						die();
+					}
+					$du['password'] = md5($du['new_password']);
+				}
+				unset($du['new_password']);
+				unset($du['re_password']);
+				$resUpload = $this->se->upload_file('gambar', 'user', $id);
+				if ($resUpload->status == 200) {
+					$du['image'] = $resUpload->file;
+				}
+				$res = $this->bum->update($id, $du);
+				if ($res) {
+					$user = $this->bum->getById($id);
+					$sess = new stdClass();
+					if (!isset($sess->user)) $sess->user = new stdClass();
+					$sess->user = $user;
+
+
+					$sess->user->menus = new stdClass();
+					$sess->user->menus->left = array();
+					$program = $this->bumm->getMenu("melihat", $sess->user->a_jabatan_id, $sess->user->id);
+					$sess->user->program = $program;
+					$this->setKey($sess);
+					$this->status = 200;
+					$this->message = 'Perubahan berhasil diterapkan';
+				} else {
+					$this->status = 901;
+					$this->message = 'Tidak dapat melakukan perubahan ke basis data';
+				}
+			} else {
+				$this->status = 104;
+				$this->message = 'Username sudah digunakan, silakan coba yang lain';
+			}
 		} else {
-			$this->status = 901;
-			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->status = 448;
+			$this->message = 'ID Tidak ditemukan';
 		}
 		$this->__json_out($data);
 	}
