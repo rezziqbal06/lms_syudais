@@ -26,3 +26,4 @@ media/penugasan/*
 media/berita_acara/*
 media/tugas/*
 media/user/*
+app/config/development.php

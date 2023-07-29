@@ -60,6 +60,8 @@ class B_Jadwal_Kegiatan_Concern extends \JI_Model
         null,
         null,
         null,
+        null,
+        null,
         '',
         '',
         '',
