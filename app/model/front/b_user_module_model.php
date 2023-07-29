@@ -29,6 +29,25 @@ class B_User_Module_Model extends \Model\B_User_Module_Concern
 		return 0;
 	}
 
+
+	public function getAllPermission($a_program_id = "", $a_jabatan_id = "", $b_user_id = "")
+	{
+		$this->db->select("type");
+		$this->db->where("a_program_id", $a_program_id);
+		$this->db->where("a_jabatan_id", $a_jabatan_id, "OR", "=", 1, 0);
+		$this->db->where("b_user_id", $b_user_id, "OR", "=", 0, 1);
+		$this->db->group_by("type");
+		$d = $this->db->get('object', 0);
+		$res = [];
+		if (isset($d[0])) {
+			foreach ($d as $v) {
+				$res[$v->type] = $v->type;
+			}
+		}
+		return $res;
+	}
+
+
 	public function getMenu($type = "create", $a_jabatan_id = "", $b_user_id = "")
 	{
 		$this->db->select_as("$this->tbl2_as.nama", 'nama', 0);

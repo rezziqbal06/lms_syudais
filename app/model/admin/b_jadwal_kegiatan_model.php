@@ -11,7 +11,7 @@ register_namespace(__NAMESPACE__);
  * @package Model\Front
  * @since 1.0.0
  */
-class A_Unit_Model extends \Model\A_Unit_Concern
+class B_Jadwal_Kegiatan_Model extends \Model\B_Jadwal_Kegiatan_Concern
 {
 
 
@@ -21,5 +21,4 @@ class A_Unit_Model extends \Model\A_Unit_Concern
 		$this->db->from($this->tbl, $this->tbl_as);
 		$this->point_of_view = 'admin';
 	}
-	
 }

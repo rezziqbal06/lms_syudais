@@ -4,14 +4,14 @@ namespace Model\Admin;
 
 register_namespace(__NAMESPACE__);
 /**
- * Scoped `front` model for `b_user` table
+ * Scoped `front` model for `b_jadwal_kegiatan` table
  *
  * @version 5.4.1
  *
  * @package Model\Front
  * @since 1.0.0
  */
-class A_Unit_Model extends \Model\A_Unit_Concern
+class B_Jadwal_Kegiatan_Model extends \Model\B_Jadwal_Kegiatan_Concern
 {
   public $tbl2 = 'a_jabatan';
   public $tbl2_as = 'j';
@@ -22,7 +22,7 @@ class A_Unit_Model extends \Model\A_Unit_Concern
     $this->point_of_view = 'admin';
   }
 
-  private function filters($b_user_id = '', $keyword = '', $is_active = '', $a_unit_id = '')
+  private function filters($b_user_id = '', $keyword = '', $is_active = '', $b_jadwal_kegiatan_id = '')
   {
     // if (strlen($b_user_id)) {
     //   $this->db->where_as("$this->tbl_as.b_user_id", $this->db->esc($b_user_id));
@@ -30,8 +30,8 @@ class A_Unit_Model extends \Model\A_Unit_Concern
     if (strlen($is_active)) {
       $this->db->where_as("$this->tbl_as.is_active", $this->db->esc($is_active));
     }
-    // if (strlen($a_unit_id)) {
-    //   $this->db->where_as("$this->tbl_as.a_unit_id", $this->db->esc($a_unit_id));
+    // if (strlen($b_jadwal_kegiatan_id)) {
+    //   $this->db->where_as("$this->tbl_as.b_jadwal_kegiatan_id", $this->db->esc($b_jadwal_kegiatan_id));
     // }
     if (strlen($keyword) > 0) {
       $this->db->where_as("$this->tbl_as.nama", $keyword, "OR", "%like%", 1, 0);
@@ -42,20 +42,20 @@ class A_Unit_Model extends \Model\A_Unit_Concern
 
 
 
-  public function data($b_user_id = "", $page = 0, $pagesize = 10, $sortCol = "id", $sortDir = "ASC", $keyword = '', $is_active = '', $a_unit_id = '')
+  public function data($b_user_id = "", $page = 0, $pagesize = 10, $sortCol = "id", $sortDir = "ASC", $keyword = '', $is_active = '', $b_jadwal_kegiatan_id = '')
   {
     $this->datatables[$this->point_of_view]->selections($this->db);
     $this->db->from($this->tbl, $this->tbl_as);
-    $this->filters($b_user_id, $keyword, $is_active, $a_unit_id)->scoped();
+    $this->filters($b_user_id, $keyword, $is_active, $b_jadwal_kegiatan_id)->scoped();
     $this->db->order_by($sortCol, $sortDir)->limit($page, $pagesize);
     return $this->db->get("object", 0);
   }
 
-  public function count($b_user_id = '', $keyword = '', $is_active = '', $a_unit_id = '')
+  public function count($b_user_id = '', $keyword = '', $is_active = '', $b_jadwal_kegiatan_id = '')
   {
     $this->db->select_as("COUNT($this->tbl_as.id)", "jumlah", 0);
     $this->db->from($this->tbl, $this->tbl_as);
-    $this->filters($b_user_id, $keyword, $is_active, $a_unit_id)->scoped();
+    $this->filters($b_user_id, $keyword, $is_active, $b_jadwal_kegiatan_id)->scoped();
     $d = $this->db->get_first("object", 0);
     if (isset($d->jumlah)) {
       return $d->jumlah;
@@ -126,7 +126,7 @@ class A_Unit_Model extends \Model\A_Unit_Concern
     return 0;
   }
 
-  public function getByAgen($agen_id = "", $page = 0, $pagesize = 10, $sortCol = "id", $sortDir = "ASC", $keyword = "", $a_unit_id = "", $edate = "")
+  public function getByAgen($agen_id = "", $page = 0, $pagesize = 10, $sortCol = "id", $sortDir = "ASC", $keyword = "", $b_jadwal_kegiatan_id = "", $edate = "")
   {
     $this->db->flushQuery();
     $this->db->select('id')
@@ -147,7 +147,7 @@ class A_Unit_Model extends \Model\A_Unit_Concern
     $this->db->order_by($sortCol, $sortDir)->limit($page, $pagesize);
     return $this->db->get("object", 0);
   }
-  public function countByAgen($agen_id = "", $keyword = "", $a_unit_id = "", $edate = "")
+  public function countByAgen($agen_id = "", $keyword = "", $b_jadwal_kegiatan_id = "", $edate = "")
   {
     $this->db->flushQuery();
     $this->db->select_as("COUNT(*)", "jumlah", 0);
@@ -164,7 +164,7 @@ class A_Unit_Model extends \Model\A_Unit_Concern
     }
     return 0;
   }
-  public function getKaryawan($page = 0, $pagesize = 10, $sortCol = "id", $sortDir = "ASC", $keyword = "", $a_unit_id = "", $edate = "")
+  public function getKaryawan($page = 0, $pagesize = 10, $sortCol = "id", $sortDir = "ASC", $keyword = "", $b_jadwal_kegiatan_id = "", $edate = "")
   {
     $this->db->flushQuery();
     $this->db->select('id')
@@ -175,8 +175,8 @@ class A_Unit_Model extends \Model\A_Unit_Concern
       ->select('karyawan_status')
       ->select('is_active');
     $this->db->from($this->tbl, $this->tbl_as);
-    if (strlen($a_unit_id)) {
-      $this->db->where("a_unit_id", $a_unit_id);
+    if (strlen($b_jadwal_kegiatan_id)) {
+      $this->db->where("b_jadwal_kegiatan_id", $b_jadwal_kegiatan_id);
     }
     if (strlen($keyword) > 0) {
       $this->db->where("username", $keyword, "OR", "%like%", 1, 0);
@@ -188,14 +188,14 @@ class A_Unit_Model extends \Model\A_Unit_Concern
     $this->db->order_by($sortCol, $sortDir)->limit($page, $pagesize);
     return $this->db->get("object", 0);
   }
-  public function countKaryawan($keyword = "", $a_unit_id = "", $edate = "")
+  public function countKaryawan($keyword = "", $b_jadwal_kegiatan_id = "", $edate = "")
   {
     $this->db->flushQuery();
     $this->db->select_as("COUNT(*)", "jumlah", 0);
     $this->db->from($this->tbl, $this->tbl_as);
     $this->db->where("is_karyawan", 1);
-    if (strlen($a_unit_id)) {
-      $this->db->where("a_unit_id", $a_unit_id);
+    if (strlen($b_jadwal_kegiatan_id)) {
+      $this->db->where("b_jadwal_kegiatan_id", $b_jadwal_kegiatan_id);
     }
     if (strlen($keyword) > 0) {
       $this->db->where("username", $keyword, "OR", "%like%", 1, 0);
