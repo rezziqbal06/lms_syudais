@@ -31,7 +31,7 @@ class A_Program_Model extends \Model\A_Program_Concern
 
 	public function getBySlug($slug = '')
 	{
-		$this->db->select('id')->select('nama')->select('slug')->select('type_form')->select('deskripsi');
+		$this->db->select('*');
 		if (strlen($slug)) $this->db->where('slug', $slug);
 		return $this->db->get_first('', 0);
 	}

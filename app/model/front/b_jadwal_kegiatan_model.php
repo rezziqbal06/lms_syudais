@@ -11,7 +11,7 @@ register_namespace(__NAMESPACE__);
  * @package Model\Front
  * @since 1.0.0
  */
-class A_Unit_Model extends \Model\A_Unit_Concern
+class B_Jadwal_Kegiatan_Model extends \Model\B_Jadwal_Kegiatan_Concern
 {
     public function __construct()
     {
@@ -20,10 +20,11 @@ class A_Unit_Model extends \Model\A_Unit_Concern
         $this->point_of_view = 'front';
     }
 
-    public function get(){
-		$this->db->where('is_active','1');
-		return $this->db->get();
-	}
+    public function get()
+    {
+        $this->db->where('is_active', '1');
+        return $this->db->get();
+    }
 
     public function getByUserId($id)
     {

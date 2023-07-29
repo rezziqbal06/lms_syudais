@@ -4,7 +4,7 @@ namespace Model;
 
 register_namespace(__NAMESPACE__);
 /**
- * Define all general method(s) and constant(s) for b_user table,
+ * Define all general method(s) and constant(s) for b_jadwal_kegiatan table,
  *   can be inherited a Concern class also can be reffered as class constants
  *
  * @version 1.0.0
@@ -12,31 +12,77 @@ register_namespace(__NAMESPACE__);
  * @package Model\B_User
  * @since 1.0.0
  */
-class A_Unit_Concern extends \JI_Model
+class B_Jadwal_Kegiatan_Concern extends \JI_Model
 {
-    public $tbl = 'a_unit';
-    public $tbl_as = 'au';
+    public $tbl = 'b_jadwal_kegiatan';
+    public $tbl_as = 'bjk';
     // public $tbl2 = 'b_user_alamat';
     // public $tbl2_as = 'bua';
     // public $tbl3 = 'a_company';
     // public $tbl3_as = 'ac';
 
     const COLUMNS = [
+        'a_pengguna_id',
+        'b_user_id',
         'nama',
-        'deskripsi',
+        'slug',
+        'tempat',
         'cdate',
+        'sdate',
+        'edate',
+        'stime',
+        'etime',
+        'sasaran',
+        'narasumber',
+        'gmaps_link',
+        'gmaps_lat',
+        'gmaps_long',
+        'negara',
+        'provinsi',
+        'kabkota',
+        'kecamatan',
+        'kelurahan',
+        'alamat',
+        'kodepos',
+        'telp',
+        'deskripsi',
+        'featured_image',
+        'is_rutin',
+        'is_deleted',
         'is_active',
-        'is_deleted'
     ];
     const DEFAULTS = [
+        null,
+        null,
         '',
         '',
         '',
-        1,
-        0
+        null,
+        null,
+        null,
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        null,
+        '',
+        '',
+        0,
+        0,
+        1
     ];
     const REQUIREDS = [
-        'nama'
+        'nama',
+        'sdate',
+
     ];
     const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
@@ -70,7 +116,7 @@ class A_Unit_Concern extends \JI_Model
             ["$this->tbl_as.deskripsi", 'deskripsi', 'Deskripsi'],
             ["$this->tbl_as.is_active", 'is_active', 'Status']
         ]);
-        
+
         $this->datatables['front'] = new \Seme_Datatable([
             ["$this->tbl_as.id", 'id', 'ID'],
             ["$this->tbl_as.nama", 'nama', 'Nama Unit'],
