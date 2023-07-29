@@ -77,7 +77,7 @@
  * Site Base URL with http:// or https:// prefix and trailing slash
  * @var string
  */
-$site = "http://" . $_SERVER['HTTP_HOST'] . "/lms/";
+$site = "http://" . $_SERVER['HTTP_HOST'] . "/lms_syudais/";
 
 /**
  * URL parse method
