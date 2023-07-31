@@ -317,4 +317,51 @@ class B_User_Model extends \Model\B_User_Concern
     }
     return 0;
   }
+  public function getAllAbsen($keyword = "", $date = "", $id_kegiatan = "", $utype_kegiatan = "", $pengabsen_id = 0)
+  {
+    $sql = "
+	SELECT * FROM(
+		SELECT bu.id AS 'id', bu.email AS 'email', bu.fnama AS 'nama', COALESCE(dk.jam_masuk,'---') AS 'jam',
+		COALESCE(dk.sia,'---') AS 'keterangan', COALESCE(dk.catatan, '') as 'catatan', 2 rank FROM `b_user` bu LEFT JOIN `d_kehadiran` dk ON dk.`b_user_id` = bu.`id` WHERE
+		DATE(dk.tgl) = DATE(\"$date\")";
+    if (!empty($pengabsen_id)) {
+      $sql .= "AND bu.id = $pengabsen_id";
+    }
+    if ($utype_kegiatan == "kegiatan") {
+      $sql .= " AND dk.e_kegiatan_id = $id_kegiatan ";
+    } elseif ($utype_kegiatan == "kajian") {
+      $sql .= " AND dk.e_kajian_id = $id_kegiatan ";
+    }
+
+    if (strlen($keyword) > 0) {
+      $sql .=  " AND bu.fnama LIKE '%$keyword%' ";
+    }
+
+    $sql .=  "
+
+		UNION
+
+		SELECT bu.id AS 'id', bu.email AS 'email', bu.fnama AS 'nama', ('---') AS 'jam',
+		('---') AS 'keterangan', ('') AS 'catatan', 1 rank FROM `b_user` bu LEFT JOIN `d_kehadiran` dk ON dk.`b_user_id` = bu.`id` WHERE ";
+
+    if (!empty($pengabsen_id)) {
+      $sql .= "AND bu.id = $pengabsen_id";
+    }
+
+    if (strlen($keyword) > 0) {
+      $sql .=  " bu.fnama LIKE '%$keyword%' ";
+    } else {
+      $sql .=  " 1 ";
+    }
+
+    $sql .= " AND bu.is_deleted = 0";
+
+    $sql .= " AND bu.is_deleted = 0";
+
+    $sql .= ") t1
+		GROUP BY id
+		ORDER BY rank DESC
+		";
+    return $this->db->query($sql);
+  }
 }

@@ -1,5 +1,13 @@
 <style>
+	div::-webkit-scrollbar-track {
+		background-color: var(--primary);
+	}
 
+	div::-webkit-scrollbar-thumb {
+		background-color: #babac0;
+		border-radius: 16px;
+		border: 5px solid var(--primary);
+	}
 </style>
 <!-- modal option -->
 <div id="modal_option" class="modal fade " tabindex="-1" role="dialog" aria-hidden="true">
@@ -272,28 +280,34 @@
 					<div class="col-12">
 						<small id="ddeskripsi"></small>
 					</div>
-					<div class="col-6">
+					<div class="col-6 col-md-4">
 						<label class=""><img src="<?= base_url('media/user.svg') ?>" alt="clock" width="18px"><span style="color: #b7b7b7 !important;"> Narasumber</span></label>
 						<p><b class="ms-1" style="font-size:0.8rem !important;" id="dnarasumber"></b></p>
 					</div>
-					<div class="col-6">
+					<div class="col-6 col-md-4">
 						<label class=""><img src="<?= base_url('media/users.svg') ?>" alt="clock" width="18px"><span style="color: #b7b7b7 !important;"> Sasaran</span></label>
 						<p><b class="ms-1" style="font-size:0.8rem !important;" id="dsasaran"></b></p>
 					</div>
-					<div class="col-6">
+					<div class="col-6 col-md-4">
 						<label class=""><img src="<?= base_url('media/calendar.svg') ?>" alt="clock" width="18px"><span style="color: #b7b7b7 !important;"> Tanggal</span></label>
 						<p class="ms-1" style="font-size:0.8rem !important;"><b id="dsdate_text"></b> <b id="dedate_text"></b></p>
 					</div>
-					<div class="col-6">
+					<div class="col-6 col-md-4">
 						<label class=""><img src="<?= base_url('media/clock.svg') ?>" alt="clock" width="18px"><span style="color: #b7b7b7 !important;"> Waktu</span></label>
 						<p class="ms-1" style="font-size:0.8rem !important;"><b id="dstime"></b> <b id="detime"></b></p>
 					</div>
-					<div class="col-12">
+					<div class="col-12 col-md-4">
 						<label class=""><img src="<?= base_url('media/home.svg') ?>" alt="clock" width="18px"><span style="color: #b7b7b7 !important;"> Tempat</span></label>
 						<p class="ms-1" style="font-size:0.8rem !important;"><b id="dtempat"></b></p>
 					</div>
 				</div>
+				<div class="row">
+					<div class="col-md-12 card bg-primary p-5 " style="height: 30rem;">
+						<div class="row" id="panel_absen" style="overflow-y: scroll;">
 
+						</div>
+					</div>
+				</div>
 				<!-- END Modal Body -->
 			</div>
 		</div>

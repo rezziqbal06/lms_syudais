@@ -263,8 +263,32 @@ $(document).on('click', '.item-jadwal', function(e){
       if(dt.data.absen){
         var s = '';
         $.each(dt.data.absen, function(k,v){
-          var is_active = v?.is_reported ? 'bar-active' : 'bar'
-          s += ``
+          var status = '';
+          switch(v?.keterangan){
+            case 'hadir':
+              status = 'success';
+              break;
+            case 'izin':
+              status = 'info';
+              break;
+            case 'alpa':
+              status = 'danger';
+              break;
+            default:
+              status = 'secondary';
+              break;
+          }
+          s += `<div class="col-12 card mb-2">
+                <a id="item-absen-${v.id}" data-id="${v.id}" class="item-absen">
+                  <div class="card-body">
+                    <p>${v.nama}</p>
+                    <div class="d-flex justify-content-between">
+                      <small>${v.jam}</small>
+                      <span class="badge badge-sm bg-gradient-${status}">${v.keterangan}</span>
+                    </div>
+                  </div>
+                </a>
+							</div>`
         })
         $('#panel_absen').html(s);
       }

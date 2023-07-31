@@ -9,9 +9,14 @@ class Program extends JI_Controller
 	{
 		parent::__construct();
 		$this->load('a_program_concern');
+		$this->load('b_user_concern');
 		$this->load('b_jadwal_kegiatan_concern');
+		$this->load('c_laporan_concern');
 		$this->load("api_front/a_program_model", 'apm');
+		$this->load("api_front/b_user_model", 'bum');
 		$this->load("api_front/b_jadwal_kegiatan_model", 'bjkm');
+		$this->load("api_front/c_laporan_model", 'clm');
+		$this->load("api_front/d_kehadiran_model", 'dkm');
 	}
 
 	/**
@@ -747,8 +752,124 @@ class Program extends JI_Controller
 		if (isset($bjkm->etime)) $bjkm->etime = date('H:i', strtotime($bjkm->etime));
 		$data['detail'] = $bjkm;
 
+		$keyword = $this->input->request('keyword', '');
+		$sdate = $this->input->request('sdate', '');
+
+		$clm = $this->clm->getByJadwal($bjkm->id);
+		$laporan_id = $clm->id ?? 0;
+
+		$absen = $this->bum->getAllAbsen($keyword, $sdate, $laporan_id, "kegiatan");
+		$data['absen'] = $absen;
+
 		$this->status = 200;
 		$this->message = API_ADMIN_ERROR_CODES[$this->status];
+		$this->__json_out($data);
+	}
+
+	public function ngabsen($email)
+	{
+		$dt = $this->__init();
+		$data = array();
+
+		$user = $this->bum->getByEmail($email);
+		if (!isset($user->id)) {
+			$this->status = 403;
+			$this->message = 'Pengguna tidak ditemukan';
+			$data['error_message'] = "";
+			$this->__json_out($data);
+			die();
+		}
+
+		$id_kegiatan = (int) $this->input->post("id_kegiatan");
+		$utype_kegiatan = $this->input->post("utype_kegiatan");
+		$catatan = $this->input->post("catatan");
+
+		if (empty($id_kegiatan)) {
+			$this->status = 405;
+			$this->message = "Id kegiatan tidak valid";
+			$data['error_message'] = "";
+			$this->__json_out($data);
+			die();
+		}
+
+		if (strlen($utype_kegiatan) < 3) {
+			$this->status = 405;
+			$this->message = "Utype kegiatan harus diisi";
+			$data['error_message'] = "";
+			$this->__json_out($data);
+			die();
+		}
+
+		$hariini = date("Y-m-d");
+		$jam_scan = strtotime(date("Y-m-d H:m:i"));
+
+		$sia = $this->input->post("sia");
+		if (!isset($sia) || strlen($sia) <= 0) $sia = 'hadir';
+		if (empty($catatan) && $sia != 'hadir' && $sia != 'alpa') {
+			$this->status = 407;
+			$data['error_message'] = "";
+			$this->message = "Catatan $sia harus diisi";
+			$this->__json_out($data);
+			die();
+		}
+
+		if ($sia == "hadir" || $sia == "alpa") $catatan = "";
+
+		$is_edit_status = 0;
+		$kehadiran = $this->dkm->getByUser($user->id, $hariini, $id_kegiatan, $utype_kegiatan);
+		if (isset($kehadiran->tgl) && $kehadiran->sia == $sia && $kehadiran->catatan == $catatan) {
+			$this->status = 406;
+			$this->message = "$user->fnama sudah mengisi absen";
+			$data['absen'] = $kehadiran;
+			$this->__json_out($data);
+			die();
+		} else if (isset($kehadiran->tgl) && $kehadiran->sia != $sia) {
+			$is_edit_status = 1;
+		} else if (isset($kehadiran->tgl) && $kehadiran->sia == $sia && $kehadiran->catatan != $catatan) {
+			$is_edit_status = 1;
+		}
+
+		if ($is_edit_status) {
+			$this->dkm->trans_start();
+			$du = array();
+			$du['sia'] = $sia;
+			$du['catatan'] = $catatan;
+			$du['b_user_pengabsen_id'] = $dt['sess']->user->id;
+			$du['jam_masuk'] = date("H:i:s");
+
+			$res = $this->dkm->update($user->id, $hariini, $du, $id_kegiatan, $utype_kegiatan);
+		} else {
+			$this->dkm->trans_start();
+			$dm = array();
+			$dm['jam_masuk'] = date("H:i:s");
+			$dm['tgl'] = "NOW()";
+			$dm['sia'] = $sia;
+			$dm['catatan'] = $catatan;
+			$dm['b_user_id'] = $user->id;
+			$dm['b_user_pengabsen_id'] = $dt['sess']->user->id;
+			if ($utype_kegiatan == "kegiatan") {
+				$dm['e_kegiatan_id'] = $id_kegiatan;
+			} else {
+				$dm['e_kajian_id'] = $id_kegiatan;
+			}
+			$res = $this->dkm->set($dm);
+		}
+		if ($res) {
+			$this->status = 200;
+			$this->message = "Berhasil";
+			$this->dkm->trans_commit();
+			$data['absen'] = $this->dkm->getByUser($user->id, $hariini, $id_kegiatan, $utype_kegiatan);
+			if (isset($data['absen']->jam_masuk)) $data['absen']->jam_masuk = $this->__dateIndonesia($data['absen']->jam_masuk, "jam");
+			$cHadir = $this->dkm->countHadir($hariini, $id_kegiatan, $utype_kegiatan);
+			$cBerhalangan = $this->dkm->countBerhalangan($hariini, $id_kegiatan, $utype_kegiatan);
+			$data['hadir'] = (int) $cHadir;
+			$data['berhalangan'] = (int) $cBerhalangan;
+			if ($is_edit_status) $data['editing'] = 'true';
+		} else {
+			$this->status = 900;
+			$this->message = "Gagal mengisi kehadiran";
+			$data['error_message'] = "";
+		}
 		$this->__json_out($data);
 	}
 }

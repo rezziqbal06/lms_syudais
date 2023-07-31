@@ -2,14 +2,14 @@
 
 register_namespace(__NAMESPACE__);
 /**
- * Scoped `front` model for `c_asesmen` table
+ * Scoped `front` model for `c_Laporan` table
  *
  * @version 5.4.1
  *
  * @package Model\Front
  * @since 1.0.0
  */
-class C_Asesmen_Model extends \Model\C_Asesmen_Concern
+class C_Laporan_Model extends \Model\C_Laporan_Concern
 {
   public function __construct()
   {
@@ -109,7 +109,7 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     return $this->db->get();
   }
 
-  public function asesmen_series($penilai_id, $jenis_penilaian)
+  public function Laporan_series($penilai_id, $jenis_penilaian)
   {
     $this->db->select_as("DAY($this->tbl_as.cdate)", "day", 0);
     $this->db->select_as("SUM($this->tbl_as.nilai)", "nilai", 0);
@@ -181,5 +181,11 @@ class C_Asesmen_Model extends \Model\C_Asesmen_Concern
     if (strlen($a_ruangan_id)) $this->db->where('a_ruangan_id', $a_ruangan_id);
     $this->db->where_as("DATE($this->tbl_as.cdate)", "DATE('$sdate')");
     return $this->db->get_first('', 0);
+  }
+
+  public function getByJadwal($id)
+  {
+    $this->db->where('b_jadwal_kegiatan_id', $id);
+    return $this->db->get_first($this->tbl);
   }
 }
