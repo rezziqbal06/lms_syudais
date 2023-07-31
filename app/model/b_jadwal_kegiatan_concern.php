@@ -22,8 +22,11 @@ class B_Jadwal_Kegiatan_Concern extends \JI_Model
     // public $tbl3_as = 'ac';
 
     const COLUMNS = [
+        'a_program_id',
         'a_pengguna_id',
         'b_user_id',
+        'b_user_id_narasumber',
+        'a_jabatan_id_sasaran',
         'nama',
         'slug',
         'tempat',
@@ -47,6 +50,7 @@ class B_Jadwal_Kegiatan_Concern extends \JI_Model
         'telp',
         'deskripsi',
         'featured_image',
+        'hari',
         'is_rutin',
         'is_deleted',
         'is_active',
@@ -54,6 +58,9 @@ class B_Jadwal_Kegiatan_Concern extends \JI_Model
     const DEFAULTS = [
         null,
         null,
+        null,
+        null,
+        null,
         '',
         '',
         '',
@@ -75,6 +82,7 @@ class B_Jadwal_Kegiatan_Concern extends \JI_Model
         '',
         '',
         null,
+        '',
         '',
         '',
         0,

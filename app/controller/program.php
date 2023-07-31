@@ -2,6 +2,8 @@
 
 namespace Controller;
 
+date_default_timezone_set('Asia/Jakarta');
+
 register_namespace(__NAMESPACE__);
 
 /**
@@ -22,10 +24,16 @@ class Program extends \JI_Controller
 		$this->setTheme('front');
 		$this->lib("seme_purifier");
 		$this->load("a_program_concern");
+		$this->load("a_jabatan_concern");
+		$this->load("b_user_concern");
 		$this->load("b_user_module_concern");
+		$this->load("b_user_jabatan_concern");
 		$this->load("b_jadwal_kegiatan_concern");
 		$this->load("front/a_program_model", "apm");
+		$this->load("front/a_jabatan_model", "ajm");
+		$this->load("front/b_user_model", "bum");
 		$this->load("front/b_user_module_model", "bumm");
+		$this->load("front/b_user_jabatan_model", "bujm");
 		$this->load("front/b_jadwal_kegiatan_model", "bjkm");
 		$this->current_parent = 'program';
 		$this->current_page = 'daftar';
@@ -66,10 +74,21 @@ class Program extends \JI_Controller
 
 		$this->setTitle($apm->nama . ' ' . $this->config_semevar('site_suffix', ''));
 
+		$jabatan = $this->bujm->getByUserId($data['sess']->user->id);
+		$jabatan_ids = [];
+		if (isset($jabatan[0])) {
+			foreach ($jabatan as $k => $v) {
+				$jabatan_ids[] = $v->a_jabatan_id;
+			}
+		}
 
+		$bum = $this->bum->getAll();
+		$data['bum'] = $bum;
 
-		$permissions = $this->bumm->getAllPermission($apm->id,  $data['sess']->user->a_jabatan_id, $data['sess']->user->id);
+		$ajm = $this->ajm->getAll();
+		$data['ajm'] = $ajm;
 
+		$permissions = $this->bumm->getAllPermission($apm->id,  $jabatan_ids, $data['sess']->user->id);
 		$data['apm'] = $apm;
 		unset($apm);
 
@@ -77,6 +96,7 @@ class Program extends \JI_Controller
 		unset($permissions);
 
 		$this->putThemeContent("program/detail", $data);
+		$this->putThemeContent("program/detail_modal", $data);
 		$this->putJsContent("program/detail_bottom", $data);
 		$this->loadLayout('col-2-left', $data);
 		$this->render();

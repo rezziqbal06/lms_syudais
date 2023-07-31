@@ -77,7 +77,7 @@
  * Site Base URL with http:// or https:// prefix and trailing slash
  * @var string
  */
-$site = "http://" . $_SERVER['HTTP_HOST'] . "/lms_syudais/";
+$site = "http://" . $_SERVER['HTTP_HOST'] . "/simak/";
 
 /**
  * URL parse method
@@ -200,15 +200,15 @@ $semevar['fcm']->storageBucket = '';
 $semevar['fcm']->messagingSenderId = '';
 $semevar['fcm']->appId = '';
 
-$semevar['site_title'] = 'Syudais LMS';
+$semevar['site_title'] = 'SIMAK Syudais';
 $semevar['site_author'] = $semevar['site_title'];
 $semevar['site_keyword'] = $semevar['site_title'];
 $semevar['site_description'] = $semevar['site_title'];
 $semevar['site_version'] = '1.0.0-dev';
-$semevar['site_name'] = 'Syudais LMS';
-$semevar['admin_site_suffix'] = 'Syudais LMS';
-$semevar['site_suffix'] = ' - Syudais LMS';
-$semevar['site_description'] = 'Syudais LMS';
+$semevar['site_name'] = 'SIMAK Syudais';
+$semevar['admin_site_suffix'] = 'SIMAK Syudais';
+$semevar['site_suffix'] = ' - SIMAK Syudais';
+$semevar['site_description'] = 'SIMAK Syudais';
 $semevar['site_logo'] = new stdClass();
 $semevar['site_logo']->path = 'media/logo.png';
 $semevar['site_logo']->width = '117';

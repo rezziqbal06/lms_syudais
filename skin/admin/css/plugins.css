@@ -4922,6 +4922,7 @@ Contributors https://github.com/jdewit/bootstrap-timepicker/graphs/contributors
 
 .bootstrap-timepicker {
     position: relative;
+    z-index: 999999 !important;
 }
 .bootstrap-timepicker input {
     border-top-left-radius: 4px !important;

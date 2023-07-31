@@ -26,11 +26,13 @@ class User extends \JI_Controller
 		// $this->load("a_jpenilaian_concern");
 		$this->load("b_user_concern");
 		$this->load("b_user_module_concern");
+		$this->load("b_user_jabatan_concern");
 		$this->load("admin/b_user_model", "bum");
 		$this->load("admin/a_jabatan_model", "ajm");
 		// $this->load("admin/a_ruangan_model", "arm");
 		// $this->load("admin/a_jpenilaian_model", "ajpm");
 		$this->load("admin/b_user_module_model", "bumm");
+		$this->load("admin/b_user_jabatan_model", "bujm");
 		$this->current_parent = 'akun';
 		$this->current_page = 'user';
 	}
@@ -92,10 +94,22 @@ class User extends \JI_Controller
 		// 	redir(base_url_admin('akun/user/'));
 		// 	die();
 		// }
+
+		$bujm = $this->bujm->getByUser($id);
+
+		$new_bujm = [];
+		if (isset($bujm[0]->id)) {
+			foreach ($bujm as $bm) {
+				$new_bujm[$bm->a_jabatan_id] = $bm;
+			}
+		}
+
 		$data['jabatans'] = $this->ajm->getAll();
 
 		$data['bum'] = $bum;
-
+		$data['bujm'] = $new_bujm;
+		unset($new_bujm);
+		unset($bujm);
 
 		$this->setTitle('Member Edit #' . $bum->id . ' ' . $this->config_semevar('site_suffix', ''));
 		$this->putThemeContent("akun/user/edit_modal", $data);

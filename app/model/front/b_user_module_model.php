@@ -30,12 +30,12 @@ class B_User_Module_Model extends \Model\B_User_Module_Concern
 	}
 
 
-	public function getAllPermission($a_program_id = "", $a_jabatan_id = "", $b_user_id = "")
+	public function getAllPermission($a_program_id = "", $a_jabatan_ids = [], $b_user_id = "")
 	{
 		$this->db->select("type");
 		$this->db->where("a_program_id", $a_program_id);
-		$this->db->where("a_jabatan_id", $a_jabatan_id, "OR", "=", 1, 0);
-		$this->db->where("b_user_id", $b_user_id, "OR", "=", 0, 1);
+		$this->db->where_in("a_jabatan_id", $a_jabatan_ids, 0, "OR");
+		$this->db->where("b_user_id", $b_user_id, "OR", "=");
 		$this->db->group_by("type");
 		$d = $this->db->get('object', 0);
 		$res = [];
@@ -48,7 +48,7 @@ class B_User_Module_Model extends \Model\B_User_Module_Concern
 	}
 
 
-	public function getMenu($type = "create", $a_jabatan_id = "", $b_user_id = "")
+	public function getMenu($type = "create", $a_jabatan_ids = [], $b_user_id = "")
 	{
 		$this->db->select_as("$this->tbl2_as.nama", 'nama', 0);
 		$this->db->select_as("$this->tbl2_as.slug", 'slug', 0);
@@ -57,7 +57,7 @@ class B_User_Module_Model extends \Model\B_User_Module_Concern
 		$this->db->from($this->tbl, $this->tbl_as);
 		$this->db->join($this->tbl2, $this->tbl2_as, "id", $this->tbl_as, "a_program_id", "left");
 		$this->db->where("type", $type, "AND", "LIKE%");
-		$this->db->where("a_jabatan_id", $a_jabatan_id, "OR", "=");
+		$this->db->where_in("a_jabatan_id", $a_jabatan_ids, 0, "OR");
 		$this->db->where("b_user_id", $b_user_id, "OR", "=");
 		$this->db->group_by("a_program_id");
 		$d = $this->db->get($this->tbl, 0);

@@ -12,43 +12,30 @@ register_namespace(__NAMESPACE__);
  * @package Model\B_User
  * @since 1.0.0
  */
-class B_User_Concern extends \JI_Model
+class B_User_Jabatan_Concern extends \JI_Model
 {
-    public $tbl = 'b_user';
-    public $tbl_as = 'bu';
-    public $tbl2 = 'b_user_alamat';
-    public $tbl2_as = 'bua';
+    public $tbl = 'b_user_jabatan';
+    public $tbl_as = 'buj';
+    public $tbl2 = 'b_user_module';
+    public $tbl2_as = 'bum';
     // public $tbl3 = 'a_company';
     // public $tbl3_as = 'ac';
 
     const COLUMNS = [
+        'b_user_id',
         'a_jabatan_id',
-        'utype',
-        'email',
-        'username',
-        'image',
-        'fnama',
-        'cdate',
-        'password',
         'is_active',
         'is_deleted'
     ];
     const DEFAULTS = [
-        0,
-        'user',
-        '',
-        '',
-        '',
-        '',
-        '',
+        null,
         null,
         1,
         0
     ];
     const REQUIREDS = [
-        'email',
-        'username',
-        'fnama',
+        'b_user_id',
+        'a_jabatan_id'
     ];
     const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
@@ -78,34 +65,40 @@ class B_User_Concern extends \JI_Model
 
         $this->datatables['admin'] = new \Seme_Datatable([
             ["$this->tbl_as.id", 'id', 'ID'],
-            ["$this->tbl_as.fnama", 'fnama', 'Nama'],
-            ["$this->tbl_as.utype", 'utype', 'Posisi'],
-            ["$this->tbl_as.email", 'email', 'Email'],
+            ["$this->tbl_as.nama", 'nama', 'Nama Jabatan'],
+            ["$this->tbl_as.deskripsi", 'deskripsi', 'Deskripsi'],
             ["$this->tbl_as.is_active", 'is_active', 'Status']
         ]);
 
         $this->datatables['front'] = new \Seme_Datatable([
             ["$this->tbl_as.id", 'id', 'ID'],
-            ["$this->tbl_as.fnama", 'fnama', 'Nama'],
-            ["$this->tbl_as.utype", 'utype', 'Posisi'],
-            ["$this->tbl_as.email", 'email', 'Email'],
-            ["$this->tbl_as.utype", 'utype', 'Utype'],
+            ["$this->tbl_as.nama", 'nama', 'Nama Jabatan'],
+            ["$this->tbl_as.deskripsi", 'deskripsi', 'Deskripsi'],
             ["$this->tbl_as.is_active", 'is_active', 'Status']
         ]);
 
-        $this->datatables['download'] = new \Seme_Datatable([
-            ["$this->tbl_as.fnama", 'fnama', 'Nama'],
-            ["$this->tbl_as.telp", 'telp', 'Telp'],
-            ["$this->tbl_as.email", 'email', 'Email'],
-            ["$this->tbl_as.utype", 'utype', 'Utype'],
-            ["$this->tbl2_as.provinsi", 'provinsi', 'Provinsi'],
-            ["$this->tbl2_as.kabkota", 'kabkota', 'Kota'],
-            ["$this->tbl2_as.kecamatan", 'kecamatan', 'Kecamatan'],
-            ["$this->tbl2_as.alamat", 'alamat', 'Alamat'],
-            ["$this->tbl2_as.alamat2", 'alamat2', 'Alamat 2'],
-            ["$this->tbl2_as.kodepos", 'kodepos', 'Kodepos'],
-            ["$this->tbl_as.is_active", 'is_active', 'Status']
-        ]);
+        // $this->datatables['front'] = new \Seme_Datatable([
+        //     ["$this->tbl_as.id", 'id', 'ID'],
+        //     ["$this->tbl_as.fnama", 'fnama', 'Nama'],
+        //     ["$this->tbl_as.telp", 'telp', 'Telp'],
+        //     ["$this->tbl_as.email", 'email', 'Email'],
+        //     ["$this->tbl_as.utype", 'utype', 'Utype'],
+        //     ["$this->tbl_as.is_active", 'is_active', 'Status']
+        // ]);
+
+        // $this->datatables['download'] = new \Seme_Datatable([
+        //     ["$this->tbl_as.fnama", 'fnama', 'Nama'],
+        //     ["$this->tbl_as.telp", 'telp', 'Telp'],
+        //     ["$this->tbl_as.email", 'email', 'Email'],
+        //     ["$this->tbl_as.utype", 'utype', 'Utype'],
+        //     ["$this->tbl2_as.provinsi", 'provinsi', 'Provinsi'],
+        //     ["$this->tbl2_as.kabkota", 'kabkota', 'Kota'],
+        //     ["$this->tbl2_as.kecamatan", 'kecamatan', 'Kecamatan'],
+        //     ["$this->tbl2_as.alamat", 'alamat', 'Alamat'],
+        //     ["$this->tbl2_as.alamat2", 'alamat2', 'Alamat 2'],
+        //     ["$this->tbl2_as.kodepos", 'kodepos', 'Kodepos'],
+        //     ["$this->tbl_as.is_active", 'is_active', 'Status']
+        // ]);
     }
 
     public function email($email)
