@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 29, 2023 at 06:16 AM
+-- Generation Time: Aug 20, 2023 at 05:41 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -143,10 +143,11 @@ INSERT INTO `a_jabatan` (`id`, `nama`, `deskripsi`, `cdate`, `is_active`, `is_de
 (1, 'Pembina', 'Pembina Majelis Ta\'lim Syubbaanul \'Uluum', '0000-00-00 00:00:00', 1, 0),
 (2, 'Tim 12', 'Tim 12', '0000-00-00 00:00:00', 1, 0),
 (3, 'Muttabi', 'Muttabi', '0000-00-00 00:00:00', 1, 0),
-(4, 'Tim Pengembangan Santri', 'Tim Pengembangan Santri', '0000-00-00 00:00:00', 1, 0),
-(5, 'Tim Tahsin & Tahfidz Al-Qur\'an', 'Tim Tahsin & Tahfidz Al-Qur\'an', '0000-00-00 00:00:00', 1, 0),
-(6, 'Tim Kreatifitas', 'Tim Kreatifitas', '0000-00-00 00:00:00', 1, 0),
-(7, 'Tim Ta\'lim Wa Ta\'allum', 'Tim Ta\'lim Wa Ta\'allum', '0000-00-00 00:00:00', 1, 0);
+(4, 'DDS', 'Dewan Dakwah Santri', '0000-00-00 00:00:00', 1, 0),
+(5, 'DTQS', 'Dewan Tahfidz Qira\'at Santri', '0000-00-00 00:00:00', 1, 0),
+(6, 'DKS', 'Dewan Kreatifitas Santri', '0000-00-00 00:00:00', 1, 0),
+(7, 'DPS', 'Dewan Pendidikan Santri', '0000-00-00 00:00:00', 1, 0),
+(12, 'Santri', 'Santri', '0000-00-00 00:00:00', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -623,16 +624,21 @@ INSERT INTO `b_jadwal` (`id`, `a_company_id`, `nama`, `jam_masuk`, `jam_keluar`,
 
 CREATE TABLE `b_jadwal_kegiatan` (
   `id` int(11) NOT NULL,
+  `a_program_id` int(11) NOT NULL,
   `a_pengguna_id` int(4) DEFAULT NULL,
   `b_user_id` int(4) DEFAULT NULL,
+  `b_user_id_narasumber` int(4) NOT NULL,
+  `a_jabatan_id_sasaran` int(4) NOT NULL,
   `nama` varchar(255) NOT NULL,
   `slug` varchar(255) NOT NULL,
   `tempat` varchar(255) NOT NULL,
   `cdate` datetime NOT NULL,
   `sdate` datetime NOT NULL,
   `edate` datetime NOT NULL,
+  `hari` varchar(28) NOT NULL,
   `stime` time NOT NULL,
   `etime` time NOT NULL,
+  `sasaran` varchar(128) NOT NULL,
   `narasumber` varchar(255) NOT NULL,
   `gmaps_link` varchar(255) NOT NULL,
   `gmaps_lat` decimal(14,11) NOT NULL,
@@ -651,6 +657,15 @@ CREATE TABLE `b_jadwal_kegiatan` (
   `is_deleted` int(1) NOT NULL DEFAULT 0,
   `is_active` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `b_jadwal_kegiatan`
+--
+
+INSERT INTO `b_jadwal_kegiatan` (`id`, `a_program_id`, `a_pengguna_id`, `b_user_id`, `b_user_id_narasumber`, `a_jabatan_id_sasaran`, `nama`, `slug`, `tempat`, `cdate`, `sdate`, `edate`, `hari`, `stime`, `etime`, `sasaran`, `narasumber`, `gmaps_link`, `gmaps_lat`, `gmaps_long`, `negara`, `provinsi`, `kabkota`, `kecamatan`, `kelurahan`, `alamat`, `kodepos`, `telp`, `deskripsi`, `featured_image`, `is_rutin`, `is_deleted`, `is_active`) VALUES
+(2, 7, 0, 2, 22, 12, 'Muthola\'ah Santri', '', 'Kediaman Kang Denta', '2023-07-31 08:45:01', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '3', '19:30:00', '21:30:00', 'Santri', 'Denta Himawan', '', '0.00000000000', '0.00000000000', '', '', '', '', '', 'Jatisari', '', '', '', '', 1, 0, 1),
+(3, 7, 0, 2, 19, 12, 'Muthola\'ah Santri', '', 'Kediaman Kang Hasan', '2023-07-31 11:23:07', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '3', '19:00:00', '20:00:00', 'Santri', 'Hasan Sadikin, S. Pd, M. Pd', '', '0.00000000000', '0.00000000000', '', '', '', '', '', '', '', '', '', '', 1, 1, 1),
+(4, 7, 0, 0, 8, 12, 'Muthola\'ah Santri', '', 'Kediaman Kang Sandi', '0000-00-00 00:00:00', '2023-06-28 00:00:00', '0000-00-00 00:00:00', '1', '20:00:00', '21:30:00', 'Santri', 'Sandi Komarulloh', '', '0.00000000000', '0.00000000000', '', '', '', '', '', 'Sayati', '', '', '', '', 1, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -770,12 +785,12 @@ CREATE TABLE `b_user` (
 --
 
 INSERT INTO `b_user` (`id`, `a_company_id`, `a_jabatan_id`, `a_jamkerja_id`, `fb_id`, `google_id`, `kode`, `email`, `username`, `password`, `fnama`, `lnama`, `utype`, `latitude`, `longitude`, `kelamin`, `bplace`, `bdate`, `cdate`, `adate`, `edate`, `telp`, `image`, `intro_teks`, `alamat`, `alamat2`, `kecamatan`, `kabkota`, `provinsi`, `kodepos`, `pekerjaan`, `fb`, `ig`, `api_web_token`, `api_mobile_token`, `api_social_id`, `fcm_token`, `device`, `poin`, `xp`, `is_agree`, `is_confirmed`, `is_active`, `is_deleted`) VALUES
-(1, NULL, 1, NULL, NULL, '', '', 'ruslan.gnw@gmail.com', 'ruslan_gnw', '4fdc4267a19395c607558570de9f3a85', 'Ust. Ruslan Gunawan, S. Ag, M. Pd', '', 'Pembina', '0.0000000000', '0.0000000000', 0, '-', '2023-07-26', '2023-07-26 09:30:38', '0000-00-00', '0000-00-00', '', '', '', '', '', '', '', '', '', '-', '', '', '', '', '', '', 'android', 0, 0, 0, 0, 1, 0),
-(2, NULL, 4, NULL, NULL, '', '', 'rezziqbal@gmail.com', 'rezziqbal', '$2y$10$Z.V9jaqGU7VcVyPB8gTizeRqn/l7FogHLfIe.ZhAMzBZPAGq11uZq', 'Rezza Muhammad Iqbal', '', 'Tim Pengembangan Santri', '0.0000000000', '0.0000000000', 0, '-', NULL, '2023-07-26 09:51:30', '0000-00-00', '0000-00-00', '', 'media/user/2023/07/62-2-.png', '', '', '', '', '', '', '', '-', '', '', '', '4GCM3NM', '', '', 'web', 100, 100, 0, 1, 1, 0),
+(1, NULL, 0, NULL, NULL, '', '', 'ruslan.gnw@gmail.com', 'ruslan_gnw', '4fdc4267a19395c607558570de9f3a85', 'Ust. Ruslan Gunawan, S. Ag, M. Pd', '', 'user', '0.0000000000', '0.0000000000', 0, '-', '2023-07-26', '2023-07-29 20:06:02', '0000-00-00', '0000-00-00', '', '', '', '', '', '', '', '', '', '-', '', '', '', '', '', '', 'android', 0, 0, 0, 0, 1, 0),
+(2, NULL, 0, NULL, NULL, '', '', 'rezziqbal@gmail.com', 'rezziqbal', '$2y$10$lAlaf6A/m4tKJAzn2X0JZ.ewnJY9jXL1JKsTFVo/EmCXjg6zFNveO', 'Rezza Muhammad Iqbal', '', 'user', '0.0000000000', '0.0000000000', 0, '-', NULL, '2023-07-29 20:06:35', '0000-00-00', '0000-00-00', '', '', '', '', '', '', '', '', '', '-', '', '', '', '4GCM3NM', '', '', 'web', 100, 100, 0, 1, 1, 0),
 (7, NULL, NULL, NULL, NULL, '4lh4lBJk2SR6DKedpqAj5tSUkzw1', '', 'syubbaanululuum@gmail.com', '', '4fdc4267a19395c607558570de9f3a85', 'SYUDAIS TV', '', 'admin', '0.0000000000', '0.0000000000', NULL, '-', NULL, '2020-06-22 20:18:43', NULL, NULL, '', 'https://lh3.googleusercontent.com/a-/AOh14GheyZOIV0M4Dbe4-JFbzUnx7p06cWWaO18rs7MZ=s96-c', '', '', '', '', '-', '', '', '-', '', '', '', '8B79HJB', '', 'cpvStAjsvBU:APA91bGa-PSZqQI4REtfmQWWqOegVuArfm_sBZ5iaGmzcVoXoqWUPEH5Qj1oYDmQ4NaoGIVK9l0ITCMksW2aOeSWtPjzRVaJGrOY4pFTeN3RZ6zlyBB9OvWCIn8uWuMSWxmC95GM7ouO', 'android', 0, 0, 0, 1, 1, 1),
-(8, NULL, 2, NULL, NULL, '', '', 'sandi.komarulloh@gmail.com', 'sandikom', '4fdc4267a19395c607558570de9f3a85', 'Sandi Komarulloh', '', 'Tim 12', '0.0000000000', '0.0000000000', 0, '-', NULL, '2023-07-26 09:30:17', '0000-00-00', '0000-00-00', '', '', '', '', '', '', '', '', '', '-', '', '', '', 'M3FQJBQ', '', 'dlkldO9mkpo:APA91bFEEMRySg2mlUj6gaivVXDfoZhvA4NcvkqInUTcUyzynFjoG2anEXWiVzRjt3ZnxDELmU1GUKxCHLJdgmWEM0PshLingJAywImi2hy81OZ03kazamBk4IYxR5ekcezRgSKCnnGr', 'android', 0, 0, 0, 1, 1, 0),
+(8, NULL, 0, NULL, NULL, '', '', 'sandi.komarulloh@gmail.com', 'sandikom', '4fdc4267a19395c607558570de9f3a85', 'Sandi Komarulloh', '', 'user', '0.0000000000', '0.0000000000', 0, '-', NULL, '2023-07-29 20:06:59', '0000-00-00', '0000-00-00', '', '', '', '', '', '', '', '', '', '-', '', '', '', 'M3FQJBQ', '', 'dlkldO9mkpo:APA91bFEEMRySg2mlUj6gaivVXDfoZhvA4NcvkqInUTcUyzynFjoG2anEXWiVzRjt3ZnxDELmU1GUKxCHLJdgmWEM0PshLingJAywImi2hy81OZ03kazamBk4IYxR5ekcezRgSKCnnGr', 'android', 0, 0, 0, 1, 1, 0),
 (9, NULL, NULL, NULL, NULL, 'EN33XMq0lpROoAVmYonsh9GYLlp2', '', 'imampenida@gmail.com', '', '4fdc4267a19395c607558570de9f3a85', 'Imam Penida', '', 'user', '0.0000000000', '0.0000000000', NULL, '-', NULL, '2020-07-12 14:48:39', NULL, NULL, '', 'https://lh5.googleusercontent.com/-zZDJ3iL50A0/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucmKk6zjvGS8w4mybRdR8FmONJq2ew/s96-c/photo.jpg', '', '', '', '', '-', '', '', '-', '', '', '', 'L0G2JLN', '', 'fu-AWqdNQxc:APA91bFmkMLKLK3J0-XOhO5o0Wawh1vyYT2KlDk3wVogWEt92aD4ZHYKb6GrVRIWIbLA94KY7ScIyInfhzoVt5wkvCpaaAqU_uW3TUMgGD3pSKZM-cUuLGdZNZnMO3GRJ1T9XJPTvAho', 'android', 0, 0, 0, 1, 1, 1),
-(10, NULL, 7, NULL, NULL, '', '', 'presidenmihp@gmail.com', '', '4fdc4267a19395c607558570de9f3a85', 'Imam Pramono', '', 'Tim Ta\'lim Wa Ta\'allum', '0.0000000000', '0.0000000000', 0, '-', NULL, '2023-07-26 09:30:04', '0000-00-00', '0000-00-00', '', '', '', '', '', '', '', '', '', '-', '', '', '', 'B5MJ74D', '', 'fu-AWqdNQxc:APA91bFmkMLKLK3J0-XOhO5o0Wawh1vyYT2KlDk3wVogWEt92aD4ZHYKb6GrVRIWIbLA94KY7ScIyInfhzoVt5wkvCpaaAqU_uW3TUMgGD3pSKZM-cUuLGdZNZnMO3GRJ1T9XJPTvAho', 'android', 0, 0, 0, 1, 1, 0),
+(10, NULL, 0, NULL, NULL, '', '', 'presidenmihp@gmail.com', 'imamh', '4fdc4267a19395c607558570de9f3a85', 'Imam Pramono', '', 'user', '0.0000000000', '0.0000000000', 0, '-', NULL, '2023-07-29 20:01:40', '0000-00-00', '0000-00-00', '', '', '', '', '', '', '', '', '', '-', '', '', '', 'B5MJ74D', '', 'fu-AWqdNQxc:APA91bFmkMLKLK3J0-XOhO5o0Wawh1vyYT2KlDk3wVogWEt92aD4ZHYKb6GrVRIWIbLA94KY7ScIyInfhzoVt5wkvCpaaAqU_uW3TUMgGD3pSKZM-cUuLGdZNZnMO3GRJ1T9XJPTvAho', 'android', 0, 0, 0, 1, 1, 0),
 (11, NULL, NULL, NULL, NULL, 'jbUilM3HUrZa9sSLQJ8s24aynvX2', '', 'rxpluscnx1@gmail.com', '', '4fdc4267a19395c607558570de9f3a85', 'Google CNX', '', 'user', '0.0000000000', '0.0000000000', NULL, '-', NULL, '2021-09-23 17:13:40', NULL, NULL, '', 'https://lh3.googleusercontent.com/a/AATXAJzwVsSLqg84KVSFPSA13Vr9l5jQIFjAJKbIMmM=s96-c', '', '', '', '', '-', '', '', '-', '', '', '', 'MI9I6XD', '', 'f6LTpztSvFw:APA91bEMn1I_cN_FVj66Y3KzaILHZHXN7-h6rB8ATNWdpX0x1bmyAOn7yDGH28zGvtAwqC3j8kkCEZ9bNmf-g40JiZmC7692SffYCAAYMD75_54_wN76M6ERUC9a4A3_EOrsTaKrYP-i', 'android', 0, 0, 0, 0, 1, 1),
 (12, NULL, NULL, NULL, NULL, '8sHkj5Vz9feKYt9q19hIrSJVGG23', '', 'sukahijiofficial@gmail.com', '', '4fdc4267a19395c607558570de9f3a85', 'Sukahiji Official', '', 'user', '0.0000000000', '0.0000000000', NULL, '-', NULL, '2021-09-26 16:59:20', NULL, NULL, '', 'https://lh3.googleusercontent.com/a/AATXAJz-RLyY5ukRBCNIjIe4XRKYf-v1ulXUSKJv0rf8=s96-c', '', '', '', '', '-', '', '', '-', '', '', '', '2C3NIGX', '', 'dopLmF9tZOs:APA91bFdykyCc_Elp-SpP7DKBgqQX_HOCCB2QAVKkCzr9y644B9ILua-vgKaI0Uvn2SmYWfsYdIpaisZbA6UwHzKNuDSUsfJp4twMrxVOZPdTqQmaJyw9Dwm9bb4lFYxql4nhhWJ7-h4', 'android', 0, 0, 0, 1, 1, 1),
 (13, NULL, NULL, NULL, NULL, 'RGPLHY7wy2fEUlaIxozRUBFq1Pa2', '', 'boracayproject16@gmail.com', '', '4fdc4267a19395c607558570de9f3a85', 'Project Boracay', '', 'user', '0.0000000000', '0.0000000000', NULL, '-', NULL, '2021-09-27 14:57:45', NULL, NULL, '', 'https://lh3.googleusercontent.com/a/AATXAJzcHf7O51qkK8574muAjD31QOwIsAZZVMDpNyJ6=s96-c', '', '', '', '', '-', '', '', '-', '', '', '', 'ECJ707G', '', 'fEi1p_iZaz8:APA91bHojDb_6Fqp_KZF3GHEIEGivBmKhBrB9laiwXg6WnWeon_AxSHArXaKxNFlyyGsN1hrkhFLPl_qs2YCENQBHVA01NCWbXMaWiFKuhyguLfOHPcUoWVae0o26JotUqVhPd2q6q3C', 'android', 0, 0, 0, 1, 1, 1),
@@ -783,7 +798,10 @@ INSERT INTO `b_user` (`id`, `a_company_id`, `a_jabatan_id`, `a_jamkerja_id`, `fb
 (15, NULL, NULL, NULL, NULL, 'o1TRa4AlTvcOkoHc0PeQdbVDfMQ2', '', 'boracay.dffthree2021@gmail.com', '', '4fdc4267a19395c607558570de9f3a85', 'DFF Test3', '', 'user', '0.0000000000', '0.0000000000', NULL, '-', NULL, '2021-09-29 22:43:40', NULL, NULL, '', 'https://lh3.googleusercontent.com/a/AATXAJzLLEjncdOJDNpHYYZ_pykWL_idIHsxMNErGJPz=s96-c', '', '', '', '', '-', '', '', '-', '', '', '', 'EHGHKQQ', '', 'cu8x2l7T4UQ:APA91bEgd4C_2Zkh42DzIvSn3t12Q9rO95Q06y8kpCoEkxqAV_K3ZfmAqzn_ZA1_I5XoGFdJlgRrM0I5AmjAXSZT5nSNmERdJwSIhE8v4lLxyBmPIzakjuSzwHH0mBIecwJfeSio-TyD', 'android', 0, 0, 0, 1, 1, 1),
 (16, NULL, NULL, NULL, NULL, 'PeDN49YiO5T7MNKYYmAvIcH44n13', '', 'ballrezz@gmail.com', '', '4fdc4267a19395c607558570de9f3a85', 'Rezza Muhammad Iqbal', '', 'user', '0.0000000000', '0.0000000000', NULL, '-', NULL, '2021-10-07 19:32:25', NULL, NULL, '', 'https://lh6.googleusercontent.com/-B9FJTlPYnLo/AAAAAAAAAAI/AAAAAAAAAAA/AAKWJJPjhDZxXsOFur_aaxBu7fvAL0YYcg/s96-c/photo.jpg', '', '', '', '', '-', '', '', '-', '', '', '', '4H55JQ6', '', 'dopLmF9tZOs:APA91bFdykyCc_Elp-SpP7DKBgqQX_HOCCB2QAVKkCzr9y644B9ILua-vgKaI0Uvn2SmYWfsYdIpaisZbA6UwHzKNuDSUsfJp4twMrxVOZPdTqQmaJyw9Dwm9bb4lFYxql4nhhWJ7-h4', 'android', 0, 0, 0, 0, 1, 1),
 (17, NULL, NULL, NULL, NULL, 'QJZxSbha8QSmfRvzoDvY2j2s0UQ2', '', 'testboramnl@gmail.com', '', '4fdc4267a19395c607558570de9f3a85', 'john Doe', '', 'user', '0.0000000000', '0.0000000000', NULL, '-', NULL, '2021-10-08 02:21:27', NULL, NULL, '', 'https://lh3.googleusercontent.com/a/AATXAJw-hDtRv93epttKb3dpQrX1nXIPzvaka_9ix2I5=s96-c', '', '', '', '', '-', '', '', '-', '', '', '', 'H06K4QJ', '', 'cvrFFQNXiW0:APA91bGJAf1YXFtE7AnZf1r06qtV4l7uZ76xGsww3pR9r_jaL9rg5xLQn3RbPxj8cbMDrBMZ_-FrWhX86WA6-Zoi8kJeGwLLedBBUIKRrx1BPf-KKQAHy7bfZyeS74zBiUwO53xYwiA4', 'android', 0, 0, 0, 1, 1, 1),
-(18, NULL, NULL, NULL, NULL, 'pTARuTha0KdERg5h75WfoCc8zRR2', '', 'babel3126341@gmail.com', '', '4fdc4267a19395c607558570de9f3a85', 'Babel Kl', '', 'user', '0.0000000000', '0.0000000000', NULL, '-', NULL, '2022-11-07 10:20:47', NULL, NULL, '', 'https://lh3.googleusercontent.com/a/ALm5wu3C5tyWk0dY7ekFym8UWB2yPN-3p4o6mHCh_lUE=s96-c', '', '', '', '', '-', '', '', '-', '', '', '', 'IL9QM77', '', 'dIK3DnK5Nt4:APA91bFuydhPLqpgYsLtu1DGtedlyxUBwuCLP0M_wSZTIKUJ9abXTVJ37tuX6FL_LmVDJiPevPlDAtUkbHte1XXv6vu0RkKK2Sh4-zeHNOk9MbAq9228RKvi3Rgr4hVCj36Yz40eg_eT', 'android', 0, 0, 0, 1, 1, 1);
+(18, NULL, NULL, NULL, NULL, 'pTARuTha0KdERg5h75WfoCc8zRR2', '', 'babel3126341@gmail.com', '', '4fdc4267a19395c607558570de9f3a85', 'Babel Kl', '', 'user', '0.0000000000', '0.0000000000', NULL, '-', NULL, '2022-11-07 10:20:47', NULL, NULL, '', 'https://lh3.googleusercontent.com/a/ALm5wu3C5tyWk0dY7ekFym8UWB2yPN-3p4o6mHCh_lUE=s96-c', '', '', '', '', '-', '', '', '-', '', '', '', 'IL9QM77', '', 'dIK3DnK5Nt4:APA91bFuydhPLqpgYsLtu1DGtedlyxUBwuCLP0M_wSZTIKUJ9abXTVJ37tuX6FL_LmVDJiPevPlDAtUkbHte1XXv6vu0RkKK2Sh4-zeHNOk9MbAq9228RKvi3Rgr4hVCj36Yz40eg_eT', 'android', 0, 0, 0, 1, 1, 1),
+(19, NULL, 0, NULL, NULL, NULL, '', 'hasan@gmail.com', 'hasans', '4fdc4267a19395c607558570de9f3a85', 'Hasan Sadikin, S. Pd, M. Pd', '', 'user', '0.0000000000', '0.0000000000', NULL, '-', NULL, '0000-00-00 00:00:00', NULL, NULL, '', '', '', '', '', '', '-', '', '', '-', '', '', '', '', '', '', 'android', 0, 0, 0, 0, 1, 0),
+(21, NULL, 0, NULL, NULL, NULL, '', 'rizky@gmail.com', 'rfauzi', '', 'Rizki Fauzi Alibani, S. Hum., M. Pd.', '', 'user', '0.0000000000', '0.0000000000', NULL, '-', NULL, '2023-07-31 08:41:22', NULL, NULL, '', '', '', '', '', '', '-', '', '', '-', '', '', '', '', '', '', 'android', 0, 0, 0, 0, 1, 0),
+(22, NULL, 0, NULL, NULL, NULL, '', 'denta@gmail.com', 'dentah', '4fdc4267a19395c607558570de9f3a85', 'Denta Himawan', '', 'user', '0.0000000000', '0.0000000000', NULL, '-', NULL, '0000-00-00 00:00:00', NULL, NULL, '', '', '', '', '', '', '-', '', '', '-', '', '', '', '', '', '', 'android', 0, 0, 0, 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -807,6 +825,37 @@ CREATE TABLE `b_user_alamat` (
   `is_default` int(1) NOT NULL DEFAULT 1,
   `is_active` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='buku alamat untuk user';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `b_user_jabatan`
+--
+
+CREATE TABLE `b_user_jabatan` (
+  `id` int(4) NOT NULL,
+  `b_user_id` int(4) NOT NULL,
+  `a_jabatan_id` int(4) NOT NULL,
+  `is_active` int(1) NOT NULL DEFAULT 1,
+  `is_deleted` int(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `b_user_jabatan`
+--
+
+INSERT INTO `b_user_jabatan` (`id`, `b_user_id`, `a_jabatan_id`, `is_active`, `is_deleted`) VALUES
+(1, 10, 3, 1, 0),
+(2, 10, 7, 1, 0),
+(3, 1, 1, 1, 0),
+(4, 2, 3, 1, 0),
+(5, 2, 4, 1, 0),
+(6, 8, 2, 1, 0),
+(7, 19, 2, 1, 0),
+(8, 19, 7, 1, 0),
+(10, 21, 2, 1, 0),
+(11, 21, 4, 1, 0),
+(12, 22, 2, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1138,6 +1187,30 @@ INSERT INTO `c_guestbook` (`id`, `cdate`, `nama`, `email`, `telp`, `alamat`, `ju
 (2, '2018-12-02 01:42:06', 'test', 'test@rerasda', '123133331', '', 'Test', 'test', 1, 0, 0, 1),
 (3, '2018-12-02 12:58:35', '', 'daengrosanda@gmail.com', '13123123123123', '', '', '', 1, 0, 0, 1),
 (4, '2018-12-18 19:21:30', 'test', 'test@asdas', 'test', '', 'test', 'test', 1, 0, 0, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `c_laporan`
+--
+
+CREATE TABLE `c_laporan` (
+  `id` int(11) NOT NULL,
+  `b_jadwal_kegiatan_id` int(4) NOT NULL,
+  `b_user_id` int(4) NOT NULL,
+  `cdate` datetime NOT NULL,
+  `deskripsi` text NOT NULL,
+  `attach` text NOT NULL,
+  `is_active` int(1) NOT NULL DEFAULT 1,
+  `is_deleted` int(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `c_laporan`
+--
+
+INSERT INTO `c_laporan` (`id`, `b_jadwal_kegiatan_id`, `b_user_id`, `cdate`, `deskripsi`, `attach`, `is_active`, `is_deleted`) VALUES
+(5, 2, 2, '2023-08-19 19:41:39', '', '[\"media\\/laporan\\/2023\\/08\\/62-2-0.jpeg\",\"media\\/laporan\\/2023\\/08\\/62-2-1.pdf\"]', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1494,7 +1567,19 @@ INSERT INTO `d_kehadiran` (`tgl`, `b_jadwal_id`, `b_user_pengabsen_id`, `e_kajia
 ('2021-10-04', 0, 2, 15, 0, 14, '04:56:39', '00:00:00', '00:00:00', '00:00:00', 0, '', 'alpa'),
 ('2021-10-07', 0, 2, 10, 0, 2, '19:30:54', '00:00:00', '00:00:00', '00:00:00', 0, '', 'hadir'),
 ('2021-10-07', 0, 2, 10, 0, 8, '19:30:51', '00:00:00', '00:00:00', '00:00:00', 0, '', 'hadir'),
-('2021-10-07', 0, 2, 10, 0, 10, '19:30:59', '00:00:00', '00:00:00', '00:00:00', 0, '', 'hadir');
+('2021-10-07', 0, 2, 10, 0, 10, '19:30:59', '00:00:00', '00:00:00', '00:00:00', 0, '', 'hadir'),
+('2023-08-04', 0, 2, 0, 2, 19, '14:32:55', '00:00:00', '00:00:00', '00:00:00', 0, 'Service HP', 'izin'),
+('2023-08-04', 0, 2, 0, 4, 19, '14:07:20', '00:00:00', '00:00:00', '00:00:00', 0, '', 'hadir'),
+('2023-08-05', 0, 2, 0, 2, 2, '14:31:04', '00:00:00', '00:00:00', '00:00:00', 0, 'izin', 'izin'),
+('2023-08-05', 0, 2, 0, 4, 2, '13:54:16', '00:00:00', '00:00:00', '00:00:00', 0, '', 'alpa'),
+('2023-08-05', 0, 2, 0, 2, 8, '14:27:05', '00:00:00', '00:00:00', '00:00:00', 0, '', 'hadir'),
+('2023-08-06', 0, 2, 0, 2, 8, '13:55:35', '00:00:00', '00:00:00', '00:00:00', 0, 'sakit', 'izin'),
+('2023-08-06', 0, 2, 0, 2, 10, '14:10:21', '00:00:00', '00:00:00', '00:00:00', 0, '', 'hadir'),
+('2023-08-14', 0, 2, 0, 4, 1, '14:25:29', '00:00:00', '00:00:00', '00:00:00', 0, '', 'hadir'),
+('2023-08-14', 0, 2, 0, 4, 2, '15:51:11', '00:00:00', '00:00:00', '00:00:00', 0, '', 'hadir'),
+('2023-08-14', 0, 2, 0, 4, 10, '14:28:01', '00:00:00', '00:00:00', '00:00:00', 0, '', 'hadir'),
+('2023-08-14', 0, 2, 0, 4, 19, '14:37:33', '00:00:00', '00:00:00', '00:00:00', 0, '', 'hadir'),
+('2023-08-14', 0, 2, 0, 4, 22, '14:37:09', '00:00:00', '00:00:00', '00:00:00', 0, '', 'hadir');
 
 -- --------------------------------------------------------
 
@@ -2112,6 +2197,12 @@ ALTER TABLE `b_user_alamat`
   ADD KEY `fk_b_user_id` (`b_user_id`);
 
 --
+-- Indexes for table `b_user_jabatan`
+--
+ALTER TABLE `b_user_jabatan`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `b_user_module`
 --
 ALTER TABLE `b_user_module`
@@ -2146,6 +2237,12 @@ ALTER TABLE `c_guestbook`
   ADD PRIMARY KEY (`id`),
   ADD KEY `email` (`email`),
   ADD KEY `telp` (`telp`);
+
+--
+-- Indexes for table `c_laporan`
+--
+ALTER TABLE `c_laporan`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `c_produk`
@@ -2353,7 +2450,7 @@ ALTER TABLE `a_grup`
 -- AUTO_INCREMENT for table `a_jabatan`
 --
 ALTER TABLE `a_jabatan`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `a_media`
@@ -2407,7 +2504,7 @@ ALTER TABLE `b_jadwal`
 -- AUTO_INCREMENT for table `b_jadwal_kegiatan`
 --
 ALTER TABLE `b_jadwal_kegiatan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `b_menu`
@@ -2419,13 +2516,19 @@ ALTER TABLE `b_menu`
 -- AUTO_INCREMENT for table `b_user`
 --
 ALTER TABLE `b_user`
-  MODIFY `id` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(7) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `b_user_alamat`
 --
 ALTER TABLE `b_user_alamat`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `b_user_jabatan`
+--
+ALTER TABLE `b_user_jabatan`
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `b_user_module`
@@ -2444,6 +2547,12 @@ ALTER TABLE `b_user_test`
 --
 ALTER TABLE `c_guestbook`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `c_laporan`
+--
+ALTER TABLE `c_laporan`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `d_blog`

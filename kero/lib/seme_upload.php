@@ -76,7 +76,7 @@ class Seme_Upload
      * @param  int      $nation_code     nation code
      * @return object                    upload result object [status, message, file]
      */
-    public function upload_file($keyname, $media_directory = "files", $unique_id = "0", $ke = "", $jenis = "image",  $maks_ukuran = 1000000, $is_use_thumb = 0, $nation_code = 62)
+    public function upload_file($keyname, $media_directory = "folder", $unique_id = "0", $ke = "", $jenis = "image",  $maks_ukuran = 1000000, $is_use_thumb = 0, $nation_code = 62)
     {
         $sc = new stdClass();
         $sc->status = 500;
@@ -86,21 +86,42 @@ class Seme_Upload
         $sc->log = '';
         $sc->size = '';
         $unique_id = (int) $unique_id;
-        if (isset($_FILES[$keyname]['name'])) {
-            if ($_FILES[$keyname]['size'] > $maks_ukuran) {
+        if (!isset($_FILES[$keyname])) {
+            $sc->status = 988;
+            $sc->message = 'Keyname file does not exists';
+            return $sc;
+        }
+
+        $files = $_FILES[$keyname];
+        if (is_array($files['name'])) {
+            $fileName = $files['name'][$ke];
+            $fileTmpName = $files['tmp_name'][$ke];
+            $fileType = $files['type'][$ke];
+            $fileSize = $files['size'][$ke];
+            $fileError = $files['error'][$ke];
+        } else {
+            $fileName = $files['name'];
+            $fileTmpName = $files['tmp_name'];
+            $fileType = $files['type'];
+            $fileSize = $files['size'];
+            $fileError = $files['error'];
+        }
+        if (isset($fileName)) {
+            if ($fileSize > $maks_ukuran) {
                 $sc->status = 301;
                 $sc->message = 'file Size too big, please try again';
-                $sc->size = $_FILES[$keyname]['size'];
+                $sc->size = $fileSize;
                 return $sc;
             }
-            $filenames = pathinfo($_FILES[$keyname]['name']);
+            $filenames = pathinfo($fileName);
+            $sc->file = $fileName;
             if (isset($filenames['extension'])) {
                 $fileext = strtolower($filenames['extension']);
             } else {
                 $fileext = '';
             }
 
-            $sc->size = $_FILES[$keyname]['size'];
+            $sc->size = $fileSize;
             if (strlen($media_directory) < 0) {
                 $sc->status = 302;
                 $sc->message = 'file media penyimpanan belum ditentukan';
@@ -111,6 +132,7 @@ class Seme_Upload
             switch (strtolower($jenis)) {
                 case 'document':
                     if (!in_array($fileext, array("pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"))) {
+                        $sc->log = $fileext;
                         $sc->status = 303;
                         $sc->message = 'Invalid file extension, please try other ' . $jenis . ' file.';
                         return $sc;
@@ -214,7 +236,7 @@ class Seme_Upload
             $filename = $filename . "." . $fileext;
 
             //magic uploading wkwk
-            move_uploaded_file($_FILES[$keyname]['tmp_name'], $this->directory . $targetdir . DIRECTORY_SEPARATOR . $filename);
+            move_uploaded_file($fileTmpName, $this->directory . $targetdir . DIRECTORY_SEPARATOR . $filename);
 
 
             if (is_file($this->directory . $targetdir . DIRECTORY_SEPARATOR . $filename) && file_exists($this->directory . $targetdir . DIRECTORY_SEPARATOR . $filename)) {

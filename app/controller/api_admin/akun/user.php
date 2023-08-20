@@ -9,8 +9,32 @@ class User extends JI_Controller
 		$this->load('a_jabatan_concern');
 		$this->load('b_user_concern');
 		$this->load('b_user_alamat_concern');
+		$this->load('b_user_jabatan_concern');
 		$this->load("api_admin/a_jabatan_model", 'ajm');
 		$this->load("api_admin/b_user_model", 'bum');
+		$this->load("api_admin/b_user_jabatan_model", 'bujm');
+	}
+
+	public function __getJabatanBadge($jabatan)
+	{
+		switch ($jabatan) {
+			case 'Pembina':
+				$jabatan = '<span class="badge badge-sm bg-gradient-warning">' . $jabatan . '</span>';
+				break;
+			case 'Tim 12':
+				$jabatan = '<span class="badge badge-sm bg-gradient-success">Tim 12</span>';
+				break;
+			case 'Muttabi':
+				$jabatan = '<span class="badge badge-sm bg-gradient-danger">Muttabi</span>';
+				break;
+			case 'Santri':
+				$jabatan = '<span class="badge badge-sm bg-gradient-primary">' . $jabatan . '</span>';
+				break;
+			default:
+				$jabatan = '<span class="badge badge-sm bg-gradient-info">' . $jabatan . '</span>';
+				break;
+		}
+		return $jabatan;
 	}
 
 	/**
@@ -68,31 +92,14 @@ class User extends JI_Controller
 			}
 
 			if (isset($gd->utype)) {
-				switch ($gd->utype) {
-					case 'Pembina':
-						$gd->utype = '<span class="badge badge-sm bg-gradient-warning">' . $gd->utype . '</span>';
-						break;
-					case 'Tim 12':
-						$gd->utype = '<span class="badge badge-sm bg-gradient-success">Tim 12</span>';
-						break;
-					case 'muttabi':
-						$gd->utype = '<span class="badge badge-sm bg-gradient-danger">Tim 12</span>';
-						break;
-					case 'Tim Pengembangan Santri':
-						$gd->utype = '<span class="badge badge-sm bg-gradient-primary">Tim Pengembangan Santri</span>';
-						break;
-					case 'Tim TTQ':
-						$gd->utype = '<span class="badge badge-sm bg-gradient-primary">Tim Tahsin & Tahfidz Al-Qur\'an</span>';
-						break;
-					case 'Tim Kreatifitas':
-						$gd->utype = '<span class="badge badge-sm bg-gradient-primary">Tim Kreatifitas</span>';
-						break;
-					case 'Tim Ta\'lim Wa Ta\'allum':
-						$gd->utype = '<span class="badge badge-sm bg-gradient-primary">Tim Ta\'lim Wa Ta\'allum</span>';
-						break;
-					default:
-						$gd->utype = '<span class="badge badge-sm bg-gradient-info">' . $gd->utype . '</span>';
-						break;
+				$gd->utype = $this->__getJabatanBadge($gd->utype);
+			}
+
+			$jabatans = $this->bujm->getByUser($gd->id);
+			if (isset($jabatans[0])) {
+				$gd->utype = '';
+				foreach ($jabatans as $jb) {
+					$gd->utype .= " " . $this->__getJabatanBadge($jb->nama);
 				}
 			}
 		}
@@ -123,16 +130,30 @@ class User extends JI_Controller
 			die();
 		}
 		$this->bum->columns['password']->value = md5('mumtaz');
-		$jabatan = $this->ajm->getByName($_POST['utype']);
-		$this->bum->columns['a_jabatan_id']->value = $jabatan->id;
+		// $jabatan = $this->ajm->getByName($_POST['utype']);
+		// $this->bum->columns['a_jabatan_id']->value = $jabatan->id;
 
 		$res = $this->bum->save();
 		if ($res) {
+			if (isset($_POST['a_jabatan_ids']) && count($_POST['a_jabatan_ids'])) {
+				$dij = [];
+				foreach ($_POST['a_jabatan_ids'] as $k => $v) {
+					$dij[$k]['b_user_id'] = $res;
+					$dij[$k]['a_jabatan_id'] = $v;
+				}
+				$resJabatan = $this->bujm->setMass($dij);
+				if (!$resJabatan) {
+					$this->status = 901;
+					$this->message = API_ADMIN_ERROR_CODES[$this->status];
+					$this->__json_out($data);
+					die();
+				}
+			}
 			$this->lib("conumtext");
 			$this->status = 200;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
-			$token = $this->conumtext->genRand($type = "str", 9, 9);
-			$update_apikey = $this->bum->update($res, ['apikey' => $token]);
+			// $token = $this->conumtext->genRand($type = "str", 9, 9);
+			// $update_apikey = $this->bum->update($res, ['apikey' => $token]);
 		} else {
 			$this->status = 901;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -225,13 +246,28 @@ class User extends JI_Controller
 		$this->bum->columns['cdate']->value = $this->__($bum, 'cdate', 'NOW()');
 		// $this->bum->columns['bdate']->value = $this->__($bum, 'bdate', 'NOW()');
 		$this->bum->columns['is_deleted']->value = $this->__($bum, 'is_deleted', '0');
-		$jabatan = $this->ajm->getByName($_POST['utype']);
-		$this->bum->columns['a_jabatan_id']->value = $jabatan->id;
+		// $jabatan = $this->ajm->getByName($_POST['utype']);
+		// $this->bum->columns['a_jabatan_id']->value = $jabatan->id;
 
 		$res = $this->bum->save($id);
 		if ($res) {
 			$this->status = 200;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			if (isset($_POST['a_jabatan_ids']) && count($_POST['a_jabatan_ids'])) {
+				$resDeleteJabatan = $this->bujm->delByUserId($id);
+				$dij = [];
+				foreach ($_POST['a_jabatan_ids'] as $k => $v) {
+					$dij[$k]['b_user_id'] = $id;
+					$dij[$k]['a_jabatan_id'] = $v;
+				}
+				$resJabatan = $this->bujm->setMass($dij);
+				if (!$resJabatan) {
+					$this->status = 901;
+					$this->message = API_ADMIN_ERROR_CODES[$this->status];
+					$this->__json_out($data);
+					die();
+				}
+			}
 		} else {
 			$this->status = 901;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];

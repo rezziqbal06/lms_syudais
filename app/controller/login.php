@@ -11,8 +11,10 @@ class Login extends \JI_Controller
 		$this->setTheme('front');
 		$this->load("b_user_concern");
 		$this->load("b_user_module_concern");
+		$this->load("b_user_jabatan_concern");
 		$this->load("front/b_user_model", "bum");
 		$this->load("front/b_user_module_model", "bumm");
+		$this->load("front/b_user_jabatan_model", "bujm");
 	}
 
 	private function __passGen($password)
@@ -104,7 +106,14 @@ class Login extends \JI_Controller
 				$sess->user->menus->left = array();
 				$sess->user->modules = array();
 
-				$program = $this->bumm->getMenu("melihat", $sess->user->a_jabatan_id, $sess->user->id);
+				$jabatan = $this->bujm->getByUserId($sess->user->id);
+				$jabatan_ids = [];
+				if (isset($jabatan[0])) {
+					foreach ($jabatan as $k => $v) {
+						$jabatan_ids[] = $v->a_jabatan_id;
+					}
+				}
+				$program = $this->bumm->getMenu("melihat", $jabatan_ids, $sess->user->id);
 				$sess->user->program = $program;
 
 				//get modules

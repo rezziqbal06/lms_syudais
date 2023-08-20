@@ -1,3 +1,14 @@
+<style>
+	div::-webkit-scrollbar-track {
+		background-color: var(--background);
+	}
+
+	div::-webkit-scrollbar-thumb {
+		background-color: #babac0;
+		border-radius: 16px;
+		border: 5px solid var(--background);
+	}
+</style>
 <!-- modal option -->
 <div id="modal_option" class="modal fade " tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
@@ -44,55 +55,85 @@
 
 			<!-- Modal Body -->
 			<div class="modal-body">
-				<form action="" method="POST" id="fedit-profil">
+				<form action="" method="POST" id="ftambah_jadwal">
 					<div class="form-group row">
-						<div class="col-md-8">
+						<input type="hidden" id="ia_program_id" name="a_program_id" value="<?= $apm->id ?>">
+						<div class="col-md-4">
 							<label for="inama" class="control-label">Nama Kegiatan</label>
-							<input id="inama" type="text" name="nama" value="" class="form-control" required>
+							<input id="inama" type="text" name="nama" value="<?= $apm->nama ?>" class="form-control">
 						</div>
-						<div class="col-md-4">
-							<label for="islug" class="control-label">Slug</label>
-							<input id="islug" type="text" name="slug" value="" class="form-control" readonly required>
-						</div>
-						<div class="col-12">
+						<div class="col-md-8">
 							<label for="ideskripsi" class="control-label">Deskripsi</label>
-							<textarea type="text" id="ideskripsi" class="form-control" name="deskripsi" value="" required></textarea>
+							<textarea type="text" id="ideskripsi" class="form-control" name="deskripsi" value=""></textarea>
 						</div>
 						<div class="col-md-4">
-							<label for="inarasumber" class="control-label">Narasumber</label>
-							<input type="text" id="inarasumber" class="form-control" name="narasumber" value="" required>
+							<label for="ib_user_id_narasumber" class="control-label">Narasumber*</label>
+							<select type="text" id="ib_user_id_narasumber" class="form-control select2" style="width: 100% !important;" name="b_user_id_narasumber" value="" onchange="$('#inarasumber').val($(this).find('option:selected').attr('data-nama'))" required>
+								<option value="">-- pilih narasumber --</option>
+								<?php if (isset($bum[0])) : ?>
+									<?php foreach ($bum as $k => $v) : ?>
+										<option value="<?= $v->id ?>" data-nama="<?= $v->fnama ?>"><?= $v->fnama ?></option>
+									<?php endforeach ?>
+								<?php endif ?>
+							</select>
+							<input type="hidden" id="inarasumber" name="narasumber">
 						</div>
 						<div class="col-md-4">
-							<label for="isasaran" class="control-label">Sasaran</label>
-							<input type="text" id="isasaran" class="form-control" name="sasaran" value="" required>
+							<label for="ia_jabatan_id_sasaran" class="control-label">Sasaran*</label>
+							<select type="text" id="ia_jabatan_id_sasaran" class="form-control select2" style="width: 100% !important;" name="a_jabatan_id_sasaran" value="" onchange="$('#isasaran').val($(this).find('option:selected').attr('data-nama'))" required>
+								<option value="">-- pilih sasaran --</option>
+								<?php if (isset($ajm[0])) : ?>
+									<?php foreach ($ajm as $k => $v) : ?>
+										<option value="<?= $v->id ?>" data-nama="<?= $v->nama ?>"><?= $v->nama ?></option>
+									<?php endforeach ?>
+								<?php endif ?>
+							</select>
+							<input type="hidden" id="isasaran" name="sasaran">
 						</div>
 						<div class="col-md-4">
-							<label for="itempat" class="control-label">Tempat</label>
+							<label for="itempat" class="control-label">Tempat*</label>
 							<input type="text" id="itempat" class="form-control" name="tempat" placeholder="Ex: Masjid/Gedung/Rumah" value="" required>
 						</div>
-						<div class="row">
-							<div class="col-6">
-								<label for="isdate" class="control-label">Tanggal Mulai</label>
-								<input type="text" id="isdate" class="form-control datepicker" name="sdate" value="" required>
-							</div>
-							<div class="col-6">
-								<label for="iedate" class="control-label">Tanggal Akhir</label>
-								<input type="text" id="iedate" class="form-control datepicker" name="edate" value="">
-							</div>
-							<div class="col-6">
-								<label for="istime" class="control-label">Waktu Mulai</label>
-								<input type="text" id="istime" class="form-control timepicker" name="stime" value="" required>
-							</div>
-							<div class="col-6">
-								<label for="ietime" class="control-label">Waktu Akhir</label>
-								<input type="text" id="ietime" class="form-control timepicker" name="etime" value="" required>
-							</div>
-							<div class="col-12">
-								<label for="ialamat" class="control-label">Alamat</label>
-								<textarea type="text" id="ialamat" class="form-control" name="alamat" value="" required></textarea>
+						<div class="col-md-12 mt-3">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" value="1" id="iis_rutin" name="is_rutin">
+								<label class="form-check-label" for="iis_rutin">
+									Kegiatan Rutin
+								</label>
 							</div>
 						</div>
-
+						<div class="col-6 panel-rutin" style="display: none;">
+							<label for="ihari">Hari rutin*</label>
+							<select id="ihari" class="form-control select2" name="hari" style="width: 100%">
+								<option value="1">Setiap Senin</option>
+								<option value="2">Setiap Selasa</option>
+								<option value="3">Setiap Rabu</option>
+								<option value="4">Setiap Kamis</option>
+								<option value="5">Setiap Jum'at</option>
+								<option value="6">Setiap Sabtu</option>
+								<option value="7">Setiap Ahad</option>
+							</select>
+						</div>
+						<div class="col-6 panel-not-rutin">
+							<label for="isdate" class="control-label">Tanggal Mulai*</label>
+							<input type="text" id="isdate" autocomplete="off" class="form-control datepicker" name="sdate" value="" required>
+						</div>
+						<div class="col-6 panel-not-rutin">
+							<label for="iedate" class="control-label">Tanggal Akhir</label>
+							<input type="text" id="iedate" autocomplete="off" class="form-control datepicker" name="edate" value="">
+						</div>
+						<div class="col-6">
+							<label for="istime" class="control-label">Waktu Mulai*</label>
+							<input type="text" id="istime" autocomplete="off" class="form-control" placeholder="ex: 07:00" name="stime" value="" required>
+						</div>
+						<div class="col-6">
+							<label for="ietime" class="control-label">Waktu Akhir*</label>
+							<input type="text" id="ietime" autocomplete="off" class="form-control" placeholder="ex: 07:00" name="etime" value="" required>
+						</div>
+						<div class="col-12">
+							<label for="ialamat" class="control-label">Alamat</label>
+							<textarea type="text" id="ialamat" class="form-control" name="alamat" value=""></textarea>
+						</div>
 					</div>
 					<div class="row" style="margin-top: 1em; ">
 						<div class="col-md-12" style="border-top: 1px #afafaf dashed;">&nbsp;</div>
@@ -114,30 +155,91 @@
 
 			<!-- Modal Header -->
 			<div class="modal-header text-center">
-				<h2 class="modal-title">Tambah Jadwal</h2>
+				<h2 class="modal-title">Edit Jadwal</h2>
 			</div>
 			<!-- END Modal Header -->
 
 			<!-- Modal Body -->
 			<div class="modal-body">
-				<form action="" method="POST" id="fedit-profil">
-					<div class="row">
-						<div class="form-group">
-							<input type="hidden" name="id" id="ieid" value="<?= $ue->id ?? '' ?>">
-							<div class="col-md-12">
-								<label for="iefnama" class="control-label">Nama Lengkap</label>
-								<input id="iefnama" type="text" name="fnama" value="<?= $ue->fnama ?? '' ?>" class="form-control" required>
+				<form action="" method="POST" id="fedit_jadwal">
+					<div class="form-group row">
+						<input type="hidden" id="ieid" name="">
+						<input type="hidden" id="iea_program_id" name="a_program_id" value="<?= $apm->id ?>">
+						<div class="col-md-4">
+							<label for="ienama" class="control-label">Nama Kegiatan</label>
+							<input id="ienama" type="text" name="nama" value="<?= $apm->nama ?>" class="form-control">
+						</div>
+						<div class="col-md-8">
+							<label for="iedeskripsi" class="control-label">Deskripsi</label>
+							<textarea type="text" id="iedeskripsi" class="form-control" name="deskripsi" value=""></textarea>
+						</div>
+						<div class="col-md-4">
+							<label for="ieb_user_id_narasumber" class="control-label">Narasumber*</label>
+							<select type="text" id="ieb_user_id_narasumber" class="form-control select2" style="width: 100% !important;" name="b_user_id_narasumber" value="" onchange="$('#ienarasumber').val($(this).find('option:selected').attr('data-nama'))" required>
+								<option value="">-- pilih narasumber --</option>
+								<?php if (isset($bum[0])) : ?>
+									<?php foreach ($bum as $k => $v) : ?>
+										<option value="<?= $v->id ?>" data-nama="<?= $v->fnama ?>"><?= $v->fnama ?></option>
+									<?php endforeach ?>
+								<?php endif ?>
+							</select>
+							<input type="hidden" id="ienarasumber" name="narasumber">
+						</div>
+						<div class="col-md-4">
+							<label for="iea_jabatan_id_sasaran" class="control-label">Sasaran*</label>
+							<select type="text" id="iea_jabatan_id_sasaran" class="form-control select2" style="width: 100% !important;" name="a_jabatan_id_sasaran" value="" onchange="$('#iesasaran').val($(this).find('option:selected').attr('data-nama'))" required>
+								<option value="">-- pilih sasaran --</option>
+								<?php if (isset($ajm[0])) : ?>
+									<?php foreach ($ajm as $k => $v) : ?>
+										<option value="<?= $v->id ?>" data-nama="<?= $v->nama ?>"><?= $v->nama ?></option>
+									<?php endforeach ?>
+								<?php endif ?>
+							</select>
+							<input type="hidden" id="iesasaran" name="sasaran">
+						</div>
+						<div class="col-md-4">
+							<label for="ietempat" class="control-label">Tempat*</label>
+							<input type="text" id="ietempat" class="form-control" name="tempat" placeholder="Ex: Masjid/Gedung/Rumah" value="" required>
+						</div>
+						<div class="col-md-12 mt-3">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" value="1" id="ieis_rutin" name="is_rutin">
+								<label class="form-check-label" for="ieis_rutin">
+									Kegiatan Rutin
+								</label>
 							</div>
-							<div class="col-md-12">
-								<label for="ietelp" class="control-label">No. Telpon</label>
-								<input type="text" id="ietelp" class="form-control" name="telp" value="<?= $ue->telp ?? '' ?>" required>
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<label for="ieemail" class="control-label">Email</label>
-									<input type="text" id="ieemail" class="form-control" name="email" value="<?= $ue->email ?? '' ?>" required>
-								</div>
-							</div>
+						</div>
+						<div class="col-6 panel-rutin" style="display: none;">
+							<label for="iehari">Hari rutin*</label>
+							<select id="iehari" class="form-control select2" name="hari" style="width: 100%">
+								<option value="1">Setiap Senin</option>
+								<option value="2">Setiap Selasa</option>
+								<option value="3">Setiap Rabu</option>
+								<option value="4">Setiap Kamis</option>
+								<option value="5">Setiap Jum'at</option>
+								<option value="6">Setiap Sabtu</option>
+								<option value="7">Setiap Ahad</option>
+							</select>
+						</div>
+						<div class="col-6 panel-not-rutin">
+							<label for="iesdate" class="control-label">Tanggal Mulai*</label>
+							<input type="text" id="iesdate" autocomplete="off" class="form-control datepicker" name="sdate" value="" required>
+						</div>
+						<div class="col-6 panel-not-rutin">
+							<label for="ieedate" class="control-label">Tanggal Akhir</label>
+							<input type="text" id="ieedate" autocomplete="off" class="form-control datepicker" name="edate" value="">
+						</div>
+						<div class="col-6">
+							<label for="iestime" class="control-label">Waktu Mulai*</label>
+							<input type="text" id="iestime" autocomplete="off" class="form-control" placeholder="ex: 07:00" name="stime" value="" required>
+						</div>
+						<div class="col-6">
+							<label for="ieetime" class="control-label">Waktu Akhir*</label>
+							<input type="text" id="ieetime" autocomplete="off" class="form-control" placeholder="ex: 07:00" name="etime" value="" required>
+						</div>
+						<div class="col-12">
+							<label for="iealamat" class="control-label">Alamat</label>
+							<textarea type="text" id="iealamat" class="form-control" name="alamat" value=""></textarea>
 						</div>
 					</div>
 					<div class="row" style="margin-top: 1em; ">
@@ -148,6 +250,184 @@
 					</div>
 				</form>
 				<!-- END Modal Body -->
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- modal detail  -->
+<div id="modal_detail_jadwal" class="modal fade " role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header text-center">
+				<div class="row">
+					<div class="col-12">
+						<div class="btn-group float-end">
+							<?php if (isset($permissions['hapus_jadwal'])) : ?>
+								<button id="hapus_jadwal" class="btn bg-danger"><i class="fa fa-trash text-white"></i></button>
+							<?php endif ?>
+							<?php if (isset($permissions['update_jadwal'])) : ?>
+								<button id="edit_jadwal" class="btn bg-white"><i class="fa fa-pencil"></i></button>
+							<?php endif ?>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+					<div class="col-12">
+						<h2 id="dnama" class="modal-title">Detail Jadwal</h2>
+					</div>
+				</div>
+			</div>
+			<!-- END Modal Header -->
+
+			<!-- Modal Body -->
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12">
+						<small id="ddeskripsi"></small>
+					</div>
+					<div class="col-6 col-md-4">
+						<label class=""><img src="<?= base_url('media/user.svg') ?>" alt="clock" width="18px"><span style="color: #b7b7b7 !important;"> Narasumber</span></label>
+						<p><b class="ms-1" style="font-size:0.8rem !important;" id="dnarasumber"></b></p>
+					</div>
+					<div class="col-6 col-md-4">
+						<label class=""><img src="<?= base_url('media/users.svg') ?>" alt="clock" width="18px"><span style="color: #b7b7b7 !important;"> Sasaran</span></label>
+						<p><b class="ms-1" style="font-size:0.8rem !important;" id="dsasaran"></b></p>
+					</div>
+					<div class="col-6 col-md-4">
+						<label class=""><img src="<?= base_url('media/calendar.svg') ?>" alt="clock" width="18px"><span style="color: #b7b7b7 !important;"> Tanggal</span></label>
+						<p class="ms-1" style="font-size:0.8rem !important;"><b id="dsdate_text"></b> <b id="dedate_text"></b></p>
+					</div>
+					<div class="col-6 col-md-4">
+						<label class=""><img src="<?= base_url('media/clock.svg') ?>" alt="clock" width="18px"><span style="color: #b7b7b7 !important;"> Waktu</span></label>
+						<p class="ms-1" style="font-size:0.8rem !important;"><b id="dstime"></b> <b id="detime"></b></p>
+					</div>
+					<div class="col-12 col-md-4">
+						<label class=""><img src="<?= base_url('media/home.svg') ?>" alt="clock" width="18px"><span style="color: #b7b7b7 !important;"> Tempat</span></label>
+						<p class="ms-1" style="font-size:0.8rem !important;"><b id="dtempat"></b></p>
+					</div>
+				</div>
+				<?php if (isset($permissions['melihat_berita_acara'])) : ?>
+					<hr>
+					<p>Laporan</p>
+					<div class="d-grid gap-2 d-md-flex justify-content-end">
+						<?php if (isset($permissions['update_berita_acara'])) : ?>
+							<div class="col btn-block me-2">
+								<button class="btn btn-secondary" id="btn_buat_laporan">Buat</button>
+							</div>
+						<?php endif ?>
+						<div class="col btn-block ">
+							<button class="btn btn-primary" id="btn_lihat_laporan">Lihat</button>
+						</div>
+					</div>
+				<?php endif ?>
+
+				<div class=" row">
+					<div class="col-md-12 card bg-background shadow-none p-4 " style="height: 30rem;">
+						<input type="text" class="form-control mb-3" id="keyword" placeholder="cari nama">
+						<div class="row" id="panel_absen" style="overflow-y: scroll;">
+
+						</div>
+					</div>
+				</div>
+				<!-- END Modal Body -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- modal detail  -->
+<div id="modal_option_absen" class="modal fade " role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header text-center">
+				<h2 id="dnama" class="modal-title"></h2>
+
+			</div>
+			<!-- END Modal Header -->
+
+			<!-- Modal Body -->
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12">
+						<input type="text" class="form-control" placeholder="keterangan" id="catatan_absen">
+						<div class="row">
+							<div class="col-12 btn-group-vertical mt-2">
+								<button id="set_alpa" class="btn bg-danger text-white">alpa</button>
+								<button id="set_izin" class="btn bg-info text-white">izin</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- END Modal Body -->
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modal_buat_laporan" class="modal fade " role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-fullscreen">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalToggleLabel">Buat Laporan</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<!-- END Modal Header -->
+
+			<!-- Modal Body -->
+			<div class="modal-body">
+				<form action="" method="POST" id="flaporan">
+					<div class="row">
+						<input type="hidden" id="ila_program_id" name="a_program_id" value="<?= $apm->id ?>">
+						<div class="col-12">
+							<label for="ideskripsi" class="control-label">Deskripsi</label>
+							<textarea type="text" id="ildeskripsi" class="form-control" name="deskripsi" value="" rows="5"></textarea>
+						</div>
+						<div class="col-12">
+							<label for="">Lampiran</label>
+							<div id="panel_attach" class="row p-2">
+
+							</div>
+							<button id="btn_tambah_lampiran" class="btn btn-info float-end me-1"><i class="fa fa-plus"></i></button>
+						</div>
+					</div>
+
+					<button class="btn btn-success btn-block" type="submit">Laporkan</button>
+				</form>
+				<!-- END Modal Body -->
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="modal_detail" class="modal fade " role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-fullscreen">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalToggleLabel">Dokumen</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<!-- END Modal Header -->
+
+			<!-- Modal Body -->
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12">
+						<img src="" alt="" class="img-fluid rounded" id="panel_image">
+						<iframe src="" height="700" frameborder="0" class="w-100" id="panel_dokumen"></iframe>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

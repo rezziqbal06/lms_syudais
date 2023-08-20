@@ -5,6 +5,32 @@
 		background-position: cover;
 		padding: 1rem !important;
 	}
+
+	.bar {
+		background-color: var(--primary);
+		border-radius: 8px;
+		width: 5px;
+		height: 100%;
+	}
+
+	.bar-active {
+		background-color: var(--accent);
+		border-radius: 8px;
+		width: 5px;
+		height: 100%;
+	}
+
+	.text-muted {
+		color: gainsboro;
+	}
+
+	.card-lampiran {
+		border: 1px solid #dedede;
+		background-color: #f3f3f3;
+		padding: 3px;
+		text-align: center;
+		border-radius: 8px;
+	}
 </style>
 <section>
 	<div class="row mt-3 mt-md-5">
@@ -28,21 +54,40 @@
 				<div class="card-header">
 					Jadwal
 					<?php if (isset($permissions['update_jadwal'])) : ?>
-						<button class="btn btn-info float-end"><i class="fa fa-plus"></i></button>
+						<button id="tambah_jadwal" class="btn btn-info float-end"><i class="fa fa-plus"></i></button>
 					<?php endif ?>
 				</div>
 				<div class="card-body">
 					<ul class="nav nav-tabs" id="myTab" role="tablist">
 						<li class="nav-item" role="presentation">
-							<button class="nav-link active" id="today-tab" data-bs-toggle="tab" data-bs-target="#today-tab-pane" type="button" role="tab" aria-controls="today-tab-pane" aria-selected="true">Hari Ini</button>
+							<button class="nav-link active" id="today-tab" data-bs-toggle="tab" data-type="today" data-bs-target="#today-tab-pane" type="button" role="tab" aria-controls="today-tab-pane" aria-selected="true">Hari Ini</button>
 						</li>
 						<li class="nav-item" role="presentation">
-							<button class="nav-link" id="week-tab" data-bs-toggle="tab" data-bs-target="#week-tab-pane" type="button" role="tab" aria-controls="week-tab-pane" aria-selected="false">Pekan Ini</button>
+							<button class="nav-link" id="week-tab" data-bs-toggle="tab" data-type="week" data-bs-target="#week-tab-pane" type="button" role="tab" aria-controls="week-tab-pane" aria-selected="false">Akan Datang</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link" id="history-tab" data-bs-toggle="tab" data-type="history" data-bs-target="#history-tab-pane" type="button" role="tab" aria-controls="history-tab-pane" aria-selected="false">Histori</button>
 						</li>
 					</ul>
 					<div class="tab-content" id="myTabContent">
-						<div class="tab-pane fade show active" id="today-tab-pane" role="tabpanel" aria-labelledby="today-tab" tabindex="0">...</div>
-						<div class="tab-pane fade" id="week-tab-pane" role="tabpanel" aria-labelledby="week-tab" tabindex="0">...</div>
+						<div class="tab-pane fade show active" id="today-tab-pane" role="tabpanel" aria-labelledby="today-tab" tabindex="0">
+							<div id="panel_jadwal_today" class="row p-3"></div>
+						</div>
+						<div class="tab-pane fade" id="week-tab-pane" role="tabpanel" aria-labelledby="week-tab" tabindex="0">
+							<div id="panel_jadwal_week" class="row p-3"></div>
+						</div>
+						<div class="tab-pane fade" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab" tabindex="0">
+							<div class="row mt-3">
+								<div class="col">
+									<input type="text" id="sdate_laporan" autocomplete="off" placeholder="tanggal" class="form-control datepicker" value="">
+								</div>
+								<div class="col">
+									<input type="text" class="form-control mb-3" id="keyword_laporan" placeholder="cari laporan">
+								</div>
+							</div>
+
+							<div id="panel_jadwal_history" class=""></div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -50,12 +95,15 @@
 		<div class="col-md-5 mb-4">
 			<div class="card">
 				<div class="card-header">
-					Absensi
+					Tugas
+					<?php if (isset($permissions['update_tugas'])) : ?>
+						<button id="tambah_jadwal" class="btn btn-info float-end"><i class="fa fa-plus"></i></button>
+					<?php endif ?>
 				</div>
 				<div class="card-body">
 					<?php if (isset($absensi[0])) : ?>
 					<?php else : ?>
-						<p>Silakan pilih kegiatan</p>
+						<p>Tidak ada tugas</p>
 					<?php endif ?>
 				</div>
 			</div>

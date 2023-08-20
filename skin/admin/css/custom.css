@@ -31,6 +31,14 @@ h1, h2, h3, h4, h5, h6{
     background-color: var(--secondary) !important;
 }
 
+.datepicker {
+    z-index: 9999 !important;
+}
+
+.bootstrap-timepicker-widget {
+    z-index: 9999 !important;
+}
+
 .bg-background{
     background-color: var(--background) !important;
 }

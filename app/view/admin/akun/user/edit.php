@@ -38,16 +38,22 @@
 						<label for="iefnama" class="control-label">Nama Lengkap*</label>
 						<input type="text" name="fnama" id="iefnama" class="form-control" value="<?= $bum->fnama ?? '' ?>" placeholder="Nama" required>
 					</div>
-					<div class="col-md-6">
-						<label for="ieutype" class="control-label">User Type</label>
-						<select name="utype" id="ieutype" class="form-control select2" required>
-							<option value="">-- pilih jabatan --</option>
-							<?php if (isset($jabatans) && count($jabatans)) { ?>
-								<?php foreach ($jabatans as $jb) { ?>
-									<option value="<?= $jb->nama ?>" <?= isset($bum->utype) && $bum->utype == $jb->nama ? 'selected' : '' ?>><?= $jb->nama ?></option>
+					<div class="col-md-12">
+						<label for="iutype" class="control-label">Posisi/Jabatan/Tingkat</label>
+						<?php if (isset($jabatans) && count($jabatans)) { ?>
+							<div class="row">
+								<?php foreach ($jabatans as $v) { ?>
+									<div class="col">
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox" value="<?= $v->id ?>" name="a_jabatan_ids[]" id="ia_jabatan_ids<?= $v->id ?>" data-id="<?= $v->id ?>" <?= isset($bujm["$v->id"]) ? 'checked' : '' ?>>
+											<label class="form-check-label" for="ia_jabatan_ids<?= $v->id ?>">
+												<?= $v->nama ?>
+											</label>
+										</div>
+									</div>
 								<?php } ?>
-							<?php } ?>
-						</select>
+							</div>
+						<?php } ?>
 					</div>
 				</div>
 
