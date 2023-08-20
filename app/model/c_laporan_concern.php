@@ -18,13 +18,16 @@ class C_Laporan_Concern extends \JI_Model
     public $tbl_as = 'cl';
     public $tbl2 = 'b_jadwal_kegiatan';
     public $tbl2_as = 'bjk';
-    // public $tbl3 = 'a_company';
-    // public $tbl3_as = 'ac';
+    public $tbl3 = 'b_user';
+    public $tbl3_as = 'bu';
+    public $tbl4 = 'b_user';
+    public $tbl4_as = 'bu2';
 
     const COLUMNS = [
         'b_jadwal_kegiatan_id',
         'b_user_id',
         'deskripsi',
+        'attach',
         'cdate',
         'is_active',
         'is_deleted'
@@ -32,6 +35,7 @@ class C_Laporan_Concern extends \JI_Model
     const DEFAULTS = [
         null,
         null,
+        '',
         '',
         '',
         1,

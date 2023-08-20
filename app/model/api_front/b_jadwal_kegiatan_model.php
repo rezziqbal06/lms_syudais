@@ -13,8 +13,8 @@ register_namespace(__NAMESPACE__);
  */
 class B_Jadwal_Kegiatan_Model extends \Model\B_Jadwal_Kegiatan_Concern
 {
-  public $tbl2 = 'a_jabatan';
-  public $tbl2_as = 'j';
+  public $tbl2 = 'c_laporan';
+  public $tbl2_as = 'cl';
   public function __construct()
   {
     parent::__construct();
@@ -271,8 +271,12 @@ class B_Jadwal_Kegiatan_Model extends \Model\B_Jadwal_Kegiatan_Concern
 
   public function getAll($a_program_id, $hari = 0, $sdate = "", $edate = "")
   {
-    $this->db->where('is_deleted', $this->db->esc(0));
-    $this->db->where('a_program_id', $a_program_id);
+    $this->db->select_as("$this->tbl_as.*, $this->tbl_as.id", 'id', 0);
+    $this->db->select_as("COALESCE($this->tbl2_as.id, 0)", 'laporan_id', 0);
+    $this->db->from($this->tbl, $this->tbl_as);
+    $this->db->join($this->tbl2, $this->tbl2_as, 'b_jadwal_kegiatan_id', $this->tbl_as, 'id');
+    $this->db->where($this->tbl_as . '.is_deleted', $this->db->esc(0));
+    $this->db->where($this->tbl_as . '.a_program_id', $a_program_id);
     if ($hari) {
       $this->db->where('hari', $hari, "OR");
       if (strlen($sdate)) $this->db->where_as("DATE($this->tbl_as.sdate)", 'DATE("' . $sdate . '")', "AND");
@@ -280,7 +284,7 @@ class B_Jadwal_Kegiatan_Model extends \Model\B_Jadwal_Kegiatan_Concern
       $this->db->where("is_rutin", 1, "OR");
       $this->db->between("DATE($this->tbl_as.sdate)", 'DATE("' . $sdate . '")', 'DATE("' . $edate . '")');
     }
-    $this->db->order_by('hari', 'asc')->order_by('sdate', 'asc')->order_by('stime', 'asc');
+    $this->db->order_by('hari', 'asc')->order_by($this->tbl_as . '.sdate', 'asc')->order_by($this->tbl_as . '.stime', 'asc');
     return $this->db->get('', 0);
   }
 }

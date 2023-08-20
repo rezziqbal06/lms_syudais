@@ -1,12 +1,12 @@
 <style>
 	div::-webkit-scrollbar-track {
-		background-color: var(--primary);
+		background-color: var(--background);
 	}
 
 	div::-webkit-scrollbar-thumb {
 		background-color: #babac0;
 		border-radius: 16px;
-		border: 5px solid var(--primary);
+		border: 5px solid var(--background);
 	}
 </style>
 <!-- modal option -->
@@ -254,6 +254,7 @@
 		</div>
 	</div>
 </div>
+
 <!-- modal detail  -->
 <div id="modal_detail_jadwal" class="modal fade " role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
@@ -261,15 +262,21 @@
 
 			<!-- Modal Header -->
 			<div class="modal-header text-center">
-				<h2 id="dnama" class="modal-title">Detail Jadwal</h2>
-				<div class="btn-group float-end">
-
-					<?php if (isset($permissions['update_jadwal'])) : ?>
-						<button id="edit_jadwal" class="btn bg-white"><i class="fa fa-pencil"></i></button>
-					<?php endif ?>
-					<?php if (isset($permissions['hapus_jadwal'])) : ?>
-						<button id="hapus_jadwal" class="btn bg-danger"><i class="fa fa-trash text-white"></i></button>
-					<?php endif ?>
+				<div class="row">
+					<div class="col-12">
+						<div class="btn-group float-end">
+							<?php if (isset($permissions['hapus_jadwal'])) : ?>
+								<button id="hapus_jadwal" class="btn bg-danger"><i class="fa fa-trash text-white"></i></button>
+							<?php endif ?>
+							<?php if (isset($permissions['update_jadwal'])) : ?>
+								<button id="edit_jadwal" class="btn bg-white"><i class="fa fa-pencil"></i></button>
+							<?php endif ?>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+					<div class="col-12">
+						<h2 id="dnama" class="modal-title">Detail Jadwal</h2>
+					</div>
 				</div>
 			</div>
 			<!-- END Modal Header -->
@@ -301,14 +308,126 @@
 						<p class="ms-1" style="font-size:0.8rem !important;"><b id="dtempat"></b></p>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-md-12 card bg-primary p-5 " style="height: 30rem;">
+				<?php if (isset($permissions['melihat_berita_acara'])) : ?>
+					<hr>
+					<p>Laporan</p>
+					<div class="d-grid gap-2 d-md-flex justify-content-end">
+						<?php if (isset($permissions['update_berita_acara'])) : ?>
+							<div class="col btn-block me-2">
+								<button class="btn btn-secondary" id="btn_buat_laporan">Buat</button>
+							</div>
+						<?php endif ?>
+						<div class="col btn-block ">
+							<button class="btn btn-primary" id="btn_lihat_laporan">Lihat</button>
+						</div>
+					</div>
+				<?php endif ?>
+
+				<div class=" row">
+					<div class="col-md-12 card bg-background shadow-none p-4 " style="height: 30rem;">
+						<input type="text" class="form-control mb-3" id="keyword" placeholder="cari nama">
 						<div class="row" id="panel_absen" style="overflow-y: scroll;">
 
 						</div>
 					</div>
 				</div>
 				<!-- END Modal Body -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- modal detail  -->
+<div id="modal_option_absen" class="modal fade " role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header text-center">
+				<h2 id="dnama" class="modal-title"></h2>
+
+			</div>
+			<!-- END Modal Header -->
+
+			<!-- Modal Body -->
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12">
+						<input type="text" class="form-control" placeholder="keterangan" id="catatan_absen">
+						<div class="row">
+							<div class="col-12 btn-group-vertical mt-2">
+								<button id="set_alpa" class="btn bg-danger text-white">alpa</button>
+								<button id="set_izin" class="btn bg-info text-white">izin</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- END Modal Body -->
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modal_buat_laporan" class="modal fade " role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-fullscreen">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalToggleLabel">Buat Laporan</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<!-- END Modal Header -->
+
+			<!-- Modal Body -->
+			<div class="modal-body">
+				<form action="" method="POST" id="flaporan">
+					<div class="row">
+						<input type="hidden" id="ila_program_id" name="a_program_id" value="<?= $apm->id ?>">
+						<div class="col-12">
+							<label for="ideskripsi" class="control-label">Deskripsi</label>
+							<textarea type="text" id="ildeskripsi" class="form-control" name="deskripsi" value="" rows="5"></textarea>
+						</div>
+						<div class="col-12">
+							<label for="">Lampiran</label>
+							<div id="panel_attach" class="row p-2">
+
+							</div>
+							<button id="btn_tambah_lampiran" class="btn btn-info float-end me-1"><i class="fa fa-plus"></i></button>
+						</div>
+					</div>
+
+					<button class="btn btn-success btn-block" type="submit">Laporkan</button>
+				</form>
+				<!-- END Modal Body -->
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="modal_detail" class="modal fade " role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-fullscreen">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalToggleLabel">Dokumen</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<!-- END Modal Header -->
+
+			<!-- Modal Body -->
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12">
+						<img src="" alt="" class="img-fluid rounded" id="panel_image">
+						<iframe src="" height="700" frameborder="0" class="w-100" id="panel_dokumen"></iframe>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

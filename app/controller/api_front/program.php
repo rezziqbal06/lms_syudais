@@ -17,6 +17,39 @@ class Program extends JI_Controller
 		$this->load("api_front/b_jadwal_kegiatan_model", 'bjkm');
 		$this->load("api_front/c_laporan_model", 'clm');
 		$this->load("api_front/d_kehadiran_model", 'dkm');
+		$this->lib("seme_upload", 'se');
+	}
+
+	public function __getJadwalKegiatan($id, $type)
+	{
+		$data = array();
+		$bjkm = $this->bjkm->id($id);
+		if (!isset($bjkm->id)) {
+			$this->status = 445;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+			die();
+		}
+		if (!isset($bjkm->sdate) || $bjkm->sdate == '0000-00-00 00:00:00') $bjkm->sdate = "";
+		if (!isset($bjkm->edate) || $bjkm->edate == '0000-00-00 00:00:00') $bjkm->edate = "";
+		if ($bjkm->is_rutin) {
+			if ($type == 'today') {
+				$bjkm->sdate = date("Y-m-d");
+				$bjkm->sdate_ori = date("Y-m-d");
+				$bjkm->sdate_text = $this->__dateIndonesia($bjkm->sdate);
+			} else {
+				$bjkm->sdate = $this->__convertDayToDateString($bjkm->hari);
+				$bjkm->sdate_ori = date("Y-m-d", strtotime($bjkm->sdate));
+				if (strlen($bjkm->sdate)) $bjkm->sdate_text = $this->__dateIndonesia($bjkm->sdate);
+			}
+		} else {
+			$bjkm->sdate_ori = date("Y-m-d", strtotime($bjkm->sdate));
+			if (strlen($bjkm->sdate)) $bjkm->sdate_text = $this->__dateIndonesia($bjkm->sdate);
+			if (strlen($bjkm->edate)) $bjkm->edate_text = $this->__dateIndonesia($bjkm->edate);
+		}
+		if (isset($bjkm->stime)) $bjkm->stime = date('H:i', strtotime($bjkm->stime));
+		if (isset($bjkm->etime)) $bjkm->etime = date('H:i', strtotime($bjkm->etime));
+		return $bjkm;
 	}
 
 	/**
@@ -648,12 +681,22 @@ class Program extends JI_Controller
 
 	function __convertDayToDateString($dayNumber)
 	{
-		$today = new DateTime();
-		$currentDayOfWeek = (int)$today->format('N'); // 1 for Monday, 2 for Tuesday, ..., 7 for Sunday
-		$difference = $dayNumber - $currentDayOfWeek;
-		$date = $today->add(new DateInterval("P{$difference}D"));
-		return $date->format('Y-m-d');
+		try {
+			$today = new DateTime();
+			$currentDayOfWeek = (int)$today->format('N'); // 1 for Monday, 2 for Tuesday, ..., 7 for Sunday
+			if ($dayNumber >= $currentDayOfWeek) {
+				$difference = $dayNumber - $currentDayOfWeek;
+			} else {
+				$difference = 7 - ($currentDayOfWeek - $dayNumber);
+			}
+			$date = $today->add(new DateInterval("P{$difference}D"));
+			return $date->format('Y-m-d');
+		} catch (Exception $e) {
+			return "";
+		}
 	}
+
+
 
 	public function get_jadwal($id)
 	{
@@ -691,18 +734,24 @@ class Program extends JI_Controller
 			$edate = $endOfWeek->format('Y-m-d');
 			$jadwal = $this->bjkm->getAll($apm->id, 0, $sdate, $edate);
 		}
+		usort($jadwal, function ($a, $b) {
+			return strcmp($a->sdate, $b->sdate);
+		});
 		foreach ($jadwal as $j) {
 			if (!isset($j->sdate) || $j->sdate == '0000-00-00 00:00:00') $j->sdate = "";
 			if (!isset($j->edate) || $j->edate == '0000-00-00 00:00:00') $j->edate = "";
+			$j->sdate_ori = date("Y-m-d", strtotime($j->sdate));
 			if ($j->is_rutin) {
 				if ($type == 'today') {
 					$j->sdate = $this->__dateIndonesia(date("Y-m-d"));
+					$j->sdate_ori = date("Y-m-d");
 				} else {
 					$j->sdate = $this->__convertDayToDateString($j->hari);
+					$j->sdate_ori = date("Y-m-d", strtotime($j->sdate));
 					if (strlen($j->sdate)) $j->sdate = $this->__dateIndonesia($j->sdate);
 				}
 			} else {
-
+				$j->sdate_ori = date("Y-m-d", strtotime($j->sdate));
 				if (strlen($j->sdate)) $j->sdate = $this->__dateIndonesia($j->sdate);
 				if (strlen($j->edate)) $j->edate = $this->__dateIndonesia($j->edate);
 			}
@@ -728,37 +777,18 @@ class Program extends JI_Controller
 			die();
 		}
 		$type = $this->input->request('type', 'today');
-		$bjkm = $this->bjkm->id($id);
-		if (!isset($bjkm->id)) {
-			$this->status = 445;
-			$this->message = API_ADMIN_ERROR_CODES[$this->status];
-			$this->__json_out($data);
-			die();
-		}
-		if (!isset($bjkm->sdate) || $bjkm->sdate == '0000-00-00 00:00:00') $bjkm->sdate = "";
-		if (!isset($bjkm->edate) || $bjkm->edate == '0000-00-00 00:00:00') $bjkm->edate = "";
-		if ($bjkm->is_rutin) {
-			if ($type == 'today') {
-				$bjkm->sdate_text = $this->__dateIndonesia(date("Y-m-d"));
-			} else {
-				$bjkm->sdate_text = $this->__convertDayToDateString($bjkm->hari);
-				if (strlen($bjkm->sdate)) $bjkm->sdate_text = $this->__dateIndonesia($bjkm->sdate);
-			}
-		} else {
-			if (strlen($bjkm->sdate)) $bjkm->sdate_text = $this->__dateIndonesia($bjkm->sdate);
-			if (strlen($bjkm->edate)) $bjkm->edate_text = $this->__dateIndonesia($bjkm->edate);
-		}
-		if (isset($bjkm->stime)) $bjkm->stime = date('H:i', strtotime($bjkm->stime));
-		if (isset($bjkm->etime)) $bjkm->etime = date('H:i', strtotime($bjkm->etime));
+		$bjkm = $this->__getJadwalKegiatan($id, $type);
 		$data['detail'] = $bjkm;
 
 		$keyword = $this->input->request('keyword', '');
-		$sdate = $this->input->request('sdate', '');
+		$sdate = $this->input->request('sdate', $bjkm->sdate);
+		$laporan_id = $this->input->request('laporan_id', '');
+		if (strlen($laporan_id)) {
+			$clm = $this->clm->id($laporan_id);
+			if (isset($clm->cdate)) $sdate = $clm->cdate;
+		}
 
-		$clm = $this->clm->getByJadwal($bjkm->id);
-		$laporan_id = $clm->id ?? 0;
-
-		$absen = $this->bum->getAllAbsen($keyword, $sdate, $laporan_id, "kegiatan");
+		$absen = $this->bum->getAllAbsen($keyword, $sdate, $bjkm->id, "kegiatan");
 		$data['absen'] = $absen;
 
 		$this->status = 200;
@@ -800,8 +830,17 @@ class Program extends JI_Controller
 			die();
 		}
 
+		$type = $this->input->request('type', 'today');
+		$bjkm = $this->__getJadwalKegiatan($id_kegiatan, $type);
+
 		$hariini = date("Y-m-d");
 		$jam_scan = strtotime(date("Y-m-d H:m:i"));
+		if ($hariini != $bjkm->sdate) {
+			$this->status = 301;
+			$this->message = "Tidak bisa mengisi absen di luar jadwal";
+			$this->__json_out($data);
+			die();
+		}
 
 		$sia = $this->input->post("sia");
 		if (!isset($sia) || strlen($sia) <= 0) $sia = 'hadir';
@@ -871,5 +910,99 @@ class Program extends JI_Controller
 			$data['error_message'] = "";
 		}
 		$this->__json_out($data);
+	}
+
+	public function get_histori($id)
+	{
+		$d = $this->__init();
+		$data = array();
+		if (!$this->user_login) {
+			$this->status = 400;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			header("HTTP/1.0 400 Harus login");
+			$this->__json_out($data);
+			die();
+		}
+		$sdate = $this->input->request('sdate', '');
+		$edate = $this->input->request('edate', '');
+		$keyword = $this->input->request('keyword', '');
+		$apm = $this->apm->id($id);
+		if (!isset($apm->id)) {
+			$this->status = 445;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+			die();
+		}
+
+		$history = $this->clm->getAll($apm->id, $sdate, $edate, $keyword);
+
+		foreach ($history as $j) {
+			if (!isset($j->sdate) || $j->sdate == '0000-00-00 00:00:00') $j->sdate = "";
+			if (!isset($j->edate) || $j->edate == '0000-00-00 00:00:00') $j->edate = "";
+			if (!isset($j->cdate) || $j->cdate == '0000-00-00 00:00:00') $j->cdate = "";
+			$j->sdate_ori = date("Y-m-d", strtotime($j->cdate));
+			if (strlen($j->sdate)) $j->sdate = $this->__dateIndonesia($j->sdate);
+			if (strlen($j->edate)) $j->edate = $this->__dateIndonesia($j->edate);
+			if (strlen($j->cdate)) $j->cdate = $this->__dateIndonesia($j->cdate);
+			if (isset($j->stime)) $j->stime = date('H:i', strtotime($j->stime));
+			if (isset($j->etime)) $j->etime = date('H:i', strtotime($j->etime));
+		}
+		$data = $history;
+
+		$this->status = 200;
+		$this->message = API_ADMIN_ERROR_CODES[$this->status];
+		$this->__json_out($data);
+	}
+
+	public function tambah_laporan($id)
+	{
+		$d = $this->__init();
+		$data = array();
+		if (!$this->user_login) {
+			$this->status = 400;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			header("HTTP/1.0 400 Harus login");
+			$this->__json_out($data);
+			die();
+		}
+		$bjkm = $this->bjkm->id($id);
+		if (!isset($bjkm->id)) {
+			$this->status = 445;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+			die();
+		}
+
+		$di = [];
+		$di['b_jadwal_kegiatan_id'] = $bjkm->id;
+		$di['b_user_id'] = $d['sess']->user->id;
+		$di['deskripsi'] = $this->input->post('deskripsi') ?? '';
+		$di['cdate'] = 'NOW()';
+
+		$attach = [];
+		$extension = $this->input->post('extension');
+		if (isset($extension) && is_array($extension) && count($extension)) {
+			foreach ($extension as $k => $v) {
+				$resUpload = $this->se->upload_file('lampiran', 'laporan', $id, $k, $v);
+				if ($resUpload->status == 200) {
+					$attach[] = $resUpload->file;
+				} else {
+					dd($resUpload);
+				}
+			}
+		}
+
+		$di['attach'] = json_encode($attach);
+
+		$res = $this->clm->set($di);
+		if ($res) {
+			$this->status = 200;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+		} else {
+			$this->status = 900;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+		}
 	}
 }
