@@ -53,7 +53,7 @@ $("#form-login").on("submit",function(evt){
 			$("#icon-submit").removeClass("fa-circle-o-notch");
 			$("#icon-submit").removeClass("fa-spin");
 			NProgress.done();
-			gritter("<h4>Gagal</h4><p>"+dt.message+"</p>",'danger');
+			gritter("<h4>Gagal</h4><p>"+dt.message+"</p>",'warning');
 			setTimeout(function(){
 				$("#bsubmit").removeClass("fa-spin");
 				if(login_try>2){
@@ -68,7 +68,7 @@ $("#form-login").on("submit",function(evt){
 		$("#icon-submit").addClass("fa-chevron-right");
 		$("#icon-submit").removeClass("fa-circle-o-notch");
 		$("#icon-submit").removeClass("fa-spin");
-		gritter("<h4>Error</h4><p>tidak dapat login sekarang, silahkan coba lagi nanti</p>",'warning');
+		gritter("<h4>Error</h4><p>tidak dapat login sekarang, silahkan coba lagi nanti</p>",'danger');
 		NProgress.done();
 	});
 });
