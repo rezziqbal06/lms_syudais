@@ -18,10 +18,10 @@ class C_Laporan_Model extends \Model\C_Laporan_Concern
     $this->point_of_view = 'front';
   }
 
-  private function filters($b_jadwal_kegiatan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
+  private function filters($a_program_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
   {
-    if (strlen($b_jadwal_kegiatan_id)) {
-      $this->db->where_as("$this->tbl_as.b_jadwal_kegiatan_id", $this->db->esc($b_jadwal_kegiatan_id));
+    if (strlen($a_program_id)) {
+      $this->db->where_as("$this->tbl5_as.id", $this->db->esc($a_program_id));
     }
     if (strlen($sdate) == 10 && strlen($edate) == 10) {
       $this->db->between("DATE($this->tbl2_as.cdate)", 'DATE("' . $sdate . '")', 'DATE("' . $edate . '")');
@@ -46,6 +46,7 @@ class C_Laporan_Model extends \Model\C_Laporan_Concern
     $this->db->join($this->tbl2, $this->tbl2_as, 'id', $this->tbl_as, 'b_jadwal_kegiatan_id', 'left');
     $this->db->join($this->tbl3, $this->tbl3_as, 'id', $this->tbl2_as, 'b_user_id', 'left');
     $this->db->join($this->tbl4, $this->tbl4_as, 'id', $this->tbl_as, 'b_user_id', 'left');
+    $this->db->join($this->tbl5, $this->tbl5_as, 'id', $this->tbl2_as, 'a_program_id', 'left');
     return $this;
   }
 
@@ -139,7 +140,14 @@ class C_Laporan_Model extends \Model\C_Laporan_Concern
     return $this->db->get_first($this->tbl);
   }
 
-  public function getAll($b_jadwal_kegiatan_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
+  public function getByJadwalIdAndDate($id, $sdate)
+  {
+    if (strlen($sdate)) $this->db->where_as("DATE(cdate)", 'DATE("' . $sdate . '")', "AND");
+    $this->db->where('b_jadwal_kegiatan_id', $id);
+    return $this->db->get_first($this->tbl, 0);
+  }
+
+  public function getAll($a_program_id = '', $sdate = '', $edate = '', $keyword = '', $is_active = '')
   {
     $this->db->select_as("$this->tbl_as.*, $this->tbl_as.id", "id", 0);
     $this->db->select_as("$this->tbl2_as.id", "jadwal_id", 0);
@@ -150,7 +158,7 @@ class C_Laporan_Model extends \Model\C_Laporan_Concern
     $this->db->select_as("$this->tbl4_as.fnama", "pelapor", 0);
     $this->db->from($this->tbl, $this->tbl_as);
     $this->join_company();
-    $this->filters($b_jadwal_kegiatan_id, $sdate, $edate, $keyword, $is_active)->scoped();
+    $this->filters($a_program_id, $sdate, $edate, $keyword, $is_active)->scoped();
     $d = $this->db->get("", 0);
     return $d;
   }

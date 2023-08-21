@@ -49,6 +49,8 @@ class Program extends JI_Controller
 		}
 		if (isset($bjkm->stime)) $bjkm->stime = date('H:i', strtotime($bjkm->stime));
 		if (isset($bjkm->etime)) $bjkm->etime = date('H:i', strtotime($bjkm->etime));
+		if (isset($bjkm->laporan_id)) $bjkm->laporan_id = (int) $bjkm->laporan_id;
+
 		return $bjkm;
 	}
 
@@ -757,6 +759,9 @@ class Program extends JI_Controller
 			}
 			if (isset($j->stime)) $j->stime = date('H:i', strtotime($j->stime));
 			if (isset($j->etime)) $j->etime = date('H:i', strtotime($j->etime));
+			$laporan = $this->clm->getByJadwalIdAndDate($j->id, $j->sdate_ori);
+			if (isset($laporan->id)) $j->laporan_id = $laporan->id;
+			if (isset($j->laporan_id)) $j->laporan_id = (int) $j->laporan_id;
 		}
 		$data = $jadwal;
 
@@ -786,6 +791,22 @@ class Program extends JI_Controller
 		if (strlen($laporan_id)) {
 			$clm = $this->clm->id($laporan_id);
 			if (isset($clm->cdate)) $sdate = $clm->cdate;
+			$clm->attach = json_decode($clm->attach);
+			$extension = [];
+			foreach ($clm->attach as $k => $v) {
+				$clm->attach[$k] = base_url($v);
+				if (stripos($v, '.jpg') !== false || stripos($v, '.jpeg') !== false || stripos($v, '.png') !== false || stripos($v, '.webp') !== false) {
+					$extension[] = 'image';
+				} else if (stripos($v, '.doc') !== false) {
+					$extension[] = 'doc';
+				} else if (stripos($v, '.xls') !== false) {
+					$extension[] = 'xls';
+				} else {
+					$extension[] = 'pdf';
+				}
+			}
+			$clm->extension = $extension;
+			$data['laporan'] = $clm;
 		}
 
 		$absen = $this->bum->getAllAbsen($keyword, $sdate, $bjkm->id, "kegiatan");

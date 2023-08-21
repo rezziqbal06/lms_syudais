@@ -22,6 +22,8 @@ class C_Laporan_Concern extends \JI_Model
     public $tbl3_as = 'bu';
     public $tbl4 = 'b_user';
     public $tbl4_as = 'bu2';
+    public $tbl5 = 'a_program';
+    public $tbl5_as = 'ap';
 
     const COLUMNS = [
         'b_jadwal_kegiatan_id',

@@ -217,14 +217,14 @@ $("#ieis_rutin").on('change', function(e){
 
 function getHistory(keyword, sdate){
   var url = '<?=base_url('api_front/program/get_histori/'.$apm->id.'/?keyword=')?>'+keyword+'&sdate='+sdate;
-
+  var type = 'history';
   $.get(url).done(function(dt){
     if(dt.status == 200){
       var s = '<p>Belum ada jadwal</p>';
       if(dt.data){
         var s = '';
         $.each(dt.data, function(k,v){
-          var is_active = v?.is_reported ? 'bar-active' : 'bar'
+          var is_active = 'bar-active'
           s += `<a href="#" class="item-jadwal mb-3" data-id="${v.jadwal_id}" data-laporan-id="${v.id}" data-sdate="${v.sdate_ori}" data-type="${type}">
 									<div class="col-md-12 card border">
 										<div class="card-body">
@@ -233,8 +233,8 @@ function getHistory(keyword, sdate){
 													<div class="${is_active}"></div>
 												</div>
 												<div class="ms-2 w-100">
-													<small class="fw-light text-muted m-0">${v.sdate}</small>
-													<p class="fs-6"><b>${v.nama}</b></p>
+													<small class="fw-light text-muted m-0">${v.cdate}</small>
+													<p class="fs-6"><b>${v.jadwal}</b></p>
 													<div class="row text-muted">
 														<div class="col-md-6">
 															<img src="<?= base_url('media/clock.svg') ?>" alt="clock" width="12px">
@@ -269,7 +269,7 @@ function getJadwal(type="today"){
       if(dt.data){
         var s = '';
         $.each(dt.data, function(k,v){
-          var is_active = v?.is_reported ? 'bar-active' : 'bar'
+          var is_active = v?.laporan_id ? 'bar-active' : 'bar'
           s += `<a href="#" class="item-jadwal mb-3" data-id="${v.id}" data-laporan-id="${v.laporan_id}" data-sdate="${v.sdate_ori}" data-type="${type}">
 									<div class="col-md-12 card">
 										<div class="card-body">
@@ -372,6 +372,32 @@ function getDataAbsen(id, keyword='', sdate=''){
   })
 }
 
+function setAttach(id, path='', extension=''){
+  var file = 'file';
+  if(extension == 'doc' || extension == 'docx'){
+    file = 'file-word-o';
+  }else if(extension == 'xls' || extension == 'xlsx'){
+    file = 'file-excel-o';
+  }else if(extension == 'pdf'){
+    file = 'file-pdf-o';
+  }else if(!extension){
+    file = 'file';
+  }else{
+    file = 'picture-o';
+  }
+  var hide_image = file != 'picture-o' ? 'display: none;' : '';
+  var hide_icon = file == 'picture-o' ? 'display: none;' : '';
+  var s = `<div id="panel_lampiran_${id}" class="col-6 col-md-4" data-id="${id}" data-path="${path}">
+              <div class="card-lampiran mb-2" id="card_lampiran_${id}" data-id="${id}" data-path="${path}" data-type="${extension}" data-is-detail="true">
+                  <i id="icon-${id}" class="fa fa-${file} fa-3x m-3" data-id="${id}" style="${hide_icon}"></i>
+                  <img id="img-${id}" src="${path}" alt="" class="img-fluid rounded-2" data-id="${id}" style="${hide_image}">
+                  <input id="extension-${id}" type="hidden" name="extension[]" data-id="${id}" value="${extension}">
+                  <input id="path-${id}" type="hidden" name="path_lampiran[]" data-id="${id}" value="${path}">
+              </div>
+            </div>`
+  $('#panel_detail_attach').append(s);
+}
+
 $(document).off('click', '.item-jadwal');
 $(document).on('click', '.item-jadwal', function(e){
   e.preventDefault();
@@ -379,12 +405,14 @@ $(document).on('click', '.item-jadwal', function(e){
   type = $(this).attr('data-type');
   sdate = $(this).attr('data-sdate');
   laporan_id = $(this).attr('data-laporan-id');
-  $("#btn_lihat_laporan").show();
   if(laporan_id == 0 || laporan_id == '0'){
-    console.log(laporan_id, 'laporan_id')
-    $("#btn_lihat_laporan").hide();
-  } 
-  $.get('<?=base_url('api_front/program/get_jadwal_detail/')?>'+id+'?type='+type+'&sdate='+sdate).done(function(dt){
+    $("#btn_buat_laporan").show();
+    $("#btn_edit_laporan").hide();
+  } else{
+    $("#btn_buat_laporan").hide();
+    $("#btn_edit_laporan").show();
+  }
+  $.get('<?=base_url('api_front/program/get_jadwal_detail/')?>'+id+'?type='+type+'&sdate='+sdate+'&laporan_id='+laporan_id).done(function(dt){
     if(dt.status == 200){
       <?php if(isset($permissions['melihat_absensi'])) : ?>
       if(dt.data.absen){
@@ -405,6 +433,15 @@ $(document).on('click', '.item-jadwal', function(e){
           if(k == 'etime' && v) v = '- '+v;
           $("#d"+k).text(v);
         })
+      }
+      if(dt.data.laporan){
+        var laporan = dt.data.laporan;
+        $("#tdeskripsi").text(laporan.deskripsi);
+        if(laporan.attach){
+          $.each(laporan.attach, function(k,v){
+            setAttach('d'+k,v,laporan.extension[k]);
+          })
+        }
       }
       $("#modal_detail_jadwal").modal('show');
     }else{
@@ -487,6 +524,10 @@ $("#modal_option_absen").on("shown.bs.modal",function(e){
 $("#modal_option_absen").on("hidden.bs.modal",function(e){
 	$("#modal_detail_jadwal").modal('show');
 });
+$("#modal_detail_jadwal").on("hidden.bs.modal",function(e){
+  $("#tdeskripsi").text('')
+	$("#panel_detail_attach").html('');
+});
 
 $("#set_izin").on('click', function(e){
   e.preventDefault();
@@ -518,6 +559,33 @@ $("#sdate_laporan").on('change', function(e){
   getHistory(keyword_laporan, sdate_laporan)
 })
 
+function initPdf(path){
+  const pdfViewerContainer = $('#panel_pdf');
+
+  // Initialize PDF.js
+  pdfjsLib.getDocument(path).promise.then(pdfDoc => {
+    // Render the first page of the PDF
+    pdfDoc.getPage(1).then(page => {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      const viewport = page.getViewport({ scale: 1 });
+
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport,
+      };
+
+      page.render(renderContext).promise.then(() => {
+        pdfViewerContainer.html(canvas);
+      });
+    });
+  });
+
+}
+
 
 function addLampiran(id, path='', extension=''){
   var file = 'file';
@@ -541,7 +609,7 @@ function addLampiran(id, path='', extension=''){
               </div>
               <div class="card-lampiran mb-2" id="card_lampiran_${id}" data-id="${id}" data-path="${path}">
                   <i id="icon-${id}" class="fa fa-${file} fa-3x m-3" data-id="${id}" style="${hide_icon}"></i>
-                  <img id="img-${id}" src="" alt="" class="img-fluid" data-id="${id}" style="${hide_image}">
+                  <img id="img-${id}" src="" alt="" class="img-fluid rounded-2" data-id="${id}" style="${hide_image}">
                   <input id="extension-${id}" type="hidden" name="extension[]" data-id="${id}" value="${extension}">
                   <input id="path-${id}" type="hidden" name="path_lampiran[]" data-id="${id}" value="${path}">
               </div>
@@ -567,6 +635,7 @@ $(document).on('click', '.card-lampiran', function(e) {
   var id = $(this).attr('data-id')
   var path = $(this).attr('data-path')
   var type = $(this).attr('data-type')
+  var is_detail = $(this).attr('data-is-detail')
   if(!type){
     $("#file-"+id).trigger('click');
     return false;
@@ -577,9 +646,23 @@ $(document).on('click', '.card-lampiran', function(e) {
     $("#panel_image").attr('src', src).show();
     $("#panel_dokumen").hide();
   }else{
+    console.log(is_detail, 'is_detail')
     const embedURL = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(path)}`;
-    $("#panel_dokumen").attr('src', path).show();
+    if(is_detail && type != 'pdf'){
+        path = embedURL;
+    }
+   
+    <!-- if(type == 'pdf') path = 'https://docs.google.com/viewer?url='+encodeURIComponent(path); -->
+    if(type == 'pdf'){
+      initPdf(path)
+      $("#panel_dokumen").hide();
+      $("#panel_pdf").show();
+    }else{
+      $("#panel_dokumen").attr('src', path).show();
+
+    }
     $("#panel_image").hide();
+
   }
   $("#modal_detail").modal('show');
 })

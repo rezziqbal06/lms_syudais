@@ -37,7 +37,7 @@ $("#fprofil").on("submit",function(e){
 	var fd = new FormData($(this)[0]);
 	var url = '<?= base_url("api_front/akun/user/edit/")?>';
 	var gambar = getImageData('iprofil_gambarprev');
-  fd.append('id', <?=$sess->user->id?>)
+  	fd.append('id', <?=$sess->user->id?>)
 	if(gambar){
 		fd.append('gambar', gambar.blob, 'gambar.'+gambar.extension);
 	}

@@ -257,7 +257,7 @@
 
 <!-- modal detail  -->
 <div id="modal_detail_jadwal" class="modal fade " role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-fullscreen">
 		<div class="modal-content">
 
 			<!-- Modal Header -->
@@ -309,16 +309,29 @@
 					</div>
 				</div>
 				<?php if (isset($permissions['melihat_berita_acara'])) : ?>
-					<hr>
-					<p>Laporan</p>
-					<div class="d-grid gap-2 d-md-flex justify-content-end">
-						<?php if (isset($permissions['update_berita_acara'])) : ?>
-							<div class="col btn-block me-2">
-								<button class="btn btn-secondary" id="btn_buat_laporan">Buat</button>
+					<div class="accordion mb-3" id="accordionExample">
+						<div class="accordion-item">
+							<h2 class="accordion-header" id="headingTwo">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+									Laporan
+								</button>
+							</h2>
+							<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+								<div class="accordion-body">
+									<p id="tdeskripsi"></p>
+									<div id="panel_detail_attach" class="row">
+
+									</div>
+									<?php if (isset($permissions['update_berita_acara'])) : ?>
+										<div class="row">
+											<div class="col-12 text-end">
+												<button class="btn btn-white" id="btn_buat_laporan"><i class="fa fa-plus"></i></button>
+												<button class="btn btn-white" id="btn_edit_laporan"><i class="fa fa-pencil"></i></button>
+											</div>
+										</div>
+									<?php endif ?>
+								</div>
 							</div>
-						<?php endif ?>
-						<div class="col btn-block ">
-							<button class="btn btn-primary" id="btn_lihat_laporan">Lihat</button>
 						</div>
 					</div>
 				<?php endif ?>
@@ -423,8 +436,11 @@
 			<!-- Modal Body -->
 			<div class="modal-body">
 				<div class="row">
-					<div class="col-12">
+					<div class="col-12 text-center">
 						<img src="" alt="" class="img-fluid rounded" id="panel_image">
+						<div id="panel_pdf">
+							<!-- PDF.js will render here -->
+						</div>
 						<iframe src="" height="700" frameborder="0" class="w-100" id="panel_dokumen"></iframe>
 					</div>
 				</div>

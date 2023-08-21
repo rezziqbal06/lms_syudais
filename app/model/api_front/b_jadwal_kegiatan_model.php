@@ -272,11 +272,12 @@ class B_Jadwal_Kegiatan_Model extends \Model\B_Jadwal_Kegiatan_Concern
   public function getAll($a_program_id, $hari = 0, $sdate = "", $edate = "")
   {
     $this->db->select_as("$this->tbl_as.*, $this->tbl_as.id", 'id', 0);
-    $this->db->select_as("COALESCE($this->tbl2_as.id, 0)", 'laporan_id', 0);
+    // $this->db->select_as("COALESCE($this->tbl2_as.id, 0)", 'laporan_id', 0);
     $this->db->from($this->tbl, $this->tbl_as);
-    $this->db->join($this->tbl2, $this->tbl2_as, 'b_jadwal_kegiatan_id', $this->tbl_as, 'id');
+    // $this->db->join($this->tbl2, $this->tbl2_as, 'b_jadwal_kegiatan_id', $this->tbl_as, 'id', 'left');
     $this->db->where($this->tbl_as . '.is_deleted', $this->db->esc(0));
     $this->db->where($this->tbl_as . '.a_program_id', $a_program_id);
+    // if (strlen($sdate)) $this->db->where_as("DATE($this->tbl2_as.cdate)", 'DATE("' . $sdate . '")', "AND");
     if ($hari) {
       $this->db->where('hari', $hari, "OR");
       if (strlen($sdate)) $this->db->where_as("DATE($this->tbl_as.sdate)", 'DATE("' . $sdate . '")', "AND");
