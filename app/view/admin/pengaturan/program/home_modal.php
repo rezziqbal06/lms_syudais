@@ -1,3 +1,8 @@
+<style>
+	.margin-0 {
+		margin: 0 !important;
+	}
+</style>
 <!-- modal option -->
 <div id="modal_option" class="modal fade " tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-md">
@@ -82,9 +87,19 @@
 									<label for="itype_form" class="control-label">Tipe Formulir</label>
 									<input id="itype_form" type="number" name="type_form" class="form-control">
 								</div>
-								<div class="col-md-12">
+								<div class="col-md-6">
 									<label for="ideskripsi" class="control-label">Deskripsi</label>
 									<textarea name="deskripsi" id="ideskripsi" class="form-control" cols="30" rows="10"></textarea>
+								</div>
+								<div class="col-md-6">
+									<label for="iindikator_pencapaian" class="control-label">Indikator Pencapaian</label>
+									<div class="row-indikator">
+										<div class="input-group input-indikator mb-2">
+											<input type="text" class="form-control" placeholder="Indikator Pencapaian" aria-label="Indikator Pencapaian" name="indikator_pencapaian[]">
+											<button class="btn btn-danger margin-0 btn-hapus-indikator" type="button" style="display:none"><i class="fa fa-trash"></i></button>
+											<button class="btn btn-secondary margin-0 btn-tambah-indikator" type="button"><i class="fa fa-plus"></i></button>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -225,9 +240,19 @@
 									<label for="ietype_form" class="control-label">Tipe Formulir</label>
 									<input id="ietype_form" type="number" name="type_form" class="form-control">
 								</div>
-								<div class="col-md-12">
+								<div class="col-md-6">
 									<label for="iedeskripsi" class="control-label">Deskripsi</label>
 									<textarea name="deskripsi" id="iedeskripsi" class="form-control" cols="30" rows="10"></textarea>
+								</div>
+								<div class="col-md-6">
+									<label for="ieindikator_pencapaian" class="control-label">Indikator Pencapaian</label>
+									<div class="row-indikator">
+										<div class="input-group input-indikator mb-2">
+											<input type="text" class="form-control" placeholder="Indikator Pencapaian" aria-label="Indikator Pencapaian" name="indikator_pencapaian[]">
+											<button class="btn btn-danger margin-0 btn-hapus-indikator" type="button" style="display:none"><i class="fa fa-trash"></i></button>
+											<button class="btn btn-secondary margin-0 btn-tambah-indikator" type="button"><i class="fa fa-plus"></i></button>
+										</div>
+									</div>
 								</div>
 							</div>
 

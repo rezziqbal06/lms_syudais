@@ -124,6 +124,7 @@ class C_Laporan_Model extends \Model\C_Laporan_Concern
     return $this->db->delete($this->tbl);
   }
 
+
   public function getByDateAndUser($ajm_id, $sdate, $penilai_id, $b_user_id = '', $a_ruangan_id = '')
   {
     $this->db->where('b_user_id_penilai', $penilai_id);
@@ -159,6 +160,7 @@ class C_Laporan_Model extends \Model\C_Laporan_Concern
     $this->db->from($this->tbl, $this->tbl_as);
     $this->join_company();
     $this->filters($a_program_id, $sdate, $edate, $keyword, $is_active)->scoped();
+    $this->db->order_by("id", "DESC");
     $d = $this->db->get("", 0);
     return $d;
   }

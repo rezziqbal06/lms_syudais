@@ -8,6 +8,11 @@
 		border-radius: 16px;
 		border: 5px solid var(--background);
 	}
+
+	.range-label {
+		text-align: center;
+		margin-top: 10px;
+	}
 </style>
 <!-- modal option -->
 <div id="modal_option" class="modal fade " tabindex="-1" role="dialog" aria-hidden="true">
@@ -262,7 +267,7 @@
 
 			<!-- Modal Header -->
 			<div class="modal-header text-center">
-				<div class="row">
+				<div class="row w-100">
 					<div class="col-12">
 						<div class="btn-group float-end">
 							<?php if (isset($permissions['hapus_jadwal'])) : ?>
@@ -308,35 +313,47 @@
 						<p class="ms-1" style="font-size:0.8rem !important;"><b id="dtempat"></b></p>
 					</div>
 				</div>
-				<?php if (isset($permissions['melihat_berita_acara'])) : ?>
-					<div class="accordion mb-3" id="accordionExample">
-						<div class="accordion-item">
-							<h2 class="accordion-header" id="headingTwo">
-								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-									Laporan
-								</button>
-							</h2>
-							<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-								<div class="accordion-body">
-									<p id="tdeskripsi"></p>
-									<div id="panel_detail_attach" class="row">
-
+				<div class="row">
+					<?php if (isset($permissions['melihat_berita_acara'])) : ?>
+						<div class="col-md-6">
+							<div class="border border-2 rounded p-4 m-1">
+								<div class="border rounded-2 row p-1 mb-2">
+									<div class="col-4 col-md-2">
+										<img src="<?= base_url("media/camera-two-color.png") ?>" class="img-fluid" alt="">
 									</div>
-									<?php if (isset($permissions['update_berita_acara'])) : ?>
-										<div class="row">
-											<div class="col-12 text-end">
-												<button class="btn btn-white" id="btn_buat_laporan"><i class="fa fa-plus"></i></button>
-												<button class="btn btn-white" id="btn_edit_laporan"><i class="fa fa-pencil"></i></button>
-											</div>
-										</div>
-									<?php endif ?>
+									<div class="col-12 col-md-6 d-flex align-items-center">
+										<small>Buatlah laporan kegiatan yang antum lakukan berupa foto dan deskripsi singkat.</small>
+									</div>
 								</div>
+								<div id="panel_detail_attach" class="row mt-3"></div>
+								<p id="tdeskripsi"></p>
+								<?php if (isset($permissions['update_berita_acara'])) : ?>
+									<div class="row">
+										<div class="col-12 text-end">
+											<!-- <button class="btn btn-white" id="btn_buat_laporan"><i class="fa fa-plus"></i></button> -->
+											<button class="btn btn-white" id="btn_edit_laporan"><i class="fa fa-pencil"></i></button>
+										</div>
+									</div>
+								<?php endif ?>
 							</div>
 						</div>
+					<?php endif ?>
+					<div class="col-md-6">
+						<div class="mb-2 border border-2 rounded p-4 m-1">
+							<div class="border rounded-2 row p-1 mb-2">
+								<div class="col-4 col-md-2">
+									<img src="<?= base_url("media/data-analyzing-two-color.png") ?>" class="img-fluid" alt="">
+								</div>
+								<div class="col-12 col-md-6 d-flex align-items-center">
+									<small>Penilaian bagi peserta kegiatan berdasarkan indikator pencapaian yang disediakan. Hal ini bertujuan untuk meningkatkan kemampuan peserta.</small>
+								</div>
+							</div>
+							<div id="panel_list_nilai"></div>
+						</div>
 					</div>
-				<?php endif ?>
+				</div>
 
-				<div class=" row">
+				<div class="row">
 					<div class="col-md-12 card bg-background shadow-none p-4 " style="height: 30rem;">
 						<input type="text" class="form-control mb-3" id="keyword" placeholder="cari nama">
 						<div class="row" id="panel_absen" style="overflow-y: scroll;">
@@ -374,6 +391,7 @@
 							<div class="col-12 btn-group-vertical mt-2">
 								<button id="set_alpa" class="btn bg-danger text-white">alpa</button>
 								<button id="set_izin" class="btn bg-info text-white">izin</button>
+								<button id="set_penilaian" class="btn bg-accent text-white">penilaian</button>
 							</div>
 						</div>
 					</div>
@@ -409,7 +427,7 @@
 							<div id="panel_attach" class="row p-2">
 
 							</div>
-							<button id="btn_tambah_lampiran" class="btn btn-info float-end me-1"><i class="fa fa-plus"></i></button>
+							<!-- <button id="btn_tambah_lampiran" class="btn btn-info float-end me-1"><i class="fa fa-plus"></i></button> -->
 						</div>
 					</div>
 
@@ -444,6 +462,38 @@
 						<iframe src="" height="700" frameborder="0" class="w-100" id="panel_dokumen"></iframe>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- modal edit -->
+<div id="modal_penilaian" class="modal fade " role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header text-center">
+				<h2 class="modal-title"><b id="nama_santri" class=""></b></h2>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<!-- END Modal Header -->
+
+			<!-- Modal Body -->
+			<div class="modal-body">
+
+				<form action="" method="POST" id="fpenilaian">
+					<input type="hidden" id="iea_program_id" name="a_program_id" value="<?= $apm->id ?>">
+					<div id="panel_penilaian" class="form-group row">
+					</div>
+					<div id="panel_button_penilaian" class="row" style="margin-top: 1em; ">
+						<div class="col-md-12" style="border-top: 1px #afafaf dashed;">&nbsp;</div>
+						<div class="col-xs-12 btn-group-vertical" style="">
+							<button type="submit" class="btn btn-default btn-block text-left" data-dismiss="modal"><i class="fa fa-save"></i> Simpan</button>
+						</div>
+					</div>
+				</form>
+				<!-- END Modal Body -->
 			</div>
 		</div>
 	</div>

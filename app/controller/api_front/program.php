@@ -9,14 +9,22 @@ class Program extends JI_Controller
 	{
 		parent::__construct();
 		$this->load('a_program_concern');
+		$this->load('a_jabatan_concern');
 		$this->load('b_user_concern');
 		$this->load('b_jadwal_kegiatan_concern');
+		$this->load('b_indikator_pencapaian_concern');
+		$this->load('b_user_jabatan_concern');
+		$this->load('d_penilaian_concern');
 		$this->load('c_laporan_concern');
 		$this->load("api_front/a_program_model", 'apm');
+		$this->load("api_front/a_jabatan_model", 'ajm');
 		$this->load("api_front/b_user_model", 'bum');
+		$this->load("api_front/b_user_jabatan_model", 'bujm');
 		$this->load("api_front/b_jadwal_kegiatan_model", 'bjkm');
+		$this->load("api_front/b_indikator_pencapaian_model", 'bipm');
 		$this->load("api_front/c_laporan_model", 'clm');
 		$this->load("api_front/d_kehadiran_model", 'dkm');
+		$this->load("api_front/d_penilaian_model", 'dpm');
 		$this->lib("seme_upload", 'se');
 	}
 
@@ -54,6 +62,31 @@ class Program extends JI_Controller
 		return $bjkm;
 	}
 
+	public function __getAbsensi($keyword, $sdate, $id_kegiatan, $type, $id_jabatan_sasaran)
+	{
+		$sasaran = $this->ajm->id($id_jabatan_sasaran);
+		$absen = $this->bum->getAllAbsen($keyword, $sdate, $id_kegiatan, $type);
+		$id_users = [];
+		$key_users = [];
+		foreach ($absen as $k => $abs) {
+			$id_users[] = $abs->id;
+			$key_users[$abs->id] = $k;
+		}
+		$getJabatans = $this->bujm->getByUsersId($id_users);
+		foreach ($getJabatans as &$row) {
+			if (strtolower($sasaran->nama) == 'santri') {
+				if (strtolower($row->nama) == 'pembina') {
+					if (isset($absen[$key_users[$row->b_user_id]])) unset($absen[$key_users[$row->b_user_id]]);
+				}
+			} else {
+				$row->a_jabatan_id = array_map('intval', explode(',', $row->a_jabatan_id));
+				if (!in_array($id_jabatan_sasaran, $row->a_jabatan_id)) {
+					if (isset($absen[$key_users[$row->b_user_id]])) unset($absen[$key_users[$row->b_user_id]]);
+				}
+			}
+		}
+		return $absen;
+	}
 	/**
 	 * Give json data set result on datatable format
 	 *
@@ -791,10 +824,12 @@ class Program extends JI_Controller
 		if (strlen($laporan_id)) {
 			$clm = $this->clm->id($laporan_id);
 			if (isset($clm->cdate)) $sdate = $clm->cdate;
-			$clm->attach = json_decode($clm->attach);
+			$clm->attach = json_decode($clm->attach ?? '[]');
 			$extension = [];
+			$filename = [];
 			foreach ($clm->attach as $k => $v) {
 				$clm->attach[$k] = base_url($v);
+				$filename[] = $v;
 				if (stripos($v, '.jpg') !== false || stripos($v, '.jpeg') !== false || stripos($v, '.png') !== false || stripos($v, '.webp') !== false) {
 					$extension[] = 'image';
 				} else if (stripos($v, '.doc') !== false) {
@@ -806,11 +841,91 @@ class Program extends JI_Controller
 				}
 			}
 			$clm->extension = $extension;
+			$clm->filename = $filename;
 			$data['laporan'] = $clm;
 		}
 
-		$absen = $this->bum->getAllAbsen($keyword, $sdate, $bjkm->id, "kegiatan");
+		$absen = $this->__getAbsensi($keyword, $sdate, $bjkm->id, "kegiatan", $bjkm->a_jabatan_id_sasaran);
 		$data['absen'] = $absen;
+
+		$data['nilai'] = $this->dpm->getByJadwalId($bjkm->id);
+
+
+		$this->status = 200;
+		$this->message = API_ADMIN_ERROR_CODES[$this->status];
+		$this->__json_out($data);
+	}
+
+	public function get_indikator_penilaian($id, $email)
+	{
+		$d = $this->__init();
+		$data = array();
+		if (!$this->user_login) {
+			$this->status = 400;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			header("HTTP/1.0 400 Harus login");
+			$this->__json_out($data);
+			die();
+		}
+		if (!isset($email)) {
+			$this->status = 444;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+			die();
+		}
+		$user = $this->bum->getByEmail($email);
+		if (!isset($user->id)) {
+			$this->status = 403;
+			$this->message = 'Pengguna tidak ditemukan';
+			$data['error_message'] = "";
+			$this->__json_out($data);
+			die();
+		}
+
+
+		$id_kegiatan = (int) $this->input->request("id_kegiatan");
+		$utype_kegiatan = $this->input->post("utype_kegiatan", "kegiatan");
+		$sdate = $this->input->request("sdate");
+
+		if (empty($id_kegiatan)) {
+			$this->status = 405;
+			$this->message = "Id kegiatan tidak valid";
+			$data['error_message'] = "";
+			$this->__json_out($data);
+			die();
+		}
+
+		if (strlen($utype_kegiatan) < 3) {
+			$this->status = 405;
+			$this->message = "Utype kegiatan harus diisi";
+			$data['error_message'] = "";
+			$this->__json_out($data);
+			die();
+		}
+
+		$kehadiran = $this->dkm->getByUser($user->id, $sdate, $id_kegiatan, $utype_kegiatan);
+		if (!isset($kehadiran->tgl) || $kehadiran->sia != 'hadir') {
+			$this->status = 406;
+			$this->message = "$user->fnama belum melakukan absensi atau tidak hadir. Tidak bisa melakukan penilaian";
+			$this->__json_out($data);
+			die();
+		}
+
+
+		$indikator = $this->bipm->getByProgramId($id);
+		$nilai = $this->dpm->getByUserIdAndJadwalId($user->id, $id_kegiatan);
+		if (isset($nilai[0])) {
+			$dt_nilai = [];
+			foreach ($nilai as $n) {
+				$dt_nilai[$n->b_indikator_pencapaian_id] = $n->nilai;
+			}
+
+			foreach ($indikator as $i) {
+				$i->nilai = $dt_nilai[$i->id] ?? 60;
+			}
+		}
+		$data['indikator'] = $indikator;
+		$data['nama'] = $user->fnama;
 
 		$this->status = 200;
 		$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -853,6 +968,13 @@ class Program extends JI_Controller
 
 		$type = $this->input->request('type', 'today');
 		$bjkm = $this->__getJadwalKegiatan($id_kegiatan, $type);
+
+		if (@$dt['sess']->user->id != @$bjkm->b_user_id_narasumber) {
+			$this->status = 301;
+			$this->message = "Antum tidak memiliki wewenang untuk melakukan absensi";
+			$this->__json_out($data);
+			die();
+		}
 
 		$hariini = date("Y-m-d");
 		$jam_scan = strtotime(date("Y-m-d H:m:i"));
@@ -933,6 +1055,79 @@ class Program extends JI_Controller
 		$this->__json_out($data);
 	}
 
+	public function nganilai($email)
+	{
+		$dt = $this->__init();
+		$data = array();
+
+		$user = $this->bum->getByEmail($email);
+		if (!isset($user->id)) {
+			$this->status = 403;
+			$this->message = 'Pengguna tidak ditemukan';
+			$data['error_message'] = "";
+			$this->__json_out($data);
+			die();
+		}
+
+		$id_kegiatan = (int) $this->input->post("id_kegiatan");
+		$catatan = $this->input->post("catatan");
+
+		if (empty($id_kegiatan)) {
+			$this->status = 405;
+			$this->message = "Id kegiatan tidak valid";
+			$data['error_message'] = "";
+			$this->__json_out($data);
+			die();
+		}
+
+
+
+		$type = $this->input->request('type', 'today');
+		$bjkm = $this->__getJadwalKegiatan($id_kegiatan, $type);
+
+		if (@$dt['sess']->user->id != @$bjkm->b_user_id_narasumber) {
+			$this->status = 301;
+			$this->message = "Antum tidak memiliki wewenang untuk melakukan penilaian";
+			$this->__json_out($data);
+			die();
+		}
+
+		$hariini = date("Y-m-d");
+		$jam_scan = strtotime(date("Y-m-d H:m:i"));
+		if ($hariini != $bjkm->sdate) {
+			$this->status = 301;
+			$this->message = "Tidak bisa mengisi absen di luar jadwal";
+			$this->__json_out($data);
+			die();
+		}
+
+		$nilai = $this->input->post('nilai');
+		$b_indikator_pencapaian_id = $this->input->post('b_indikator_pencapaian_id');
+		$resDelete = $this->dpm->deleteByUserIdAndJadwalId($user->id, $id_kegiatan);
+		if (isset($nilai) && is_array($nilai) && count($nilai)) {
+			$di = [];
+			foreach ($nilai as $k => $v) {
+				$di[$k]['b_user_id'] = $user->id;
+				$di[$k]['nilai'] = $v;
+				$di[$k]['b_indikator_pencapaian_id'] = $b_indikator_pencapaian_id[$k] ?? 0;
+				$di[$k]['b_jadwal_kegiatan_id'] = $id_kegiatan;
+			}
+		}
+
+		$res = $this->dpm->setMass($di);
+		if ($res) {
+			$this->status = 200;
+			$this->message = "Berhasil";
+			$this->dkm->trans_commit();
+			$data['nilai'] = $this->dpm->getByJadwalId($id_kegiatan);
+		} else {
+			$this->status = 900;
+			$this->message = "Gagal mengisi penilaian";
+			$data['error_message'] = "";
+		}
+		$this->__json_out($data);
+	}
+
 	public function get_histori($id)
 	{
 		$d = $this->__init();
@@ -1008,7 +1203,10 @@ class Program extends JI_Controller
 				if ($resUpload->status == 200) {
 					$attach[] = $resUpload->file;
 				} else {
-					dd($resUpload);
+					$this->status = $resUpload->status;
+					$this->message = $resUpload->message;
+					$this->__json_out($data);
+					die();
 				}
 			}
 		}
@@ -1016,6 +1214,74 @@ class Program extends JI_Controller
 		$di['attach'] = json_encode($attach);
 
 		$res = $this->clm->set($di);
+		if ($res) {
+			$this->status = 200;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+		} else {
+			$this->status = 900;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+		}
+	}
+
+	public function edit_laporan($id)
+	{
+		$d = $this->__init();
+		$data = array();
+		if (!$this->user_login) {
+			$this->status = 400;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			header("HTTP/1.0 400 Harus login");
+			$this->__json_out($data);
+			die();
+		}
+		$bjkm = $this->bjkm->id($id);
+		if (!isset($bjkm->id)) {
+			$this->status = 445;
+			$this->message = API_ADMIN_ERROR_CODES[$this->status];
+			$this->__json_out($data);
+			die();
+		}
+
+		$di = [];
+		$di['b_jadwal_kegiatan_id'] = $bjkm->id;
+		$di['b_user_id'] = $d['sess']->user->id;
+		$di['deskripsi'] = $this->input->post('deskripsi') ?? '';
+		$di['cdate'] = 'NOW()';
+
+		$attach = [];
+		$extension = $this->input->post('extension');
+		$path = $this->input->post('path');
+		$is_upload = $this->input->post('is_upload');
+		if (isset($extension) && is_array($extension) && count($extension)) {
+			foreach ($extension as $k => $v) {
+				if (strlen(@$v)) {
+					if ($is_upload[$k] == false || $is_upload[$k] == 'false') {
+						$attach[] = @$path[$k];
+					} else {
+						$resUpload = $this->se->upload_file('lampiran', 'laporan', $id, $k, $v);
+						if ($resUpload->status == 200) {
+							$attach[] = $resUpload->file;
+						} else {
+							$this->status = $resUpload->status;
+							$this->message = $resUpload->message;
+							$this->__json_out($data);
+							die();
+						}
+					}
+				}
+			}
+		}
+
+		$di['attach'] = json_encode($attach);
+
+		$check = $this->clm->getByJadwal($id);
+		if (isset($check->id)) {
+			$res = $this->clm->update($check->id, $di);
+		} else {
+			$res = $this->clm->set($di);
+		}
 		if ($res) {
 			$this->status = 200;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];

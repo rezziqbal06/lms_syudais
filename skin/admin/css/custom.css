@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans@1&family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Plus+Jakarta+Sans&family=Poppins&display=swap');
 
-p, a, input, label, i, li, div{
-    font-family: 'Plus Jakarta Sans', sans-serif;
+p, a, input, label, i, li, div, b{
+    font-family: 'Inter', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6{

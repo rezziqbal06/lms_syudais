@@ -56,22 +56,16 @@ if(jQuery('#drTable').length>0){
 									}
 								})
 							}
-							if(dt.data.indikator){
-								$(".row-indikator-edit[data-id!='0']").remove();
-								$.each(dt.data.indikator, function(k,v){
-									$.each(v, function(kitem, vitem){
-										if(kitem == "id"){
-											addIndikator('edit')
-										}
-										if(kitem == 'nama') kitem = kitem + '_indikator';
-										$("#ie"+kitem+'_'+(nIndikator-1)).val(vitem);
-										if(kitem == 'a_ruangan_ids' && vitem){
-											var ids = JSON.parse(vitem);
-											$.each(ids, function(kid, vid){
-												$("#ie"+kitem+'_'+(nIndikator-1)+" option[value='"+vid+"']").prop('selected', true)
-											})
-										}
-									})
+							if(dt.data.indikator_pencapaian){
+								$.each(dt.data.indikator_pencapaian, function(k,v){
+									if(k == 0){
+										$('#fedit .input-indikator').first().find('input').val(v.nama)
+									}else{
+										var newInputGroup = $('#fedit .input-indikator').first().clone(); // Clone the first input group
+										newInputGroup.find('.btn-hapus-indikator').show(); // Clear input value if needed
+										newInputGroup.find('input').val(v.nama); // Clear input value if needed
+										$('#fedit .row-indikator').append(newInputGroup); // Append cloned input group
+									}
 									
 								})
 							}
@@ -291,3 +285,17 @@ $(document).on('change', '[name="nama"]', function(e){
 	var slug = convertToSlug($(this).val());
 	$("#"+type+"slug").val(slug);
 })
+
+
+// Append new input group
+$('.row-indikator').on('click', '.btn-tambah-indikator', function() {
+	var newInputGroup = $('.input-indikator').first().clone(); // Clone the first input group
+	newInputGroup.find('.btn-hapus-indikator').show(); // Clear input value if needed
+	newInputGroup.find('input').val(''); // Clear input value if needed
+	$(this).closest('.row-indikator').append(newInputGroup); // Append cloned input group
+});
+
+// Remove input group
+$('.row-indikator').on('click', '.btn-hapus-indikator', function() {
+	$(this).closest('.input-indikator').remove(); // Remove the closest input group
+});

@@ -192,13 +192,14 @@ $semevar['send_email'] = true;
 //firebase messaging
 $semevar['fcm'] = new stdClass();
 $semevar['fcm']->version = '';
-$semevar['fcm']->apiKey = '';
-$semevar['fcm']->authDomain = '';
-$semevar['fcm']->databaseURL = '';
-$semevar['fcm']->projectId = '';
-$semevar['fcm']->storageBucket = '';
-$semevar['fcm']->messagingSenderId = '';
-$semevar['fcm']->appId = '';
+$semevar['fcm']->apiKey = 'AIzaSyAz_v97N_7Thu0roVEoDm-ZTjUF-947wQU';
+$semevar['fcm']->authDomain = 'syudais.firebaseapp.com';
+$semevar['fcm']->databaseURL = 'https://syudais.firebaseio.com';
+$semevar['fcm']->projectId = 'syudais';
+$semevar['fcm']->storageBucket = 'syudais.appspot.com';
+$semevar['fcm']->messagingSenderId = '312280727159';
+$semevar['fcm']->appId = '1:312280727159:web:8b1245d852b58deaf61072';
+$semevar['fcm']->measurementId = 'G-9FP1BV9MWP';
 
 $semevar['site_title'] = 'SIMAK Syudais';
 $semevar['site_author'] = $semevar['site_title'];

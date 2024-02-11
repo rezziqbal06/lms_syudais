@@ -50,6 +50,10 @@
 		transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, border-radius .15s ease
 	}
 
+	.nav-link {
+		font-size: smaller;
+	}
+
 	@media (prefers-reduced-motion:reduce) {
 		.accordion-button {
 			transition: none
@@ -159,6 +163,25 @@
 	.accordion-flush .accordion-item .accordion-button {
 		border-radius: 0
 	}
+
+	.range-container {
+		position: relative;
+	}
+
+	.range-labels {
+		display: flex;
+		justify-content: space-between;
+		position: absolute;
+		top: -15px;
+		width: 100%;
+		pointer-events: none;
+	}
+
+	.range-labels .label {
+		position: relative;
+		display: inline-block;
+		font-size: 12px;
+	}
 </style>
 <section>
 	<div class="row mt-3 mt-md-5">
@@ -166,10 +189,107 @@
 			<div class="card mb-3">
 				<div class="card-header" style="background-color: <?= $apm->warna ?? '#dedede' ?>;">
 					<i class="<?= $apm->icon ?? 'ni ni-app' ?> text-white text-lg opacity-10"></i>
+					<?php if (isset($permissions['update_jadwal'])) : ?>
+						<button id="tambah_jadwal" class="btn btn-info float-end"><i class="fa fa-plus"></i></button>
+					<?php endif ?>
 				</div>
 				<div class="card-body">
 					<h6 class="card-title"><?= $apm->nama ?? '' ?></h6>
 					<p><?= $apm->deskripsi ?></p>
+
+
+					<div class="row mt-2">
+						<div class="col-md-6">
+							<ul class="nav nav-tabs" id="myTab" role="tablist">
+								<li class="nav-item" role="presentation">
+									<button class="nav-link active" id="today-tab" data-bs-toggle="tab" data-type="today" data-bs-target="#today-tab-pane" type="button" role="tab" aria-controls="today-tab-pane" aria-selected="true">Hari Ini</button>
+								</li>
+								<li class="nav-item" role="presentation">
+									<button class="nav-link" id="week-tab" data-bs-toggle="tab" data-type="week" data-bs-target="#week-tab-pane" type="button" role="tab" aria-controls="week-tab-pane" aria-selected="false">Akan Datang</button>
+								</li>
+								<li class="nav-item" role="presentation">
+									<button class="nav-link" id="history-tab" data-bs-toggle="tab" data-type="history" data-bs-target="#history-tab-pane" type="button" role="tab" aria-controls="history-tab-pane" aria-selected="false">Histori</button>
+								</li>
+							</ul>
+							<div class="tab-content" id="myTabContent">
+								<div class="tab-pane fade show active" id="today-tab-pane" role="tabpanel" aria-labelledby="today-tab" tabindex="0">
+									<div id="panel_jadwal_today" class="row p-3"></div>
+								</div>
+								<div class="tab-pane fade" id="week-tab-pane" role="tabpanel" aria-labelledby="week-tab" tabindex="0">
+									<div id="panel_jadwal_week" class="row p-3"></div>
+								</div>
+								<div class="tab-pane fade" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab" tabindex="0">
+									<div class="row mt-3">
+										<div class="col">
+											<input type="text" id="sdate_laporan" autocomplete="off" placeholder="tanggal" class="form-control datepicker" value="">
+										</div>
+										<div class="col">
+											<input type="text" class="form-control mb-3" id="keyword_laporan" placeholder="cari laporan">
+										</div>
+									</div>
+
+									<div id="panel_jadwal_history" class=""></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 ">
+							<?php if (isset($top_five_diligent) && count($top_five_diligent) > 1) : ?>
+								<div class="border rounded-2 row p-1 mb-3">
+									<div class="col-4 col-md-2">
+										<img src="<?= base_url("media/trophy-two.svg") ?>" class="img-fluid" alt="">
+									</div>
+									<div class="col-12 col-md-6 d-flex align-items-center">
+										<small>peserta terajin dari kegiatan <?= $apm->nama ?>.</small>
+									</div>
+								</div>
+								<div class="panel-list mb-5">
+									<?php foreach ($top_five_diligent as $k => $v) : ?>
+										<?php
+										$nilai = (int) $v->nilai;
+										$status = 'warning';
+										if ($v->nilai >= 90) {
+											$status = 'success';
+										} else if ($v->nilai >= 70 && $v->nilai < 90) {
+											$status = 'primary';
+										}
+										?>
+										<a href="#" class="border rounded-2 bg-gradient-<?= $status ?> text-white d-flex justify-content-between p-2 mb-1 " data-id="<?= $v->b_jadwal_kegiatan_id ?? '' ?>" data-email="<?= $v->email ?? '' ?>">
+											<span><?= $v->nama ?? '' ?></span>
+											<span><b><?= $nilai ?>x</b></span>
+										</a>
+									<?php endforeach ?>
+								</div>
+							<?php endif ?>
+
+							<?php if (isset($top_five) && count($top_five) > 1) : ?>
+								<div class="border rounded-2 row p-1 mb-3">
+									<div class="col-4 col-md-2">
+										<img src="<?= base_url("media/trophy.svg") ?>" class="img-fluid" alt="">
+									</div>
+									<div class="col-12 col-md-6 d-flex align-items-center">
+										<small>Nilai 5 terbaik dari kegiatan <?= $apm->nama ?>.</small>
+									</div>
+								</div>
+								<div class="panel-list mb-5">
+									<?php foreach ($top_five as $k => $v) : ?>
+										<?php
+										$nilai = (int) $v->nilai;
+										$status = 'warning';
+										if ($v->nilai >= 90) {
+											$status = 'success';
+										} else if ($v->nilai >= 70 && $v->nilai < 90) {
+											$status = 'primary';
+										}
+										?>
+										<a href="#" class="border rounded-2 bg-gradient-<?= $status ?> text-white d-flex justify-content-between p-2 mb-1 " data-id="<?= $v->b_jadwal_kegiatan_id ?>" data-email="<?= $v->email ?>">
+											<span><?= $v->nama ?></span>
+											<span><b><?= $nilai ?></b></span>
+										</a>
+									<?php endforeach ?>
+								</div>
+							<?php endif ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -177,50 +297,18 @@
 </section>
 <section>
 	<div class="row">
-		<div class="col-md-7 mb-4">
+		<!-- <div class="col-md-12 mb-4">
 			<div class="card">
 				<div class="card-header">
 					Jadwal
-					<?php if (isset($permissions['update_jadwal'])) : ?>
-						<button id="tambah_jadwal" class="btn btn-info float-end"><i class="fa fa-plus"></i></button>
-					<?php endif ?>
+					
 				</div>
 				<div class="card-body">
-					<ul class="nav nav-tabs" id="myTab" role="tablist">
-						<li class="nav-item" role="presentation">
-							<button class="nav-link active" id="today-tab" data-bs-toggle="tab" data-type="today" data-bs-target="#today-tab-pane" type="button" role="tab" aria-controls="today-tab-pane" aria-selected="true">Hari Ini</button>
-						</li>
-						<li class="nav-item" role="presentation">
-							<button class="nav-link" id="week-tab" data-bs-toggle="tab" data-type="week" data-bs-target="#week-tab-pane" type="button" role="tab" aria-controls="week-tab-pane" aria-selected="false">Akan Datang</button>
-						</li>
-						<li class="nav-item" role="presentation">
-							<button class="nav-link" id="history-tab" data-bs-toggle="tab" data-type="history" data-bs-target="#history-tab-pane" type="button" role="tab" aria-controls="history-tab-pane" aria-selected="false">Histori</button>
-						</li>
-					</ul>
-					<div class="tab-content" id="myTabContent">
-						<div class="tab-pane fade show active" id="today-tab-pane" role="tabpanel" aria-labelledby="today-tab" tabindex="0">
-							<div id="panel_jadwal_today" class="row p-3"></div>
-						</div>
-						<div class="tab-pane fade" id="week-tab-pane" role="tabpanel" aria-labelledby="week-tab" tabindex="0">
-							<div id="panel_jadwal_week" class="row p-3"></div>
-						</div>
-						<div class="tab-pane fade" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab" tabindex="0">
-							<div class="row mt-3">
-								<div class="col">
-									<input type="text" id="sdate_laporan" autocomplete="off" placeholder="tanggal" class="form-control datepicker" value="">
-								</div>
-								<div class="col">
-									<input type="text" class="form-control mb-3" id="keyword_laporan" placeholder="cari laporan">
-								</div>
-							</div>
 
-							<div id="panel_jadwal_history" class=""></div>
-						</div>
-					</div>
 				</div>
 			</div>
-		</div>
-		<div class="col-md-5 mb-4">
+		</div> -->
+		<!-- <div class="col-md-5 mb-4">
 			<div class="card">
 				<div class="card-header">
 					Tugas
@@ -235,6 +323,6 @@
 					<?php endif ?>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 </section>

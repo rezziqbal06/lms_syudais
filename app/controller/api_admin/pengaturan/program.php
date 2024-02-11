@@ -7,8 +7,12 @@ class Program extends JI_Controller
 	{
 		parent::__construct();
 		$this->load('a_program_concern');
-		$this->load("api_admin/a_program_model", 'apm');
 		$this->load('a_indikator_concern');
+		$this->load('b_indikator_pencapaian_concern');
+
+		$this->load("api_admin/a_program_model", 'apm');
+		$this->load("api_admin/b_indikator_pencapaian_model", 'bipm');
+
 		// $this->load("api_admin/a_indikator_model", 'aim');
 	}
 
@@ -93,28 +97,30 @@ class Program extends JI_Controller
 		if ($res) {
 			$this->status = 200;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
-			$nama_indikator = $this->input->request('nama_indikator') ?? null;
-			// if (isset($nama_indikator) && is_array($nama_indikator) && count($nama_indikator)) {
-			// 	$dai = [];
-			// 	foreach ($nama_indikator as $k => $v) {
-			// 		$dai[$k]['nama'] = $v;
-			// 		$dai[$k]['a_ruangan_ids'] = isset($_POST['a_ruangan_ids_' . $k]) ? json_encode($_POST['a_ruangan_ids_' . $k]) : '';
-			// 		$dai[$k]['kategori'] = $_POST['kategori'][$k] ?? '';
-			// 		$dai[$k]['subkategori'] = $_POST['subkategori'][$k] ?? '';
-			// 		$dai[$k]['is_optional'] = $_POST['is_optional'][$k] ?? 0;
-			// 		$dai[$k]['type'] = $_POST['type'][$k] ?? '';
-			// 		$dai[$k]['a_program_id'] = $res;
-			// 		$dai[$k]['cdate'] = 'NOW()';
-			// 	}
-			// 	$res = $this->aim->setMass($dai);
-			// 	if ($res) {
-			// 		$this->status = 200;
-			// 		$this->message = API_ADMIN_ERROR_CODES[$this->status];
-			// 	} else {
-			// 		$this->status = 110;
-			// 		$this->message = API_ADMIN_ERROR_CODES[$this->status];
-			// 	}
-			// }
+			$indikator_pencapaian = $this->input->request('indikator_pencapaian') ?? null;
+			if (isset($indikator_pencapaian) && is_array($indikator_pencapaian) && count($indikator_pencapaian)) {
+				$resDelete = $this->bipm->deleteByProgramId($res);
+				if (!$resDelete) {
+					$this->status = 200;
+					$this->message = API_ADMIN_ERROR_CODES[$this->status];
+					$this->__json_out($data);
+					die();
+				}
+
+				$dai = [];
+				foreach ($indikator_pencapaian as $k => $v) {
+					$dai[$k]['nama'] = $v;
+					$dai[$k]['a_program_id'] = $res;
+				}
+				$res = $this->bipm->setMass($dai);
+				if ($res) {
+					$this->status = 200;
+					$this->message = API_ADMIN_ERROR_CODES[$this->status];
+				} else {
+					$this->status = 110;
+					$this->message = API_ADMIN_ERROR_CODES[$this->status];
+				}
+			}
 		} else {
 			$this->status = 110;
 			$this->message = API_ADMIN_ERROR_CODES[$this->status];
@@ -154,7 +160,7 @@ class Program extends JI_Controller
 			die();
 		}
 
-		// $data->indikator = $this->aim->getByPenilaianId($id);
+		$data->indikator_pencapaian = $this->bipm->getByProgramId($id);
 		// dd(count($data->indikator));
 		$this->__json_out($data);
 	}
@@ -224,35 +230,29 @@ class Program extends JI_Controller
 			unset($du['id']);
 			$res = $this->apm->update($id, $du);
 			if ($res) {
-				$nama_indikator = $this->input->request('nama_indikator') ?? null;
-				if (isset($nama_indikator) && is_array($nama_indikator) && count($nama_indikator)) {
-					// $resDelete = $this->aim->deleteByPenilaianId($id);
-					// if (!$resDelete) {
-					// 	$this->status = 200;
-					// 	$this->message = API_ADMIN_ERROR_CODES[$this->status];
-					// 	$this->__json_out($data);
-					// 	die();
-					// }
+				$indikator_pencapaian = $this->input->request('indikator_pencapaian') ?? null;
+				if (isset($indikator_pencapaian) && is_array($indikator_pencapaian) && count($indikator_pencapaian)) {
+					$resDelete = $this->bipm->deleteByProgramId($id);
+					if (!$resDelete) {
+						$this->status = 200;
+						$this->message = API_ADMIN_ERROR_CODES[$this->status];
+						$this->__json_out($data);
+						die();
+					}
 
-					// $dai = [];
-					// foreach ($nama_indikator as $k => $v) {
-					// 	$dai[$k]['nama'] = $v;
-					// 	$dai[$k]['a_ruangan_ids'] = isset($_POST['a_ruangan_ids_' . $k]) ? json_encode($_POST['a_ruangan_ids_' . $k]) : '';
-					// 	$dai[$k]['kategori'] = $_POST['kategori'][$k] ?? '';
-					// 	$dai[$k]['subkategori'] = $_POST['subkategori'][$k] ?? '';
-					// 	$dai[$k]['is_optional'] = $_POST['is_optional'][$k] ?? '';
-					// 	$dai[$k]['type'] = $_POST['type'][$k] ?? '';
-					// 	$dai[$k]['a_program_id'] = $id;
-					// 	$dai[$k]['cdate'] = 'NOW()';
-					// }
-					// $res = $this->aim->setMass($dai);
-					// if ($res) {
-					// 	$this->status = 200;
-					// 	$this->message = API_ADMIN_ERROR_CODES[$this->status];
-					// } else {
-					// 	$this->status = 110;
-					// 	$this->message = API_ADMIN_ERROR_CODES[$this->status];
-					// }
+					$dai = [];
+					foreach ($indikator_pencapaian as $k => $v) {
+						$dai[$k]['nama'] = $v;
+						$dai[$k]['a_program_id'] = $id;
+					}
+					$res = $this->bipm->setMass($dai);
+					if ($res) {
+						$this->status = 200;
+						$this->message = API_ADMIN_ERROR_CODES[$this->status];
+					} else {
+						$this->status = 110;
+						$this->message = API_ADMIN_ERROR_CODES[$this->status];
+					}
 				}
 				$this->status = 200;
 				$this->message = API_ADMIN_ERROR_CODES[$this->status];

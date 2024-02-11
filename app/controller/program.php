@@ -29,12 +29,15 @@ class Program extends \JI_Controller
 		$this->load("b_user_module_concern");
 		$this->load("b_user_jabatan_concern");
 		$this->load("b_jadwal_kegiatan_concern");
+		$this->load('d_penilaian_concern');
 		$this->load("front/a_program_model", "apm");
 		$this->load("front/a_jabatan_model", "ajm");
 		$this->load("front/b_user_model", "bum");
 		$this->load("front/b_user_module_model", "bumm");
 		$this->load("front/b_user_jabatan_model", "bujm");
 		$this->load("front/b_jadwal_kegiatan_model", "bjkm");
+		$this->load("front/d_kehadiran_model", 'dkm');
+		$this->load("front/d_penilaian_model", 'dpm');
 		$this->current_parent = 'program';
 		$this->current_page = 'daftar';
 	}
@@ -89,11 +92,17 @@ class Program extends \JI_Controller
 		$data['ajm'] = $ajm;
 
 		$permissions = $this->bumm->getAllPermission($apm->id,  $jabatan_ids, $data['sess']->user->id);
+		// dd($permissions);
 		$data['apm'] = $apm;
+		$data['top_five'] = $this->dpm->getTopFive($apm->id);
+		$data['top_five_diligent'] = $this->dkm->getTopFive($apm->id);
+
 		unset($apm);
 
 		$data['permissions'] = $permissions;
 		unset($permissions);
+
+
 
 		$this->putThemeContent("program/detail", $data);
 		$this->putThemeContent("program/detail_modal", $data);

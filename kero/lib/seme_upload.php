@@ -94,11 +94,11 @@ class Seme_Upload
 
         $files = $_FILES[$keyname];
         if (is_array($files['name'])) {
-            $fileName = $files['name'][$ke];
-            $fileTmpName = $files['tmp_name'][$ke];
-            $fileType = $files['type'][$ke];
-            $fileSize = $files['size'][$ke];
-            $fileError = $files['error'][$ke];
+            $fileName = $files['name'][$ke] ?? null;
+            $fileTmpName = $files['tmp_name'][$ke] ?? null;
+            $fileType = $files['type'][$ke] ?? null;
+            $fileSize = $files['size'][$ke] ?? null;
+            $fileError = $files['error'][$ke] ?? null;
         } else {
             $fileName = $files['name'];
             $fileTmpName = $files['tmp_name'];

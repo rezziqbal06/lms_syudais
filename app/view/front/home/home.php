@@ -8,27 +8,42 @@
 </style>
 <section>
     <div class="row">
-        <?php if (isset($sess->user->program[0])) {
-            foreach ($sess->user->program as $k => $v) { ?>
-                <div class="col-6 col-md-3">
-                    <a href="<?= base_url('program/' . $v->slug) ?>">
-                        <div class="card mb-3">
-                            <div class="card-header" style="background-color: <?= $v->warna ?? '#dedede' ?>;">
-                                <i class="<?= $v->icon ?? 'ni ni-app' ?> text-white text-lg opacity-10"></i>
-                            </div>
-                            <div class="card-body">
-                                <h6 class="card-title"><?= $v->nama ?? '' ?></h6>
-                                <small class="float-end" style="color:#dedede;">Selengkapnya</small>
-                            </div>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="border rounded-2 row p-2 mb-3">
+                        <div class="col-4 col-md-2">
+                            <img src="<?= base_url("media/world-connection-two-color.png") ?>" class="img-fluid" alt="">
                         </div>
-                    </a>
+                        <div class="col-12 col-md-6 d-flex align-items-center ">
+                            <p class="m-0"><b>Ahlan wa sahlan <br class="d-block d-md-none"><?= $sess->user->fnama ?></b><br>di Sistem Akademik Syudais (Syubbaanul 'Uluum Dakwah Islam) <br> Membantu antum menjadi manusia yang bermanfaat.</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <?php if (isset($sess->user->program[0])) {
+                            foreach ($sess->user->program as $k => $v) { ?>
+                                <div class="col-6 col-md-3">
+                                    <a href="<?= base_url('program/' . $v->slug) ?>">
+                                        <div class="card mb-3">
+                                            <div class="card-header" style="background-color: <?= $v->warna ?? '#dedede' ?>; border-radius: 12px;">
+                                                <span class="text-white"><i class="<?= $v->icon ?? 'ni ni-app' ?> text-white text-lg opacity-10 me-3"></i> <br class="d-block d-md-none"><?= $v->nama ?? '' ?></span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                        <?php }
+                        } ?>
+                    </div>
                 </div>
-        <?php }
-        } ?>
+            </div>
+        </div>
+        <div class="col-md-12">
 
+        </div>
     </div>
+
 </section>
-<section>
+<section class="d-none">
     <div class="row">
         <div class="col-md-7 mb-4">
             <div class="card">

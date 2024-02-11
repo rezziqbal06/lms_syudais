@@ -7,6 +7,7 @@ var sdate = ''
 var sdate_laporan = ''
 var keyword_laporan = ''
 var type = 'today';
+var laporan = [];
 
 var lampiran = [];
 var id_lampiran = 0
@@ -225,8 +226,8 @@ function getHistory(keyword, sdate){
         var s = '';
         $.each(dt.data, function(k,v){
           var is_active = 'bar-active'
-          s += `<a href="#" class="item-jadwal mb-3" data-id="${v.jadwal_id}" data-laporan-id="${v.id}" data-sdate="${v.sdate_ori}" data-type="${type}">
-									<div class="col-md-12 card border">
+          s += `<a href="#" class="item-jadwal mb-2" data-id="${v.jadwal_id}" data-laporan-id="${v.id}" data-sdate="${v.sdate_ori}" data-type="${type}">
+									<div class="col-md-12 card border mb-2">
 										<div class="card-body">
 											<div class="d-flex justify-content-start">
 												<div>
@@ -270,7 +271,7 @@ function getJadwal(type="today"){
         var s = '';
         $.each(dt.data, function(k,v){
           var is_active = v?.laporan_id ? 'bar-active' : 'bar'
-          s += `<a href="#" class="item-jadwal mb-3" data-id="${v.id}" data-laporan-id="${v.laporan_id}" data-sdate="${v.sdate_ori}" data-type="${type}">
+          s += `<a href="#" class="item-jadwal mb-2" data-id="${v.id}" data-laporan-id="${v.laporan_id}" data-sdate="${v.sdate_ori}" data-type="${type}">
 									<div class="col-md-12 card">
 										<div class="card-body">
 											<div class="d-flex justify-content-start">
@@ -372,7 +373,56 @@ function getDataAbsen(id, keyword='', sdate=''){
   })
 }
 
-function setAttach(id, path='', extension=''){
+function getDataLaporan(id, keyword='', sdate=''){
+  $.get('<?=base_url('api_front/program/get_jadwal_detail/')?>'+id+'?keyword='+keyword+'&type='+type+'&sdate='+sdate+'&laporan_id='+laporan_id).done(function(dt){
+    if(dt.status == 200){
+      isEditLaporan = true;
+      if(dt.data.laporan){
+        laporan = dt.data.laporan;
+        $("#ildeskripsi").text(laporan.deskripsi);
+        $("#tdeskripsi").text(laporan.deskripsi);
+        if(laporan.attach){
+          id_lampiran = 0;
+          $('#panel_detail_attach').empty('');
+          $("#panel_attach").empty('')
+          $.each(laporan.attach, function(k,v){
+            setAttach('d'+k,v,laporan.extension[k], laporan.filename[k]);
+            addLampiran(k, v, laporan.extension[k], laporan.filename[k]);
+          })
+        }
+      }
+    }else{
+      // gritter('<h4>Gagal</h4><p>'+dt.message+'</p>','warning');
+    }
+  }).fail(function(){
+    // gritter('<h4>Error</h4><p>Gagal, silahkan coba lagi nanti</p>','danger');
+  })
+}
+
+
+function setListNilai(nilai){
+  var s = '';
+  $.each(nilai, function(k,v){
+    if(v.nilai){
+      var nilai = parseInt(v?.nilai);
+      console.log(nilai);
+      var status = 'warning';
+      if(nilai >= 90){
+        status = 'success';
+      }else if(nilai >= 70 && nilai < 90){
+        status = 'primary'
+      }
+      s += `<a href="#" class="list-nilai border rounded-2 bg-gradient-${status} text-white d-flex justify-content-between p-2 mb-1 " data-id="${v.b_jadwal_kegiatan_id}" data-email="${v.email}">
+        <span>${v.nama}</span>
+        <span><b>${nilai}</b></span>
+    </a>`
+    }
+  })
+  $("#panel_list_nilai").html(s);
+}
+
+
+function setAttach(id, path='', extension='', url=''){
   var file = 'file';
   if(extension == 'doc' || extension == 'docx'){
     file = 'file-word-o';
@@ -391,8 +441,8 @@ function setAttach(id, path='', extension=''){
               <div class="card-lampiran mb-2" id="card_lampiran_${id}" data-id="${id}" data-path="${path}" data-type="${extension}" data-is-detail="true">
                   <i id="icon-${id}" class="fa fa-${file} fa-3x m-3" data-id="${id}" style="${hide_icon}"></i>
                   <img id="img-${id}" src="${path}" alt="" class="img-fluid rounded-2" data-id="${id}" style="${hide_image}">
-                  <input id="extension-${id}" type="hidden" name="extension[]" data-id="${id}" value="${extension}">
-                  <input id="path-${id}" type="hidden" name="path_lampiran[]" data-id="${id}" value="${path}">
+                  <input id="extension-${id}" type="hidden" data-id="${id}" value="${extension}">
+                  <input id="path-${id}" type="hidden" data-id="${id}" value="${path}">
               </div>
             </div>`
   $('#panel_detail_attach').append(s);
@@ -418,6 +468,10 @@ $(document).on('click', '.item-jadwal', function(e){
       if(dt.data.absen){
         setListAbsen(dt.data.absen)
       }
+
+      if(dt.data.nilai){
+        setListNilai(dt.data.nilai)
+      }
       <?php endif ?>
       if(dt.data.detail){
         $.each(dt.data.detail, function(k,v){
@@ -434,12 +488,18 @@ $(document).on('click', '.item-jadwal', function(e){
           $("#d"+k).text(v);
         })
       }
+      isEditLaporan = true;
       if(dt.data.laporan){
-        var laporan = dt.data.laporan;
+        laporan = dt.data.laporan;
+        $("#ildeskripsi").text(laporan.deskripsi);
         $("#tdeskripsi").text(laporan.deskripsi);
         if(laporan.attach){
+          id_lampiran = 0;
+          $('#panel_detail_attach').empty('');
+          $("#panel_attach").empty('')
           $.each(laporan.attach, function(k,v){
-            setAttach('d'+k,v,laporan.extension[k]);
+            setAttach('d'+k,v,laporan.extension[k], laporan.filename[k]);
+            addLampiran(k, v, laporan.extension[k], laporan.filename[k]);
           })
         }
       }
@@ -486,6 +546,83 @@ function setAbsen(id_kegiatan, email, keterangan, utype, sia, catatan){
 		}
 	});
 }
+
+
+
+function getPenilaian(id_kegiatan, email, type="edit"){
+  $.get('<?=base_url("api_front/program/get_indikator_penilaian/".$apm->id."/")?>'+email+"?id_kegiatan="+id_kegiatan+'&sdate='+sdate).done(function(dt){
+    if(dt.status == 200){
+      if(dt.data.indikator){
+        $("#nama_santri").text(dt.data.nama);
+        var s = '';
+        $.each(dt.data.indikator, function(k,v){
+          s += `
+          <div class="col-md-12">
+            <p class="m-0 mb-3">${v.nama}</p>
+            <div class="range-container mb-2">
+                  <input type="range" class="form-range" name="nilai[]" min="60" max="100" value="${v.nilai}" step="10">
+                  <input type="hidden" name="b_indikator_pencapaian_id[]" value="${v.id}">
+                  <div class="range-labels">
+                    <div class="label">60</div>
+                    <div class="label">70</div>
+                    <div class="label">80</div>
+                    <div class="label">90</div>
+                    <div class="label">100</div>
+                  </div>
+              </div>
+            </div>`
+        })
+        $("#panel_penilaian").html(s);
+        if(type == 'edit'){
+          $("#panel_button_penilaian").show();
+        }else{
+          $("#panel_button_penilaian").hide();
+        }
+        $("#modal_penilaian").modal('show');
+      }
+    }else{
+				gritter('<h4>Gagal</h4><p>'+dt.message+'</p>','warning');
+    }
+  }).fail(function(){
+    setTimeout(function(){
+				gritter('<h4>Error</h4><p>Tidak dapat mengakses sekarang, silahkan coba lagi nanti</p>','danger');
+			}, 666);
+			return false;
+  })
+}
+
+$("#fpenilaian").on('submit', function(e){
+  e.preventDefault();
+  var fd = new FormData($(this)[0]);
+  if(id) fd.append('id_kegiatan', id);
+	var url = '<?=base_url("api_front/program/nganilai/")?>'+email;
+
+	$.ajax({
+		type: 'POST',
+		url: url,
+		data: fd,
+		processData: false,
+		contentType: false,
+		success: function(respon){
+			if(respon.status==200){
+				gritter('<h4>Sukses</h4><p>Berhasil</p>','success');
+				if(respon.data.nilai){
+          setListNilai(respon.data.nilai)
+        }
+        $("#modal_penilaian").modal('hide');
+        $("#modal_option_absen").modal('hide');
+			}else{
+				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','warning');
+			}
+		},
+		error:function(){
+			setTimeout(function(){
+				gritter('<h4>Error</h4><p>Tidak dapat menilai sekarang, silahkan coba lagi nanti</p>','danger');
+			}, 666);
+			return false;
+		}
+	});
+})
 
 <?php if(isset($permissions['update_absensi'])) : ?>
 $(document).off('click', '.item-absen')
@@ -540,6 +677,20 @@ $("#set_alpa").on('click', function(e){
   setAbsen(id, email, keterangan, 'kegiatan', 'alpa')
 })
 
+$("#set_penilaian").on('click', function(e){
+  e.preventDefault();
+  getPenilaian(id, email)
+})
+
+$(document).off('click', '.list-nilai')
+$(document).on('click', '.list-nilai', function(e) {
+  e.preventDefault();
+  var id = $(this).attr('data-id')
+  var email = $(this).attr('data-email')
+  getPenilaian(id, email, 'detail')
+
+})
+
 $("#keyword").on('input', debounce(function(e){
   e.preventDefault();
   var keyword = $(this).val();
@@ -587,7 +738,7 @@ function initPdf(path){
 }
 
 
-function addLampiran(id, path='', extension=''){
+function addLampiran(id, path='', extension='', url='',){
   var file = 'file';
   if(extension == 'doc' || extension == 'docx'){
     file = 'file-word-o';
@@ -609,9 +760,10 @@ function addLampiran(id, path='', extension=''){
               </div>
               <div class="card-lampiran mb-2" id="card_lampiran_${id}" data-id="${id}" data-path="${path}">
                   <i id="icon-${id}" class="fa fa-${file} fa-3x m-3" data-id="${id}" style="${hide_icon}"></i>
-                  <img id="img-${id}" src="" alt="" class="img-fluid rounded-2" data-id="${id}" style="${hide_image}">
+                  <img id="img-${id}" src="${path}" alt="" class="img-fluid rounded-2" data-id="${id}" style="${hide_image}">
                   <input id="extension-${id}" type="hidden" name="extension[]" data-id="${id}" value="${extension}">
-                  <input id="path-${id}" type="hidden" name="path_lampiran[]" data-id="${id}" value="${path}">
+                  <input id="path-${id}" type="hidden" name="path_lampiran[]" data-id="${id}" value="${url}">
+                  <input id="is-upload-${id}" type="hidden" name="is_upload[]" value="false">
               </div>
             </div>`
   $('#panel_attach').append(s);
@@ -651,8 +803,6 @@ $(document).on('click', '.card-lampiran', function(e) {
     if(is_detail && type != 'pdf'){
         path = embedURL;
     }
-   
-    <!-- if(type == 'pdf') path = 'https://docs.google.com/viewer?url='+encodeURIComponent(path); -->
     if(type == 'pdf'){
       initPdf(path)
       $("#panel_dokumen").hide();
@@ -693,8 +843,9 @@ $(document).on('change', 'input[type="file"]', function(e){
     $("#icon-"+id).show();
     $("#extension-"+id).val('document')
   }
+  $("#is-upload-"+id).val(true)
+
   $("#card_lampiran_"+id).attr('data-type', lampiran[id]);
-  console.log(id, URL.createObjectURL(file), lampiran)
 });
 
 
@@ -716,7 +867,10 @@ $("#flaporan").on("submit",function(e){
 
 	var fd = new FormData();
 	var url = '<?= base_url("api_front/program/tambah_laporan/")?>'+id;
-
+  if(isEditLaporan){
+    console.log('edit loh ')
+	  url = '<?= base_url("api_front/program/edit_laporan/")?>'+id;
+  }
   var lampiranInputs = $('input[name="lampiran[]"]');
   var nomor = 0;
   for (let index = 0; index < lampiran.length; index++) {
@@ -740,6 +894,19 @@ $("#flaporan").on("submit",function(e){
     fd.append('extension[]', $(input).val());
   });
 
+  var is_uploadInputs = $('input[name="is_upload[]"]');
+  is_uploadInputs.each(function(index, input) {
+    fd.append('is_upload[]', $(input).val());
+  });
+
+  var pathInputs = $('input[name="path_lampiran[]"]');
+  if(pathInputs){
+    pathInputs.each(function(index, input) {
+      fd.append('path[]', $(input).val());
+    });
+  }
+ 
+
   fd.append('sdate', sdate)
   fd.append('deskripsi', $("#ildeskripsi").val())
 	
@@ -753,6 +920,8 @@ $("#flaporan").on("submit",function(e){
 			if(respon.status==200){
 				gritter('<h4>Sukses</h4><p>Berhasil dilaporkan</p>','success');
 				<!-- window.history.back() -->
+        getDataLaporan(id, '', sdate)
+        $("#modal_buat_laporan").modal('hide')
 			}else{
 				gritter('<h4>Gagal</h4><p>'+respon.message+'</p>','warning');
 				$('.icon-submit').removeClass('fa-circle-o-notch fa-spin');
@@ -772,3 +941,10 @@ $("#flaporan").on("submit",function(e){
 		}
 	});
 });
+
+$("#btn_edit_laporan").on('click', function(e){
+  e.preventDefault();
+  console.log($("#panel_lampiran").length, 'length')
+  if($("#panel_attach").length < 1) addLampiran(id_lampiran)
+  $("#modal_buat_laporan").modal('show')
+})
